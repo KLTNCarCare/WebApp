@@ -1,79 +1,53 @@
-import {
-  ReactNode,
+import React, {
   createContext,
-  useCallback,
   useContext,
-  useEffect,
-  useMemo,
   useState,
+  useCallback,
+  ReactNode,
+  useEffect,
 } from 'react';
-import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { LoginArgs } from 'src/api/admin/types';
 import { useLogin } from 'src/api/auth/useLogin';
-import { DefaultQueryError } from 'src/api/type';
-import { getCookie } from 'src/lib/cookies';
-import {
-  ACCESS_TOKEN_KEY,
-  getAccessToken,
-  getRefreshToken,
-  removeAccessToken,
-  removeRefreshToken,
-  storeAccessToken,
-  storeRefreshToken,
-} from 'src/lib/token';
+import { getCookie, setCookie, removeCookie } from 'src/lib/cookies';
 
-export interface AuthContextProps {
+interface AuthContextType {
   isAuthenticated: boolean;
+  setIsAuthenticated: (isAuthenticated: boolean) => void;
   accessToken: string | null;
   refreshToken: string | null;
   logOut: () => void;
-  signInWithAdmin: (param: LoginArgs) => Promise<unknown>;
+  signInWithAdmin: (params: LoginArgs) => Promise<any>;
   loading: boolean;
 }
 
-export const AuthContext = createContext<AuthContextProps>({
-  isAuthenticated: false,
-  accessToken: null,
-  refreshToken: null,
-  logOut: () => {},
-  signInWithAdmin: () => new Promise(() => {}),
-  loading: false,
-});
+const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-export const useAuth = () => useContext(AuthContext);
-
-export interface AuthProviderProps {
-  children: ReactNode;
-}
-
-export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
+export const AuthProvider = ({ children }: { children: ReactNode }) => {
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [accessToken, setAccessToken] = useState<string | null>(null);
+  const [refreshToken, setRefreshToken] = useState<string | null>(null);
   const navigate = useNavigate();
-  const { pathname } = useLocation();
-  const [searchParams] = useSearchParams();
-  const tokenParam = searchParams.get(ACCESS_TOKEN_KEY);
-  const [accessToken, setAccessToken] = useState<string | null>(
-    getAccessToken()
-  );
-  const [refreshToken, setRefreshToken] = useState<string | null>(
-    getRefreshToken()
-  );
 
-  const tokenCookie = getCookie(ACCESS_TOKEN_KEY);
-
-  const isAuthenticated = useMemo(
-    () => !!accessToken && !!tokenCookie,
-    [accessToken, tokenCookie]
-  );
+  useEffect(() => {
+    const tokenCookie = getCookie('accessToken');
+    if (tokenCookie) {
+      setAccessToken(tokenCookie);
+      setIsAuthenticated(true);
+    }
+  }, []);
 
   const { mutate: signIn, isLoading } = useLogin({});
 
   const logOut = useCallback(() => {
-    removeAccessToken();
-    removeRefreshToken();
+    removeCookie('accessToken');
+    removeCookie('refreshToken');
     setAccessToken(null);
     setRefreshToken(null);
+    setIsAuthenticated(false);
     navigate(`/signin`, { replace: true });
   }, [navigate]);
+
   const signInWithAdmin = (params: LoginArgs) => {
     return new Promise((resolve, reject) => {
       signIn(params, {
@@ -85,37 +59,45 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
           console.log('Refresh Token:', res.data.refreshToken);
 
           if (res.data.accessToken && res.data.refreshToken) {
-            storeAccessToken(res.data.accessToken);
-            storeRefreshToken(res.data.refreshToken);
+            setCookie('accessToken', res.data.accessToken);
+            setCookie('refreshToken', res.data.refreshToken);
             setAccessToken(res.data.accessToken);
             setRefreshToken(res.data.refreshToken);
+            setIsAuthenticated(true);
             resolve(res);
           } else {
-            console.error('Access token or refresh token is missing');
             reject(new Error('Access token or refresh token is missing'));
           }
         },
-        onError: (e: DefaultQueryError) => {
-          console.error('Login error:', e);
-          reject(e);
+        onError: (error: any) => {
+          reject(error);
         },
       });
     });
   };
+
   useEffect(() => {
+    const tokenParam = new URLSearchParams(window.location.search).get(
+      'accessToken'
+    );
     if (tokenParam) {
-      removeAccessToken();
-      storeAccessToken(tokenParam);
+      removeCookie('accessToken');
+      setCookie('accessToken', tokenParam);
       setAccessToken(tokenParam);
-      searchParams.delete(ACCESS_TOKEN_KEY);
-      navigate(`${pathname}?${searchParams.toString()}`, { replace: true });
+      setIsAuthenticated(true);
+      const searchParams = new URLSearchParams(window.location.search);
+      searchParams.delete('accessToken');
+      navigate(`${window.location.pathname}?${searchParams.toString()}`, {
+        replace: true,
+      });
     }
-  }, [tokenParam, pathname, navigate, searchParams]);
+  }, [navigate]);
 
   return (
     <AuthContext.Provider
       value={{
         isAuthenticated,
+        setIsAuthenticated,
         accessToken,
         refreshToken,
         logOut,
@@ -126,4 +108,12 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       {children}
     </AuthContext.Provider>
   );
+};
+
+export const useAuth = () => {
+  const context = useContext(AuthContext);
+  if (context === undefined) {
+    throw new Error('useAuth must be used within an AuthProvider');
+  }
+  return context;
 };

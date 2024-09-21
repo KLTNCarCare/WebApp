@@ -33,7 +33,7 @@ export const storeAccessToken = (accessToken: string): void => {
     console.log('Storing access token:', accessToken);
     setCookie(ACCESS_TOKEN_KEY, accessToken, {
       // expires: dayjs().add(3, 'month').toDate(),
-      // sameSite: 'lax', // Hoặc 'lax', tùy thuộc vào nhu cầu
+      // sameSite: 'none', // Hoặc 'lax', tùy thuộc vào nhu cầu
       secure: false, // Đặt là false cho HTTP
     });
     console.log('Access token stored successfully');

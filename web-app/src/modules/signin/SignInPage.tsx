@@ -7,6 +7,7 @@ import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useLogin } from 'src/api/auth/useLogin';
 import { storeAccessToken, storeRefreshToken } from 'src/lib/token'; // Đảm bảo import các hàm lưu token
+import { setCookie } from 'src/lib/cookies';
 
 interface SignInFormValues {
   username: string;
@@ -43,11 +44,14 @@ export function SignInPage() {
       });
 
       if (response.data) {
-        const { accessToken, refreshToken } = response.data; // Lấy token từ phản hồi
+        const { accessToken, refreshToken } = response.data;
 
         if (accessToken && refreshToken) {
-          storeAccessToken(accessToken); // Lưu access token
-          storeRefreshToken(refreshToken); // Lưu refresh token
+          console.log('Storing access token:', accessToken);
+          setCookie('accessToken', accessToken); // Lưu trữ token dưới tên accessToken
+          console.log('Storing refresh token:', refreshToken);
+          setCookie('refreshToken', refreshToken); // Lưu trữ refresh token
+          console.log('Tokens stored successfully');
           navigate('/dashboard');
         } else {
           setErrorSignin('Access token or refresh token is missing');
