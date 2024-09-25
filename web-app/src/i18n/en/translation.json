@@ -1,5 +1,52 @@
 {
-  "welcome": "Welcome",
-  "signIn": "Sign In",
-  "homePage": "Home Page"
+  "dashboard": {
+    "selectLanguage": "Select Language",
+    "welcome": "Welcome to the store management system",
+    "accountManagement": "Account Management",
+    "promotion": "Promotional Program",
+    "noDataAvailable": "No data available",
+    "confirmDelete": "Do you want to delete?",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "close": "Close",
+    "collapse": "Collapse"
+  },
+  "report": {
+    "closeNotification": "Close Notification"
+  },
+  "promotion": {
+    "promotionDetails": "Promotional Program Details",
+    "header": "Promotional Program Information",
+    "promotionId": "Promotional Program ID",
+    "promotionName": "Promotional Program Name",
+    "description": "Description",
+    "startDate": "Start Date",
+    "endDate": "End Date",
+    "lines": "Promotions",
+    "userPromotionManagement": "User Promotion Management",
+    "filter": "Filter",
+    "addNew": "Add New Promotion",
+    "promotionList": "Promotional Programs List",
+    "registerPromotion": "Register Promotional Program",
+    "index": "Index",
+    "status": "Status",
+    "createSuccess": "Create Promotional Program Successfully",
+    "deleteTitle": "Delete Promotional Program",
+    "deleteSuccessTitle": "Delete Promotional Program Successfully",
+    "deleteSuccess": " Promotional program has been deleted successfully",
+    "update": "Update",
+    "updateDetailsTitle": "Update Promotional Program Successfully",
+    "updateSuccess": "Promotional program has been updated successfully"
+  },
+  "promotionLine": {
+    "index": "Index",
+    "lineId": "Promotion ID",
+    "description": "Description",
+    "startDate": "Start Date",
+    "endDate": "End Date",
+    "itemId": "Item ID",
+    "itemGiftId": "Gift Item ID",
+    "discount": "Discount %",
+    "limitDiscount": "Limit Discount"
+  }
 }

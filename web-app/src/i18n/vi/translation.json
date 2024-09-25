@@ -1,5 +1,52 @@
 {
-  "welcome": "Chào mừng",
-  "signIn": "Đăng nhập",
-  "homePage": "Trang chủ"
+  "dashboard": {
+    "selectLanguage": "Chọn ngôn ngữ",
+    "welcome": "Chào mừng bạn đến với hệ thống quản lý cửa hàng",
+    "accountManagement": "Quản lý tài khoản",
+    "promotion": "Chương trình khuyến mãi",
+    "noDataAvailable": "Không có dữ liệu",
+    "confirmDelete": "Bạn có chắc chắn muốn xóa không?",
+    "cancel": "Hủy",
+    "delete": "Xóa",
+    "close": "Đóng",
+    "collapse": "Thu gọn"
+  },
+  "report": {
+    "closeNotification": "Đóng thông báo"
+  },
+  "promotion": {
+    "promotionDetails": "Chi tiết chương trình khuyến mãi",
+    "header": "Thông tin chương trình khuyến mãi",
+    "promotionId": "Mã chương trình khuyến mãi",
+    "promotionName": "Tên khuyến mãi",
+    "description": "Mô tả",
+    "startDate": "Ngày bắt đầu",
+    "endDate": "Ngày kết thúc",
+    "lines": "Các khuyến mãi",
+    "userPromotionManagement": "Quản lý khuyến mãi người dùng",
+    "filter": "Bộ lọc",
+    "addNew": "Thêm mới",
+    "promotionList": "Danh sách chương trình khuyến mãi",
+    "registerPromotion": "Đăng ký khuyến mãi",
+    "index": "STT",
+    "status": "Trạng thái",
+    "createSuccess": "Tạo chương trình khuyến mãi thành công",
+    "deleteTitle": "Xóa chương trình khuyến mãi",
+    "deleteSuccessTitle": "Xóa chương trình khuyến mãi thành công",
+    "deleteSuccess": "Chương trình khuyến mãi đã được xóa thành công",
+    "update": "Cập nhật",
+    "updateDetailsTitle": "Cập nhật chương trình khuyến mãi thành công",
+    "updateSuccess": "Chương trình khuyến mãi đã được cập nhật thành công"
+  },
+  "promotionLine": {
+    "index": "STT",
+    "lineId": "Mã khuyến mãi",
+    "description": "Mô tả",
+    "startDate": "Ngày bắt đầu",
+    "endDate": "Ngày kết thúc",
+    "itemId": "Mã sản phẩm",
+    "itemGiftId": "Mã quà tặng",
+    "discount": "Giảm giá %",
+    "limitDiscount": "Giới hạn giảm giá"
+  }
 }

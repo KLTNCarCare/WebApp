@@ -15,6 +15,7 @@ import { NavLink } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import MapIcon from '@mui/icons-material/Map';
 import ContactEmergencyIcon from '@mui/icons-material/ContactEmergency';
+import DiscountIcon from '@mui/icons-material/Discount';
 import SelectLanguage from './SelectLanguage';
 
 type SidebarDashboardProps = {
@@ -31,15 +32,20 @@ const sidebarDataDashboard: Array<{
     label: 'selectLanguage',
     icon: <SelectLanguage />,
   },
+  // {
+  //   value: '/dashboard',
+  //   label: 'viewFloodMap',
+  //   icon: <MapIcon />,
+  // },
   {
-    value: '/dashboard',
-    label: 'viewFloodMap',
-    icon: <MapIcon />,
+    value: '/account-management',
+    label: 'accountManagement',
+    icon: <ContactEmergencyIcon />,
   },
   {
-    value: '/emergency-numbers',
-    label: 'emergencyNumbers.title',
-    icon: <ContactEmergencyIcon />,
+    value: '/promotion',
+    label: 'promotion',
+    icon: <DiscountIcon />,
   },
 ];
 
