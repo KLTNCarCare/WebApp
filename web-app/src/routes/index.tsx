@@ -4,6 +4,7 @@ import { publicUrl } from 'src/lib/constants';
 import { AuthProvider } from 'src/modules/auth/AuthProvider';
 import ProtectedRoute from 'src/modules/auth/ProtectedRoute';
 import AccountPage from 'src/pages/AccountPage';
+import CategoryPage from 'src/pages/CategoryPage';
 import DashboardPage from 'src/pages/DashBoard';
 import PromotionPage from 'src/pages/PromotionPage';
 import SignInPage from 'src/pages/SignIn';
@@ -34,6 +35,14 @@ const routes: RouteObject[] = [
         element: (
           <ProtectedRoute>
             <PromotionPage />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: `${publicUrl}/category`,
+        element: (
+          <ProtectedRoute>
+            <CategoryPage />
           </ProtectedRoute>
         ),
       },

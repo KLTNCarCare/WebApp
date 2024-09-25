@@ -9,7 +9,8 @@
     "cancel": "Hủy",
     "delete": "Xóa",
     "close": "Đóng",
-    "collapse": "Thu gọn"
+    "collapse": "Thu gọn",
+    "category": "Danh mục"
   },
   "report": {
     "closeNotification": "Đóng thông báo"
@@ -31,6 +32,7 @@
     "index": "STT",
     "status": "Trạng thái",
     "createSuccess": "Tạo chương trình khuyến mãi thành công",
+    "editPromotion": "Chỉnh sửa chương trình khuyến mãi",
     "deleteTitle": "Xóa chương trình khuyến mãi",
     "deleteSuccessTitle": "Xóa chương trình khuyến mãi thành công",
     "deleteSuccess": "Chương trình khuyến mãi đã được xóa thành công",
@@ -48,5 +50,31 @@
     "itemGiftId": "Mã quà tặng",
     "discount": "Giảm giá %",
     "limitDiscount": "Giới hạn giảm giá"
+  },
+  "category": {
+    "userCategoryManagement": "Quản lý danh mục người dùng",
+    "filter": "Bộ lọc",
+    "categoryList": "Danh sách danh mục",
+    "addNew": "Thêm mới danh mục",
+    "categoryDetails": "Chi tiết danh mục",
+    "registerCategory": "Thêm mới danh mục",
+    "index": "STT",
+    "categoryId": "Mã danh mục",
+    "categoryType": "Loại danh mục",
+    "duration": "Thời gian",
+    "status": "Trạng thái",
+    "categoryName": "Tên danh mục",
+    "createdAt": "Ngày tạo",
+    "updatedAt": "Ngày cập nhật",
+    "product": "Sản phẩm",
+    "service": "Dịch vụ",
+    "createSuccess": "Tạo danh mục thành công",
+    "deleteTitle": "Xóa danh mục",
+    "deleteSuccessTitle": "Xóa danh mục thành công",
+    "deleteSuccess": "Danh mục đã được xóa thành công",
+    "editCategory": "Chỉnh sửa danh mục",
+    "update": "Cập nhật",
+    "updateDetailsTitle": "Cập nhật danh mục thành công",
+    "updateSuccess": "Danh mục đã được cập nhật thành công"
   }
 }
