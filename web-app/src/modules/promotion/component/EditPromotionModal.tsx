@@ -17,7 +17,7 @@ import { useTranslation } from 'react-i18next';
 import { ReactComponent as CheckIcon } from '../../../assets/icons/CheckCircle.svg';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { useUpdatePromotion } from 'src/api/promotion/useUpdatePromotion';
-import { format } from 'date-fns'; // Import format from date-fns
+import { format } from 'date-fns';
 
 const schemaUpdatePromotion = yup.object({
   promotionName: yup.string().required('Vui lòng nhập tên khuyến mãi'),
@@ -58,8 +58,8 @@ const EditPromotionModal = ({
     defaultValues: {
       promotionName: promotionData.promotionName,
       description: promotionData.description,
-      startDate: format(new Date(promotionData.startDate), 'yyyy-MM-dd'), // Format startDate
-      endDate: format(new Date(promotionData.endDate), 'yyyy-MM-dd'), // Format endDate
+      startDate: format(new Date(promotionData.startDate), 'yyyy-MM-dd'),
+      endDate: format(new Date(promotionData.endDate), 'yyyy-MM-dd'),
     },
   });
 
@@ -81,7 +81,7 @@ const EditPromotionModal = ({
       'startDate',
       format(new Date(promotionData.startDate), 'yyyy-MM-dd')
     );
-    setValue('endDate', format(new Date(promotionData.endDate), 'yyyy-MM-dd')); // Format endDate
+    setValue('endDate', format(new Date(promotionData.endDate), 'yyyy-MM-dd'));
   }, [promotionData, setValue]);
 
   const handleConfirmUpdate: SubmitHandler<any> = (data) => {

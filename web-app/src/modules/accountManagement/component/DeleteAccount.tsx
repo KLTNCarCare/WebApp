@@ -17,7 +17,7 @@ import { ReactComponent as CheckIcon } from '@/assets/icons/CheckCircle.svg';
 
 type DeleteUserProps = {
   _id: string;
-  refetch: () => void; // Callback khi xóa thành công
+  refetch: () => void;
 };
 const DeleteAccount: React.FC<DeleteUserProps> = ({ _id, refetch }) => {
   const { t } = useTranslation();

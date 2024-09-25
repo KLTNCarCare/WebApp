@@ -24,13 +24,12 @@ import { Close as CloseIcon } from '@mui/icons-material';
 import { PromotionManagement } from 'src/api/promotion/useGetPromotion';
 import { TEN_ITEMS_PAGE } from 'src/lib/constants';
 import CustomPagination from 'src/components/CustomPagination';
-import PromotionDetailModal from './PromotionDetailModal'; // Import PromotionDetailModal
+import PromotionDetailModal from './PromotionDetailModal';
 import EmptyScreen from 'src/components/layouts/EmtyScreen';
 import { useGetPromotionLines } from 'src/api/promotion/useGetPromotionLine';
 import EditIcon from '@mui/icons-material/Edit';
 import DeletePromotion from './DeletePromotion';
-import EditPromotionModal from './EditPromotionModal'; // Import EditPromotionModal
-
+import EditPromotionModal from './EditPromotionModal';
 interface PromotionDataTableProps {
   dataPromotion: any[];
   isLoadingPromotion: boolean;
@@ -39,18 +38,18 @@ interface PromotionDataTableProps {
   setPaginationModel: React.Dispatch<
     React.SetStateAction<{ pageSize: number; page: number }>
   >;
-  totalPage: number; // Total page prop
+  totalPage: number;
 }
 
 const createPromotionColumns = (
   t: (key: string) => string,
   handleStatusClick: (id: string, currentStatus: string) => void,
-  handleEditClick: (promotionData: any) => void, // Add handleEditClick
+  handleEditClick: (promotionData: any) => void,
   paginationModel: { page: number; pageSize: number },
   refetch: () => void
 ): GridColDef[] => [
   {
-    field: 'id', // New field for index
+    field: 'id',
     headerName: t('promotion.index'),
     maxWidth: 100,
     flex: 1,
@@ -101,12 +100,9 @@ const createPromotionColumns = (
       >
         <EditIcon
           sx={{ cursor: 'pointer', color: '#a1a0a0' }}
-          onClick={() => handleEditClick(params.row)} // Call handleEditClick
+          onClick={() => handleEditClick(params.row)}
         />
-        <DeletePromotion
-          _id={params.row._id}
-          refetch={refetch} // Add refetch prop
-        />
+        <DeletePromotion _id={params.row._id} refetch={refetch} />
       </div>
     ),
   },
@@ -125,8 +121,8 @@ const PromotionDataTable: React.FC<PromotionDataTableProps> = ({
     useState<PromotionManagement | null>(null);
   const [currentPage, setCurrentPage] = useState(0);
   const [previousPage, setPreviousPage] = useState(0);
-  const [isEditPromotionOpen, setIsEditPromotionOpen] = useState(false); // State for edit modal
-  const [editPromotionData, setEditPromotionData] = useState<any>(null); // State for promotion data to edit
+  const [isEditPromotionOpen, setIsEditPromotionOpen] = useState(false);
+  const [editPromotionData, setEditPromotionData] = useState<any>(null);
 
   const {
     data: promotionLineData,
@@ -174,7 +170,7 @@ const PromotionDataTable: React.FC<PromotionDataTableProps> = ({
             columns={createPromotionColumns(
               t,
               handleStatusClick,
-              handleEditClick, // Pass handleEditClick
+              handleEditClick,
               paginationModel,
               refetch
             )}
