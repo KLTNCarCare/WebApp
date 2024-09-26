@@ -17,6 +17,7 @@ import { CategoryManagement } from 'src/api/category/useGetCategory';
 import CategoryDetailModal from './CategoryModalDetail';
 import DeleteCategory from './DeleteCategory';
 import EditCategoryModal from './EditCategoryModal';
+import { useGetServiceByCategory } from 'src/api/category/useGetServiceByCategory';
 interface CategoryDataTableProps {
   dataCategory: any[];
   isLoadingCategory: boolean;
@@ -124,6 +125,14 @@ const CategoryDataTable: React.FC<CategoryDataTableProps> = ({
   const [isEditCategoryOpen, setIsEditCategoryOpen] = useState(false);
   const [editCategoryData, setEditCategoryData] = useState<any>(null);
 
+  const {
+    data: serviceByCategorytData,
+    isLoading: isLoadingPromotionLine,
+    refetch: refetchPromotionLine,
+  } = useGetServiceByCategory(selectedCategory?._id || '', {
+    enabled: !!selectedCategory?._id,
+  });
+
   const handleRowClick = (params: GridRowParams) => {
     setSelectedCategory(params.row as CategoryManagement);
   };
@@ -201,6 +210,8 @@ const CategoryDataTable: React.FC<CategoryDataTableProps> = ({
           isLoadingCategory={isLoadingCategory}
           paginationModel={paginationModel}
           setPaginationModel={setPaginationModel}
+          serviceByCategorytData={serviceByCategorytData}
+          isLoadingServiceByCategory={isLoadingPromotionLine}
         />
       )}
 

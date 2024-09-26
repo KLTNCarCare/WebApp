@@ -75,6 +75,12 @@
     "editCategory": "Chỉnh sửa danh mục",
     "update": "Cập nhật",
     "updateDetailsTitle": "Cập nhật danh mục thành công",
-    "updateSuccess": "Danh mục đã được cập nhật thành công"
+    "updateSuccess": "Danh mục đã được cập nhật thành công",
+    "serviceByCategory": "Dịch vụ",
+    "serviceId": "Mã dịch vụ",
+    "serviceName": "Tên dịch vụ",
+    "serviceStatus": "Trạng thái",
+    "serviceCreatedAt": "Ngày tạo",
+    "serviceUpdatedAt": "Ngày cập nhật"
   }
 }

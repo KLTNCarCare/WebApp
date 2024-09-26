@@ -60,7 +60,7 @@
     "registerCategory": "Register Category",
     "index": "Index",
     "categoryId": "Category ID",
-    "categoryName ": "Category Name",
+    "categoryName": "Category Name",
     "categoryType": "Category Type",
     "duration": "Duration",
     "status": "Status",
@@ -74,6 +74,12 @@
     "editCategory": "Edit Category",
     "update": "Update",
     "updateDetailsTitle": "Update Category Successfully",
-    "updateSuccess": "Category has been updated successfully"
+    "updateSuccess": "Category has been updated successfully",
+    "serviceByCategory": "Service",
+    "serviceId": "Service ID",
+    "serviceName": "Service Name",
+    "serviceStatus": "Status",
+    "serviceCreatedAt": "Created Date",
+    "serviceUpdatedAt": "Updated Date"
   }
 }

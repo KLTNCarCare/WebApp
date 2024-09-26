@@ -20,6 +20,7 @@ import {
   CategoryResponse,
 } from 'src/api/category/useGetCategory';
 import EmptyScreen from 'src/components/layouts/EmtyScreen';
+import { ServiceByCategory } from 'src/api/category/useGetServiceByCategory';
 
 interface CategoryDetailModalProps {
   open: boolean;
@@ -32,8 +33,75 @@ interface CategoryDetailModalProps {
   setPaginationModel: React.Dispatch<
     React.SetStateAction<{ pageSize: number; page: number }>
   >;
+  serviceByCategorytData: ServiceByCategory[] | undefined;
+  isLoadingServiceByCategory: boolean;
 }
-
+const createServiceColumns = (
+  t: (key: string) => string,
+  handleStatusClick: (id: string, currentStatus: string) => void,
+  serviceByCategorytData: ServiceByCategory[]
+): GridColDef[] => [
+  {
+    field: 'id',
+    headerName: t('category.index'),
+    maxWidth: 50,
+    flex: 1,
+    valueGetter: (params: GridValueGetterParams) => {
+      const rowIndex = serviceByCategorytData.findIndex(
+        (row: ServiceByCategory) => row._id === params.id
+      );
+      return rowIndex !== -1 ? rowIndex + 1 : null;
+    },
+  },
+  {
+    field: 'serviceId',
+    headerName: t('category.serviceId'),
+    maxWidth: 160,
+    flex: 1,
+    valueGetter: (params: GridValueGetterParams) => params.row.serviceId || '',
+  },
+  {
+    field: 'serviceName',
+    headerName: t('category.serviceName'),
+    maxWidth: 300,
+    flex: 1,
+    renderCell: (params) => (
+      <Typography
+        variant="body2"
+        sx={{
+          whiteSpace: 'normal',
+          wordBreak: 'break-word',
+          overflowWrap: 'break-word',
+        }}
+      >
+        {params.value}
+      </Typography>
+    ),
+  },
+  {
+    field: 'status',
+    headerName: t('category.serviceStatus'),
+    maxWidth: 160,
+    flex: 1,
+    valueGetter: (params: GridValueGetterParams) => params.row.status || '',
+  },
+  {
+    field: 'createdAt',
+    headerName: t('category.serviceCreatedAt'),
+    maxWidth: 110,
+    flex: 1,
+    valueGetter: (params: GridValueGetterParams) =>
+      new Date(params.row.createdAt).toLocaleDateString(),
+  },
+  {
+    field: 'updatedAt',
+    headerName: t('category.serviceUpdatedAt'),
+    maxWidth: 110,
+    flex: 1,
+    valueGetter: (params: GridValueGetterParams) =>
+      new Date(params.row.createdAt).toLocaleDateString(),
+  },
+];
 const CategoryDetailModal: React.FC<CategoryDetailModalProps> = ({
   open,
   onClose,
@@ -43,6 +111,8 @@ const CategoryDetailModal: React.FC<CategoryDetailModalProps> = ({
   isLoadingCategory,
   paginationModel,
   setPaginationModel,
+  serviceByCategorytData,
+  isLoadingServiceByCategory,
 }) => {
   const { t } = useTranslation();
 
@@ -51,9 +121,13 @@ const CategoryDetailModal: React.FC<CategoryDetailModalProps> = ({
       `Status clicked for id: ${id}, current status: ${currentStatus}`
     );
   };
-
+  const columns = createServiceColumns(
+    t,
+    handleStatusClick,
+    serviceByCategorytData || []
+  );
   return (
-    <Dialog open={open} onClose={onClose} fullWidth maxWidth="xs">
+    <Dialog open={open} onClose={onClose} fullWidth maxWidth="lg">
       <DialogTitle>
         <Typography variant="h2">{t('category.categoryDetails')}</Typography>
       </DialogTitle>
@@ -170,6 +244,42 @@ const CategoryDetailModal: React.FC<CategoryDetailModalProps> = ({
               </>
             )}
           </List>
+        </Box>
+
+        <Box>
+          <Typography variant="h4">
+            {t('category.serviceByCategory')}
+          </Typography>
+          <Paper sx={{ height: 400, width: '100%' }}>
+            {isLoadingServiceByCategory ? (
+              <LinearProgress />
+            ) : (
+              <DataGrid
+                rows={serviceByCategorytData || []}
+                columns={columns}
+                pagination
+                paginationModel={{
+                  pageSize: serviceByCategorytData?.length || 0,
+                  page: 0,
+                }}
+                disableRowSelectionOnClick
+                autoHeight
+                getRowId={(row) => row._id}
+                sx={{
+                  '& .MuiDataGrid-cell': {
+                    whiteSpace: 'normal',
+                    wordBreak: 'break-word',
+                    overflowWrap: 'break-word',
+                  },
+                }}
+                slots={{
+                  noRowsOverlay: () => (
+                    <EmptyScreen titleEmpty={t('dashboard.noDataAvailable')} />
+                  ),
+                }}
+              />
+            )}
+          </Paper>
         </Box>
       </DialogContent>
     </Dialog>

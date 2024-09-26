@@ -1,5 +1,3 @@
-// src/api/category/types.ts
-
 export interface CreateCategoryFn {
   categoryName: string;
   categoryType: string;

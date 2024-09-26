@@ -28,6 +28,7 @@ const apiRoutes = {
     create: 'v1/api/category/create',
     update: 'v1/api/category/edit',
     delete: (id: string) => `v1/api/category/delete/${id}`,
+    getServiceByCategory: 'v1/api/service/get-by-category',
   },
 };
 
