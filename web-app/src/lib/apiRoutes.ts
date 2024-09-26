@@ -23,6 +23,13 @@ const apiRoutes = {
     delete: (id: string) => `v1/api/promotion/delete-promotion/${id}`,
     getLineByParentId: '/v1/api/promotion/get-line-by-parentId',
   },
+  category: {
+    list: 'v1/api/category/get-all',
+    create: 'v1/api/category/create',
+    update: 'v1/api/category/edit',
+    delete: (id: string) => `v1/api/category/delete/${id}`,
+    getServiceByCategory: 'v1/api/service/get-by-category',
+  },
 };
 
 export default apiRoutes;

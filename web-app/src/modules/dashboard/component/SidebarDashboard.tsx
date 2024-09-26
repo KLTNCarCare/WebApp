@@ -16,6 +16,7 @@ import { useTranslation } from 'react-i18next';
 import MapIcon from '@mui/icons-material/Map';
 import ContactEmergencyIcon from '@mui/icons-material/ContactEmergency';
 import DiscountIcon from '@mui/icons-material/Discount';
+import CategoryIcon from '@mui/icons-material/Category';
 import SelectLanguage from './SelectLanguage';
 
 type SidebarDashboardProps = {
@@ -46,6 +47,11 @@ const sidebarDataDashboard: Array<{
     value: '/promotion',
     label: 'promotion',
     icon: <DiscountIcon />,
+  },
+  {
+    value: '/category',
+    label: 'category',
+    icon: <CategoryIcon />,
   },
 ];
 

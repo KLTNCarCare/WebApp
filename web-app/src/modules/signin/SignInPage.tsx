@@ -6,7 +6,6 @@ import { useForm, SubmitHandler } from 'react-hook-form';
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useLogin } from 'src/api/auth/useLogin';
-import { storeAccessToken, storeRefreshToken } from 'src/lib/token'; // Đảm bảo import các hàm lưu token
 import { setCookie } from 'src/lib/cookies';
 
 interface SignInFormValues {
@@ -47,11 +46,8 @@ export function SignInPage() {
         const { accessToken, refreshToken } = response.data;
 
         if (accessToken && refreshToken) {
-          console.log('Storing access token:', accessToken);
-          setCookie('accessToken', accessToken); // Lưu trữ token dưới tên accessToken
-          console.log('Storing refresh token:', refreshToken);
-          setCookie('refreshToken', refreshToken); // Lưu trữ refresh token
-          console.log('Tokens stored successfully');
+          setCookie('accessToken', accessToken);
+          setCookie('refreshToken', refreshToken);
           navigate('/dashboard');
         } else {
           setErrorSignin('Access token or refresh token is missing');

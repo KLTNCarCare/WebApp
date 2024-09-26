@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from './AuthProvider';
-import { getCookie } from 'src/lib/cookies'; // Giả sử bạn có hàm này để lấy token từ cookie
+import { getCookie } from 'src/lib/cookies';
 
 type Props = {
   children: JSX.Element;
@@ -13,10 +13,9 @@ const ProtectedRoute = ({ children }: Props) => {
   const prevAuthRef = useRef<boolean | null>(null);
 
   useEffect(() => {
-    const accessToken = getCookie('accessToken'); // Lấy token từ cookie
+    const accessToken = getCookie('accessToken');
 
     if (!accessToken) {
-      // Nếu không có token, điều hướng đến trang đăng nhập
       navigate('/signin', {
         replace: true,
       });
@@ -24,7 +23,6 @@ const ProtectedRoute = ({ children }: Props) => {
     }
 
     if (!isAuthenticated && accessToken) {
-      // Nếu có token nhưng chưa xác thực, cập nhật trạng thái xác thực
       setIsAuthenticated(true);
     }
 

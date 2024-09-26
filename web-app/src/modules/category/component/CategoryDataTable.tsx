@@ -1,16 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import {
-  Box,
-  Dialog,
-  DialogTitle,
-  LinearProgress,
-  Stack,
-  Toolbar,
-  Typography,
-  ButtonBase,
-  DialogContent,
-  Paper,
-} from '@mui/material';
+import { Dialog, LinearProgress, Paper } from '@mui/material';
 import {
   DataGrid,
   GridColDef,
@@ -20,19 +9,18 @@ import {
   viVN,
 } from '@mui/x-data-grid';
 import { useTranslation } from 'react-i18next';
-import { Close as CloseIcon } from '@mui/icons-material';
-import { PromotionManagement } from 'src/api/promotion/useGetPromotion';
 import { TEN_ITEMS_PAGE } from 'src/lib/constants';
 import CustomPagination from 'src/components/CustomPagination';
-import PromotionDetailModal from './PromotionDetailModal';
 import EmptyScreen from 'src/components/layouts/EmtyScreen';
-import { useGetPromotionLines } from 'src/api/promotion/useGetPromotionLine';
 import EditIcon from '@mui/icons-material/Edit';
-import DeletePromotion from './DeletePromotion';
-import EditPromotionModal from './EditPromotionModal';
-interface PromotionDataTableProps {
-  dataPromotion: any[];
-  isLoadingPromotion: boolean;
+import { CategoryManagement } from 'src/api/category/useGetCategory';
+import CategoryDetailModal from './CategoryModalDetail';
+import DeleteCategory from './DeleteCategory';
+import EditCategoryModal from './EditCategoryModal';
+import { useGetServiceByCategory } from 'src/api/category/useGetServiceByCategory';
+interface CategoryDataTableProps {
+  dataCategory: any[];
+  isLoadingCategory: boolean;
   refetch: () => void;
   paginationModel: { page: number; pageSize: number };
   setPaginationModel: React.Dispatch<
@@ -41,17 +29,17 @@ interface PromotionDataTableProps {
   totalPage: number;
 }
 
-const createPromotionColumns = (
+const createCategoryColumns = (
   t: (key: string) => string,
   handleStatusClick: (id: string, currentStatus: string) => void,
-  handleEditClick: (promotionData: any) => void,
+  handleEditClick: (categoryData: any) => void,
   paginationModel: { page: number; pageSize: number },
   refetch: () => void
 ): GridColDef[] => [
   {
     field: 'id',
-    headerName: t('promotion.index'),
-    maxWidth: 100,
+    headerName: t('category.index'),
+    maxWidth: 50,
     flex: 1,
     valueGetter: (params: GridValueGetterParams) => {
       const allRowIds = params.api.getAllRowIds();
@@ -59,28 +47,41 @@ const createPromotionColumns = (
     },
   },
   {
-    field: 'promotionId',
-    headerName: t('promotion.promotionId'),
+    field: 'categoryName',
+    headerName: t('category.categoryName'),
+    minWidth: 250,
+    flex: 1,
+    valueGetter: (params: GridValueGetterParams) =>
+      params.row.categoryName || '',
+  },
+  {
+    field: 'categoryId',
+    headerName: t('category.categoryId'),
+    maxWidth: 150,
+    flex: 1,
+    valueGetter: (params: GridValueGetterParams) => params.row.categoryId || '',
+  },
+  {
+    field: 'categoryType',
+    headerName: t('category.categoryType'),
+    maxWidth: 150,
+    flex: 1,
+    valueGetter: (params: GridValueGetterParams) =>
+      params.row.categoryType || '',
+  },
+  {
+    field: 'duration',
+    headerName: t('category.duration'),
     maxWidth: 100,
     flex: 1,
-    valueGetter: (params: GridValueGetterParams) =>
-      params.row.promotionId || '',
+    valueGetter: (params: GridValueGetterParams) => params.row.duration || '',
   },
   {
-    field: 'promotionName',
-    headerName: t('promotion.promotionName'),
-    maxWidth: 200,
+    field: 'status',
+    headerName: t('category.status'),
+    maxWidth: 100,
     flex: 1,
-    valueGetter: (params: GridValueGetterParams) =>
-      params.row.promotionName || '',
-  },
-  {
-    field: 'description',
-    headerName: t('promotion.description'),
-    maxWidth: 500,
-    flex: 1,
-    valueGetter: (params: GridValueGetterParams) =>
-      params.row.description || '',
+    valueGetter: (params: GridValueGetterParams) => params.row.status || '',
   },
   {
     field: 'action',
@@ -102,72 +103,64 @@ const createPromotionColumns = (
           sx={{ cursor: 'pointer', color: '#a1a0a0' }}
           onClick={() => handleEditClick(params.row)}
         />
-        <DeletePromotion _id={params.row._id} refetch={refetch} />
+        <DeleteCategory _id={params.row._id} refetch={refetch} />
       </div>
     ),
   },
 ];
 
-const PromotionDataTable: React.FC<PromotionDataTableProps> = ({
-  dataPromotion,
-  isLoadingPromotion,
+const CategoryDataTable: React.FC<CategoryDataTableProps> = ({
+  dataCategory,
+  isLoadingCategory,
   refetch,
   paginationModel,
   setPaginationModel,
   totalPage,
 }) => {
   const { t } = useTranslation();
-  const [selectedPromotion, setSelectedPromotion] =
-    useState<PromotionManagement | null>(null);
+  const [selectedCategory, setSelectedCategory] =
+    useState<CategoryManagement | null>(null);
   const [currentPage, setCurrentPage] = useState(0);
   const [previousPage, setPreviousPage] = useState(0);
-  const [isEditPromotionOpen, setIsEditPromotionOpen] = useState(false);
-  const [editPromotionData, setEditPromotionData] = useState<any>(null);
+  const [isEditCategoryOpen, setIsEditCategoryOpen] = useState(false);
+  const [editCategoryData, setEditCategoryData] = useState<any>(null);
 
   const {
-    data: promotionLineData,
+    data: serviceByCategorytData,
     isLoading: isLoadingPromotionLine,
     refetch: refetchPromotionLine,
-  } = useGetPromotionLines(selectedPromotion?._id || '', {
-    enabled: !!selectedPromotion?._id,
+  } = useGetServiceByCategory(selectedCategory?._id || '', {
+    enabled: !!selectedCategory?._id,
   });
 
   const handleRowClick = (params: GridRowParams) => {
-    setSelectedPromotion(params.row as PromotionManagement);
+    setSelectedCategory(params.row as CategoryManagement);
   };
 
   const handleStatusClick = (id: string, currentStatus: string) => {
     console.log(`Current status for ${id} is ${currentStatus}`);
   };
 
-  const handleEditClick = (promotionData: any) => {
-    setEditPromotionData(promotionData);
-    setIsEditPromotionOpen(true);
+  const handleEditClick = (categoryData: any) => {
+    setEditCategoryData(categoryData);
+    setIsEditCategoryOpen(true);
   };
 
   useEffect(() => {
-    if (selectedPromotion && selectedPromotion._id) {
+    if (selectedCategory && selectedCategory._id) {
       if (paginationModel.page !== previousPage) {
         setPreviousPage(paginationModel.page);
       }
-      if (!promotionLineData || promotionLineData.length === 0) {
-        refetchPromotionLine();
-      }
     }
-  }, [
-    selectedPromotion,
-    promotionLineData,
-    paginationModel.page,
-    refetchPromotionLine,
-  ]);
+  }, [selectedCategory, paginationModel.page]);
 
   return (
     <>
       <Paper>
         <div style={{ height: '60vh', width: '100%' }}>
           <DataGrid
-            rows={dataPromotion}
-            columns={createPromotionColumns(
+            rows={dataCategory}
+            columns={createCategoryColumns(
               t,
               handleStatusClick,
               handleEditClick,
@@ -179,7 +172,7 @@ const PromotionDataTable: React.FC<PromotionDataTableProps> = ({
             paginationMode="server"
             paginationModel={paginationModel}
             onPaginationModelChange={(model) => {
-              if (!selectedPromotion || !selectedPromotion._id) {
+              if (!selectedCategory || !selectedCategory._id) {
                 setPaginationModel((prev) => ({ ...prev, ...model }));
               } else {
                 setPaginationModel((prev) => ({ ...prev, page: currentPage }));
@@ -201,39 +194,38 @@ const PromotionDataTable: React.FC<PromotionDataTableProps> = ({
                 />
               ),
             }}
-            loading={isLoadingPromotion}
+            loading={isLoadingCategory}
             onRowClick={handleRowClick}
           />
         </div>
       </Paper>
 
-      {selectedPromotion && (
-        <PromotionDetailModal
-          open={!!selectedPromotion}
-          onClose={() => setSelectedPromotion(null)}
-          promotionData={selectedPromotion}
+      {selectedCategory && (
+        <CategoryDetailModal
+          open={!!selectedCategory}
+          onClose={() => setSelectedCategory(null)}
+          categoryData={selectedCategory}
           refetch={refetch}
-          dataPromotion={null}
-          isLoadingPromotion={isLoadingPromotion}
+          dataCategory={null}
+          isLoadingCategory={isLoadingCategory}
           paginationModel={paginationModel}
           setPaginationModel={setPaginationModel}
-          promotionLineData={promotionLineData}
-          isLoadingPromotionLine={isLoadingPromotionLine}
-          refetchPromotionLine={refetchPromotionLine}
+          serviceByCategorytData={serviceByCategorytData}
+          isLoadingServiceByCategory={isLoadingPromotionLine}
         />
       )}
 
       <Dialog
-        open={isEditPromotionOpen}
-        onClose={() => setIsEditPromotionOpen(false)}
+        open={isEditCategoryOpen}
+        onClose={() => setIsEditCategoryOpen(false)}
         maxWidth="md"
         fullWidth
       >
-        {isEditPromotionOpen && editPromotionData && (
-          <EditPromotionModal
-            promotionData={editPromotionData}
+        {isEditCategoryOpen && editCategoryData && (
+          <EditCategoryModal
+            categoryData={editCategoryData}
             refetch={refetch}
-            setIsEditPromotion={setIsEditPromotionOpen}
+            setIsEditCategory={setIsEditCategoryOpen}
           />
         )}
       </Dialog>
@@ -241,4 +233,4 @@ const PromotionDataTable: React.FC<PromotionDataTableProps> = ({
   );
 };
 
-export default PromotionDataTable;
+export default CategoryDataTable;

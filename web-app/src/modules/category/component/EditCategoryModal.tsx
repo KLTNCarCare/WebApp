@@ -16,33 +16,28 @@ import {
 import { useTranslation } from 'react-i18next';
 import { ReactComponent as CheckIcon } from '../../../assets/icons/CheckCircle.svg';
 import { useForm, SubmitHandler } from 'react-hook-form';
-import { useUpdatePromotion } from 'src/api/promotion/useUpdatePromotion';
-import { format } from 'date-fns';
+import { useUpdateCategory } from 'src/api/category/useUpdateCategory';
 
-const schemaUpdatePromotion = yup.object({
-  promotionName: yup.string().required('Vui lòng nhập tên khuyến mãi'),
-  description: yup.string().required('Vui lòng nhập mô tả'),
-  startDate: yup.date().required('Vui lòng nhập ngày bắt đầu'),
-  endDate: yup.date().required('Vui lòng nhập ngày kết thúc'),
+const schemaUpdateCategory = yup.object({
+  categoryName: yup.string().required('Vui lòng nhập tên khuyến mãi'),
+  duration: yup.string().required('Vui lòng nhập mô tả'),
 });
 
-type EditPromotionModalProps = {
-  promotionData: {
+type EditCategoryModalProps = {
+  categoryData: {
     _id: string;
-    promotionName: string;
-    description: string;
-    startDate: string;
-    endDate: string;
+    categoryName: string;
+    duration: string;
   };
   refetch: () => void;
-  setIsEditPromotion: (value: boolean) => void;
+  setIsEditCategory: (value: boolean) => void;
 };
 
-const EditPromotionModal = ({
-  promotionData,
+const EditCategoryModal = ({
+  categoryData,
   refetch,
-  setIsEditPromotion,
-}: EditPromotionModalProps) => {
+  setIsEditCategory,
+}: EditCategoryModalProps) => {
   const { t } = useTranslation();
   const [isSuccessDialogOpen, setIsSuccessDialogOpen] =
     useState<boolean>(false);
@@ -54,16 +49,14 @@ const EditPromotionModal = ({
     setValue,
     formState: { errors, isValid },
   } = useForm({
-    resolver: yupResolver(schemaUpdatePromotion),
+    resolver: yupResolver(schemaUpdateCategory),
     defaultValues: {
-      promotionName: promotionData.promotionName,
-      description: promotionData.description,
-      startDate: format(new Date(promotionData.startDate), 'yyyy-MM-dd'),
-      endDate: format(new Date(promotionData.endDate), 'yyyy-MM-dd'),
+      categoryName: categoryData.categoryName,
+      duration: categoryData.duration,
     },
   });
 
-  const { mutate: updatePromotion } = useUpdatePromotion({
+  const { mutate: updateCategory } = useUpdateCategory({
     onSuccess: () => {
       refetch();
       setIsSuccessDialogOpen(true);
@@ -75,18 +68,13 @@ const EditPromotionModal = ({
   });
 
   useEffect(() => {
-    setValue('promotionName', promotionData.promotionName);
-    setValue('description', promotionData.description);
-    setValue(
-      'startDate',
-      format(new Date(promotionData.startDate), 'yyyy-MM-dd')
-    );
-    setValue('endDate', format(new Date(promotionData.endDate), 'yyyy-MM-dd'));
-  }, [promotionData, setValue]);
+    setValue('categoryName', categoryData.categoryName);
+    setValue('duration', categoryData.duration);
+  }, [categoryData, setValue]);
 
   const handleConfirmUpdate: SubmitHandler<any> = (data) => {
     setIsLoading(true);
-    updatePromotion({ id: promotionData._id, data });
+    updateCategory({ id: categoryData._id, data });
   };
 
   const handleCloseSuccessDialog = () => {
@@ -95,70 +83,43 @@ const EditPromotionModal = ({
   };
 
   const handleCloseModal = () => {
-    setIsEditPromotion(false);
+    setIsEditCategory(false);
   };
 
   return (
     <>
       <Dialog maxWidth="md" fullWidth open={true} onClose={handleCloseModal}>
-        <DialogTitle>{t('promotion.editPromotion')}</DialogTitle>
+        <DialogTitle>{t('category.editCategory')}</DialogTitle>
         <DialogContent>
           <form
-            id="update-promotion"
+            id="update-category"
             onSubmit={handleSubmit(handleConfirmUpdate)}
           >
             <Stack spacing={2} sx={{ paddingTop: '10px' }}>
               <TextField
                 required
                 variant="filled"
-                label={t('promotion.promotionName')}
+                label={t('category.categoryName')}
                 type="text"
-                {...register('promotionName')}
+                {...register('categoryName')}
                 inputProps={{ inputMode: 'text' }}
-                error={!!errors.promotionName}
+                error={!!errors.categoryName}
                 helperText={
-                  errors.promotionName
-                    ? String(errors.promotionName.message)
-                    : ''
+                  errors.categoryName ? String(errors.categoryName.message) : ''
                 }
               />
               <TextField
                 required
                 fullWidth
                 variant="filled"
-                label={t('promotion.description')}
-                type="text"
-                {...register('description')}
-                inputProps={{ inputMode: 'text' }}
-                error={!!errors.description}
-                helperText={
-                  errors.description ? String(errors.description.message) : ''
-                }
-              />
-              <TextField
-                required
-                fullWidth
-                variant="filled"
-                label={t('promotion.startDate')}
-                type="date"
-                {...register('startDate')}
+                label={t('category.duration')}
+                type="number"
+                {...register('duration')}
                 InputLabelProps={{ shrink: true }}
-                error={!!errors.startDate}
+                inputProps={{ step: 0.5 }}
+                error={!!errors.duration}
                 helperText={
-                  errors.startDate ? String(errors.startDate.message) : ''
-                }
-              />
-              <TextField
-                required
-                fullWidth
-                variant="filled"
-                label={t('promotion.endDate')}
-                type="date"
-                {...register('endDate')}
-                InputLabelProps={{ shrink: true }}
-                error={!!errors.endDate}
-                helperText={
-                  errors.endDate ? String(errors.endDate.message) : ''
+                  errors.duration ? String(errors.duration.message) : ''
                 }
               />
               <Stack direction="row" spacing={2}>
@@ -177,7 +138,7 @@ const EditPromotionModal = ({
                   type="submit"
                   disabled={!isValid || isLoading}
                 >
-                  {isLoading ? t('promotion.updating') : t('promotion.update')}
+                  {isLoading ? t('category.updating') : t('category.update')}
                 </Button>
               </Stack>
             </Stack>
@@ -203,12 +164,12 @@ const EditPromotionModal = ({
               <CheckIcon color="success" fontSize="large" />
             </Avatar>
             <Typography variant="h4">
-              {t('promotion.updateDetailsTitle')}
+              {t('category.updateDetailsTitle')}
             </Typography>
           </Stack>
         </DialogTitle>
         <DialogContent sx={{ px: 2 }}>
-          <DialogContentText>{t('promotion.updateSuccess')}</DialogContentText>
+          <DialogContentText>{t('category.updateSuccess')}</DialogContentText>
         </DialogContent>
         <DialogActions sx={{ p: 2 }}>
           <Button
@@ -224,4 +185,4 @@ const EditPromotionModal = ({
   );
 };
 
-export default EditPromotionModal;
+export default EditCategoryModal;

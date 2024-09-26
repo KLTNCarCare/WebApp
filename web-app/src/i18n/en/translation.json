@@ -9,7 +9,8 @@
     "cancel": "Cancel",
     "delete": "Delete",
     "close": "Close",
-    "collapse": "Collapse"
+    "collapse": "Collapse",
+    "category": "Category"
   },
   "report": {
     "closeNotification": "Close Notification"
@@ -31,6 +32,7 @@
     "index": "Index",
     "status": "Status",
     "createSuccess": "Create Promotional Program Successfully",
+    "editPromotion": "Edit Promotional Program",
     "deleteTitle": "Delete Promotional Program",
     "deleteSuccessTitle": "Delete Promotional Program Successfully",
     "deleteSuccess": " Promotional program has been deleted successfully",
@@ -48,5 +50,36 @@
     "itemGiftId": "Gift Item ID",
     "discount": "Discount %",
     "limitDiscount": "Limit Discount"
+  },
+  "category": {
+    "userCategoryManagement": "User Category Management",
+    "filter": "Filter",
+    "categoryList": "Category List",
+    "addNew": "Add New Category",
+    "categoryDetails": "Category Details",
+    "registerCategory": "Register Category",
+    "index": "Index",
+    "categoryId": "Category ID",
+    "categoryName": "Category Name",
+    "categoryType": "Category Type",
+    "duration": "Duration",
+    "status": "Status",
+    "createdAt": "Created Date",
+    "updatedAt": "Updated Date",
+    "product": "Products",
+    "service": "Services",
+    "createSuccess": "Create Promotional Program Successfully",
+    "deleteTitle": "Delete Category Successfully",
+    "deleteSuccess": "Category has been deleted successfully",
+    "editCategory": "Edit Category",
+    "update": "Update",
+    "updateDetailsTitle": "Update Category Successfully",
+    "updateSuccess": "Category has been updated successfully",
+    "serviceByCategory": "Service",
+    "serviceId": "Service ID",
+    "serviceName": "Service Name",
+    "serviceStatus": "Status",
+    "serviceCreatedAt": "Created Date",
+    "serviceUpdatedAt": "Updated Date"
   }
 }

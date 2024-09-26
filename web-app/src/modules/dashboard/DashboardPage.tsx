@@ -17,7 +17,6 @@ export function DashboardPage() {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
         const result = await response.json();
-        console.log('Fetched data:', result); // Log dữ liệu
         setData(result);
       } catch (error) {
         console.error('Error fetching data:', error);
@@ -29,11 +28,11 @@ export function DashboardPage() {
     if (isAuthenticated && !data) {
       fetchData();
     }
-  }, [isAuthenticated, data]); // Chỉ fetch nếu dữ liệu chưa có
+  }, [isAuthenticated, data]);
 
   return (
     <AdminLayout
-      title="Bản đồ ngập"
+      title="Card Dashboard"
       isCollapse={false}
       setIsCollapse={() => {}}
     >
