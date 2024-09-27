@@ -4,13 +4,13 @@ import { Pagination } from '@mui/material';
 interface CustomPaginationProps {
   paginationModel: { pageSize: number; page: number };
   onPageChange: (page: number) => void;
-  totalPage: number; // Nhận prop totalPage
+  totalPage: number;
 }
 
 const CustomPagination: React.FC<CustomPaginationProps> = ({
   paginationModel,
   onPageChange,
-  totalPage, // Sử dụng prop totalPage
+  totalPage,
 }) => {
   const handleChange = (event: React.ChangeEvent<unknown>, value: number) => {
     onPageChange(value);
@@ -18,8 +18,8 @@ const CustomPagination: React.FC<CustomPaginationProps> = ({
 
   return (
     <Pagination
-      count={totalPage} // Sử dụng totalPage để tính tổng số trang
-      page={paginationModel.page + 1} // Sử dụng page 1-based
+      count={totalPage}
+      page={paginationModel.page + 1}
       onChange={handleChange}
     />
   );

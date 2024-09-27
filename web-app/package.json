@@ -59,6 +59,7 @@
     "eslint-plugin-react": "^7.31.11",
     "eslint-plugin-regexp": "^1.11.0",
     "eslint-plugin-tailwindcss": "^3.7.0",
+    "nodemon": "^3.1.7",
     "prettier": "^2.8.0"
   },
   "scripts": {
@@ -67,7 +68,8 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "lint": "eslint .",
-    "lint:fix": "eslint . --fix"
+    "lint:fix": "eslint . --fix",
+    "dev": "nodemon --watch src --exec yarn start"
   },
   "eslintConfig": {
     "extends": [
