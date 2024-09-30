@@ -6,6 +6,7 @@ import ProtectedRoute from 'src/modules/auth/ProtectedRoute';
 import AccountPage from 'src/pages/AccountPage';
 import CategoryPage from 'src/pages/CategoryPage';
 import DashboardPage from 'src/pages/DashBoard';
+import PriceCatalogPage from 'src/pages/PriceCatalog';
 import PromotionPage from 'src/pages/PromotionPage';
 import SignInPage from 'src/pages/SignIn';
 
@@ -43,6 +44,14 @@ const routes: RouteObject[] = [
         element: (
           <ProtectedRoute>
             <CategoryPage />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: `${publicUrl}/price-catalog`,
+        element: (
+          <ProtectedRoute>
+            <PriceCatalogPage />
           </ProtectedRoute>
         ),
       },

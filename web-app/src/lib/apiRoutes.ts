@@ -30,6 +30,12 @@ const apiRoutes = {
     delete: (id: string) => `v1/api/category/delete/${id}`,
     getServiceByCategory: 'v1/api/service/get-by-category',
   },
+  priceCatalog: {
+    list: 'v1/api/price-catalog/get-all',
+    create: 'v1/api/price-catalog/create',
+    update: 'v1/api/price-catalog/update-end-date',
+    delete: (id: string) => `v1/api/price-catalog/delete-price-catalog/${id}`,
+  },
 };
 
 export default apiRoutes;
