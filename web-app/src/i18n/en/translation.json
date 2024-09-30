@@ -10,7 +10,8 @@
     "delete": "Delete",
     "close": "Close",
     "collapse": "Collapse",
-    "category": "Category"
+    "category": "Category",
+    "priceCatalog": "Price Catalog"
   },
   "report": {
     "closeNotification": "Close Notification"
@@ -81,5 +82,34 @@
     "serviceStatus": "Status",
     "serviceCreatedAt": "Created Date",
     "serviceUpdatedAt": "Updated Date"
+  },
+  "priceCatalog": {
+    "userPriceCatalogManagement": "Price Catalog Management",
+    "filter": "Filter",
+    "addNew": "Add New Price Catalog",
+    "priceCatalogList": "Price Catalog List",
+    "index": "Index",
+    "priceId": "Price Catalog ID",
+    "priceName": "Price Catalog Name",
+    "status": "Status",
+    "startDate": "Start Date",
+    "endDate": "End Date",
+    "priceCatalogDetails": "Price Catalog Details",
+    "header": "Price Catalog Information",
+    "items": "Price Catalog Details",
+    "itemName": "Service Name",
+    "itemPrice": "Service Price",
+    "active": "Active",
+    "inactive": "Inactive",
+    "registerPriceCatalog": "Create Price Catalog",
+    "selectCategory": "Select Category",
+    "selectService": "Select Service",
+    "enterPrice": "Enter Price",
+    "editPriceCatalog": "Edit Price Catalog",
+    "update": "Update",
+    "updating": "Updating",
+    "updateDetailsTitle": "Update Price Catalog Successfully",
+    "updateSuccess": "Price Catalog has been updated successfully",
+    "createSuccess": "Create Price Catalog Successfully"
   }
 }

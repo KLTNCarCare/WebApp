@@ -17,6 +17,7 @@ import MapIcon from '@mui/icons-material/Map';
 import ContactEmergencyIcon from '@mui/icons-material/ContactEmergency';
 import DiscountIcon from '@mui/icons-material/Discount';
 import CategoryIcon from '@mui/icons-material/Category';
+import PriceChangeIcon from '@mui/icons-material/PriceChange';
 import SelectLanguage from './SelectLanguage';
 
 type SidebarDashboardProps = {
@@ -52,6 +53,11 @@ const sidebarDataDashboard: Array<{
     value: '/category',
     label: 'category',
     icon: <CategoryIcon />,
+  },
+  {
+    value: '/price-catalog',
+    label: 'priceCatalog',
+    icon: <PriceChangeIcon />,
   },
 ];
 

@@ -10,7 +10,8 @@
     "delete": "Xóa",
     "close": "Đóng",
     "collapse": "Thu gọn",
-    "category": "Danh mục"
+    "category": "Danh mục",
+    "priceCatalog": "Bảng giá"
   },
   "report": {
     "closeNotification": "Đóng thông báo"
@@ -82,5 +83,34 @@
     "serviceStatus": "Trạng thái",
     "serviceCreatedAt": "Ngày tạo",
     "serviceUpdatedAt": "Ngày cập nhật"
+  },
+  "priceCatalog": {
+    "userPriceCatalogManagement": "Quản lý bảng giá",
+    "filter": "Bộ lọc",
+    "addNew": "Thêm mới",
+    "priceCatalogList": "Danh sách bảng giá",
+    "index": "STT",
+    "priceId": "Mã bảng giá",
+    "priceName": "Tên bảng giá",
+    "status": "Trạng thái",
+    "startDate": "Ngày bắt đầu",
+    "endDate": "Ngày kết thúc",
+    "priceCatalogDetails": "Chi tiết bảng giá",
+    "header": "Thông tin bảng giá",
+    "items": "Chi tiết bảng giá",
+    "itemName": "Tên dịch vụ",
+    "itemPrice": "Giá dịch vụ",
+    "active": "Hoạt động",
+    "inactive": "Ngưng hoạt động",
+    "registerPriceCatalog": "Tạo bảng giá",
+    "selectCategory": "Chọn danh mục",
+    "selectService": "Chọn dịch vụ",
+    "enterPrice": "Nhập giá",
+    "editPriceCatalog": "Chỉnh sửa bảng giá",
+    "update": "Cập nhật",
+    "updating": "Đang cập nhật",
+    "updateDetailsTitle": "Cập nhật bảng giá",
+    "updateSuccess": "Bảng giá đã được cập nhật thành công",
+    "createSuccess": "Tạo bảng giá thành công"
   }
 }
