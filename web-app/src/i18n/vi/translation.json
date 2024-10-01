@@ -53,9 +53,9 @@
     "limitDiscount": "Giới hạn giảm giá"
   },
   "category": {
-    "userCategoryManagement": "Quản lý danh mục người dùng",
+    "userCategoryManagement": "Quản lý danh mục dịch vụ",
     "filter": "Bộ lọc",
-    "categoryList": "Danh sách danh mục",
+    "categoryList": "Danh mục dịch vụ",
     "addNew": "Thêm mới danh mục",
     "categoryDetails": "Chi tiết danh mục",
     "registerCategory": "Thêm mới danh mục",
@@ -82,7 +82,12 @@
     "serviceName": "Tên dịch vụ",
     "serviceStatus": "Trạng thái",
     "serviceCreatedAt": "Ngày tạo",
-    "serviceUpdatedAt": "Ngày cập nhật"
+    "serviceUpdatedAt": "Ngày cập nhật",
+    "serviceDuration": "Thời gian",
+    "active": "Hoạt động",
+    "inactive": "Ngưng hoạt động",
+    "addService": "Thêm dịch vụ",
+    "description": "Mô tả"
   },
   "priceCatalog": {
     "userPriceCatalogManagement": "Quản lý bảng giá",
@@ -111,6 +116,9 @@
     "updating": "Đang cập nhật",
     "updateDetailsTitle": "Cập nhật bảng giá",
     "updateSuccess": "Bảng giá đã được cập nhật thành công",
-    "createSuccess": "Tạo bảng giá thành công"
+    "createSuccess": "Tạo bảng giá thành công",
+    "deleteSuccessTitle": "Xóa bảng giá thành công",
+    "deleteSuccess": "Bảng giá đã được xóa thành công",
+    "addItem": "Thêm dịch vụ"
   }
 }

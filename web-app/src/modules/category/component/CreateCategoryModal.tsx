@@ -27,7 +27,6 @@ import { useCreateCategory } from 'src/api/category/useCreateCategory';
 const schemaCreateCategory = yup.object({
   categoryName: yup.string().required('Vui lòng nhập tên khuyến mãi'),
   categoryType: yup.string().required('Vui lòng nhập loại khuyến mãi'),
-  duration: yup.number().required('Vui lòng nhập thời gian'),
 });
 
 type CreateCategoryProps = {
@@ -50,7 +49,6 @@ function CreateCategoryModal({
     defaultValues: {
       categoryName: '',
       categoryType: '',
-      duration: 0,
     },
     mode: 'onChange',
     resolver: yupResolver(schemaCreateCategory),
@@ -108,18 +106,6 @@ function CreateCategoryModal({
               {errors.categoryType ? String(errors.categoryType.message) : ''}
             </FormHelperText>
           </FormControl>
-          <TextField
-            required
-            fullWidth
-            variant="filled"
-            label={t('category.duration')}
-            type="number"
-            {...register('duration')}
-            InputLabelProps={{ shrink: true }}
-            inputProps={{ step: 0.5 }}
-            error={!!errors.duration}
-            helperText={errors.duration ? String(errors.duration.message) : ''}
-          />
           <Button
             variant="contained"
             size="medium"

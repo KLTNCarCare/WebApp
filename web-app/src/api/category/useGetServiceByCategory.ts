@@ -5,11 +5,14 @@ import { DefaultQueryError } from '../type';
 import { getCookie } from 'src/lib/cookies';
 
 export interface ServiceByCategory {
+  [x: string]: any;
   _id: string;
   serviceId: string;
   serviceName: string;
   categoryId: string;
   status: string;
+  description: string;
+  duration: number;
   createdAt: string;
   updatedAt: string;
   __v: number;

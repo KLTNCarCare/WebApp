@@ -35,12 +35,6 @@ interface PriceCatalogDetailModalProps {
 }
 
 const createItemColumns = (t: (key: string) => string): GridColDef[] => [
-  // {
-  //   field: 'itemId',
-  //   headerName: t('priceCatalog.itemId'),
-  //   maxWidth: 150,
-  //   flex: 1,
-  // },
   {
     field: 'itemName',
     headerName: t('priceCatalog.itemName'),
@@ -186,7 +180,7 @@ const PriceCatalogDetailModal: React.FC<PriceCatalogDetailModalProps> = ({
               }}
               disableRowSelectionOnClick
               autoHeight
-              getRowId={(row) => row._id}
+              getRowId={(row) => row.itemId}
               sx={{
                 '& .MuiDataGrid-cell': {
                   whiteSpace: 'normal',
