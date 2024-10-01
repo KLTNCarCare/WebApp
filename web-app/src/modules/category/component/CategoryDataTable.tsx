@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Dialog, LinearProgress, Paper } from '@mui/material';
+import { Chip, Dialog, LinearProgress, Paper } from '@mui/material';
 import {
   DataGrid,
   GridColDef,
@@ -57,31 +57,25 @@ const createCategoryColumns = (
   {
     field: 'categoryId',
     headerName: t('category.categoryId'),
-    maxWidth: 150,
+    maxWidth: 300,
     flex: 1,
     valueGetter: (params: GridValueGetterParams) => params.row.categoryId || '',
   },
   {
-    field: 'categoryType',
-    headerName: t('category.categoryType'),
-    maxWidth: 150,
-    flex: 1,
-    valueGetter: (params: GridValueGetterParams) =>
-      params.row.categoryType || '',
-  },
-  {
-    field: 'duration',
-    headerName: t('category.duration'),
-    maxWidth: 100,
-    flex: 1,
-    valueGetter: (params: GridValueGetterParams) => params.row.duration || '',
-  },
-  {
     field: 'status',
     headerName: t('category.status'),
-    maxWidth: 100,
+    maxWidth: 150,
     flex: 1,
-    valueGetter: (params: GridValueGetterParams) => params.row.status || '',
+    renderCell: (params: GridRenderCellParams) => (
+      <Chip
+        label={
+          params.row.status === 'active'
+            ? t('priceCatalog.active')
+            : t('priceCatalog.inactive')
+        }
+        color={params.row.status === 'active' ? 'success' : 'default'}
+      />
+    ),
   },
   {
     field: 'action',
@@ -127,8 +121,8 @@ const CategoryDataTable: React.FC<CategoryDataTableProps> = ({
 
   const {
     data: serviceByCategorytData,
-    isLoading: isLoadingPromotionLine,
-    refetch: refetchPromotionLine,
+    isLoading: isLoadingCategoryLine,
+    refetch: refetchCategoryLine,
   } = useGetServiceByCategory(selectedCategory?._id || '', {
     enabled: !!selectedCategory?._id,
   });
@@ -211,7 +205,7 @@ const CategoryDataTable: React.FC<CategoryDataTableProps> = ({
           paginationModel={paginationModel}
           setPaginationModel={setPaginationModel}
           serviceByCategorytData={serviceByCategorytData}
-          isLoadingServiceByCategory={isLoadingPromotionLine}
+          isLoadingServiceByCategory={isLoadingCategoryLine}
         />
       )}
 

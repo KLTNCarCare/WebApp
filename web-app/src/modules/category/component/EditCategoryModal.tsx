@@ -15,19 +15,17 @@ import {
 } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import { ReactComponent as CheckIcon } from '../../../assets/icons/CheckCircle.svg';
-import { useForm, SubmitHandler } from 'react-hook-form';
+import { useForm, SubmitHandler, useWatch } from 'react-hook-form';
 import { useUpdateCategory } from 'src/api/category/useUpdateCategory';
 
 const schemaUpdateCategory = yup.object({
   categoryName: yup.string().required('Vui lòng nhập tên khuyến mãi'),
-  duration: yup.string().required('Vui lòng nhập mô tả'),
 });
 
 type EditCategoryModalProps = {
   categoryData: {
     _id: string;
     categoryName: string;
-    duration: string;
   };
   refetch: () => void;
   setIsEditCategory: (value: boolean) => void;
@@ -42,19 +40,34 @@ const EditCategoryModal = ({
   const [isSuccessDialogOpen, setIsSuccessDialogOpen] =
     useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isChanged, setIsChanged] = useState<boolean>(false);
 
   const {
     register,
     handleSubmit,
     setValue,
     formState: { errors, isValid },
+    control,
   } = useForm({
     resolver: yupResolver(schemaUpdateCategory),
     defaultValues: {
       categoryName: categoryData.categoryName,
-      duration: categoryData.duration,
     },
+    mode: 'onChange',
   });
+
+  const watchedCategoryName = useWatch({
+    control,
+    name: 'categoryName',
+  });
+
+  useEffect(() => {
+    setValue('categoryName', categoryData.categoryName);
+  }, [categoryData, setValue]);
+
+  useEffect(() => {
+    setIsChanged(watchedCategoryName !== categoryData.categoryName);
+  }, [watchedCategoryName, categoryData.categoryName]);
 
   const { mutate: updateCategory } = useUpdateCategory({
     onSuccess: () => {
@@ -66,11 +79,6 @@ const EditCategoryModal = ({
       setIsLoading(false);
     },
   });
-
-  useEffect(() => {
-    setValue('categoryName', categoryData.categoryName);
-    setValue('duration', categoryData.duration);
-  }, [categoryData, setValue]);
 
   const handleConfirmUpdate: SubmitHandler<any> = (data) => {
     setIsLoading(true);
@@ -108,20 +116,6 @@ const EditCategoryModal = ({
                   errors.categoryName ? String(errors.categoryName.message) : ''
                 }
               />
-              <TextField
-                required
-                fullWidth
-                variant="filled"
-                label={t('category.duration')}
-                type="number"
-                {...register('duration')}
-                InputLabelProps={{ shrink: true }}
-                inputProps={{ step: 0.5 }}
-                error={!!errors.duration}
-                helperText={
-                  errors.duration ? String(errors.duration.message) : ''
-                }
-              />
               <Stack direction="row" spacing={2}>
                 <Button
                   variant="outlined"
@@ -136,7 +130,7 @@ const EditCategoryModal = ({
                   size="medium"
                   fullWidth
                   type="submit"
-                  disabled={!isValid || isLoading}
+                  disabled={!isValid || isLoading || !isChanged}
                 >
                   {isLoading ? t('category.updating') : t('category.update')}
                 </Button>

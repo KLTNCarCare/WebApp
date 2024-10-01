@@ -81,7 +81,12 @@
     "serviceName": "Service Name",
     "serviceStatus": "Status",
     "serviceCreatedAt": "Created Date",
-    "serviceUpdatedAt": "Updated Date"
+    "serviceUpdatedAt": "Updated Date",
+    "serviceDuration": "Duration",
+    "active": "Active",
+    "inactive": "Inactive",
+    "addService": "Add Service",
+    "description": "Description"
   },
   "priceCatalog": {
     "userPriceCatalogManagement": "Price Catalog Management",
@@ -110,6 +115,9 @@
     "updating": "Updating",
     "updateDetailsTitle": "Update Price Catalog Successfully",
     "updateSuccess": "Price Catalog has been updated successfully",
-    "createSuccess": "Create Price Catalog Successfully"
+    "createSuccess": "Create Price Catalog Successfully",
+    "deleteSuccessTitle": "Delete Price Catalog Successfully",
+    "deleteSuccess": "Price Catalog has been deleted successfully",
+    "addItem": "Add Item"
   }
 }

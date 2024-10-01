@@ -1,3 +1,5 @@
+import { create } from 'domain';
+
 const apiRoutes = {
   user: {},
   admin: {
@@ -35,6 +37,11 @@ const apiRoutes = {
     create: 'v1/api/price-catalog/create',
     update: 'v1/api/price-catalog/update-end-date',
     delete: (id: string) => `v1/api/price-catalog/delete-price-catalog/${id}`,
+  },
+  service: {
+    create: 'v1/api/service/create',
+    update: 'v1/api/service/edit',
+    delete: (id: string) => `v1/api/service/delete/${id}`,
   },
 };
 
