@@ -3,6 +3,7 @@ import apiRoutes from 'src/lib/apiRoutes';
 import httpClient from 'src/lib/httpClient';
 import { DefaultQueryError } from '../type';
 import { getCookie } from 'src/lib/cookies';
+import { PromotionLine } from './useGetPromotionLine';
 
 export interface GetPromotionParams {
   page: number;
@@ -24,6 +25,7 @@ export interface PromotionManagement {
   updatedDate: string;
   __v: number;
   updatedAt: string;
+  items: PromotionLine[];
 }
 
 export const getListPromotionFn = async (params: GetPromotionParams) => {

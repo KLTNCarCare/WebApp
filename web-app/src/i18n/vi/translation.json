@@ -11,7 +11,9 @@
     "close": "Đóng",
     "collapse": "Thu gọn",
     "category": "Danh mục",
-    "priceCatalog": "Bảng giá"
+    "priceCatalog": "Bảng giá",
+    "confirm": "Xác nhận",
+    "confirmToggle": "Bạn có muốn xác nhận không?"
   },
   "report": {
     "closeNotification": "Đóng thông báo"
@@ -39,7 +41,9 @@
     "deleteSuccess": "Chương trình khuyến mãi đã được xóa thành công",
     "update": "Cập nhật",
     "updateDetailsTitle": "Cập nhật chương trình khuyến mãi thành công",
-    "updateSuccess": "Chương trình khuyến mãi đã được cập nhật thành công"
+    "updateSuccess": "Chương trình khuyến mãi đã được cập nhật thành công",
+    "active": "Hoạt động",
+    "inactive": "Ngưng hoạt động"
   },
   "promotionLine": {
     "index": "STT",
@@ -50,7 +54,8 @@
     "itemId": "Mã sản phẩm",
     "itemGiftId": "Mã quà tặng",
     "discount": "Giảm giá %",
-    "limitDiscount": "Giới hạn giảm giá"
+    "limitDiscount": "Giới hạn giảm giá",
+    "addItem": "Thêm khuyến mãi"
   },
   "category": {
     "userCategoryManagement": "Quản lý danh mục dịch vụ",
@@ -61,7 +66,6 @@
     "registerCategory": "Thêm mới danh mục",
     "index": "STT",
     "categoryId": "Mã danh mục",
-    "categoryType": "Loại danh mục",
     "duration": "Thời gian",
     "status": "Trạng thái",
     "categoryName": "Tên danh mục",
@@ -87,7 +91,10 @@
     "active": "Hoạt động",
     "inactive": "Ngưng hoạt động",
     "addService": "Thêm dịch vụ",
-    "description": "Mô tả"
+    "description": "Mô tả",
+    "toggleTitle": "Chuyển đổi trạng thái",
+    "toggleSuccessTitle": "Chuyển đổi trạng thái thành công",
+    "toggleSuccess": "Danh mục đã được chuyển đổi trạng thái thành công"
   },
   "priceCatalog": {
     "userPriceCatalogManagement": "Quản lý bảng giá",
@@ -119,6 +126,9 @@
     "createSuccess": "Tạo bảng giá thành công",
     "deleteSuccessTitle": "Xóa bảng giá thành công",
     "deleteSuccess": "Bảng giá đã được xóa thành công",
-    "addItem": "Thêm dịch vụ"
+    "addItem": "Thêm dịch vụ",
+    "toggleTitle": "Chuyển đổi trạng thái",
+    "toggleSuccessTitle": "Chuyển đổi trạng thái thành công",
+    "toggleSuccess": "Danh mục đã được chuyển đổi trạng thái thành công"
   }
 }

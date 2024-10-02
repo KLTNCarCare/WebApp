@@ -13,13 +13,14 @@ export interface PromotionLine {
   startDate: string;
   endDate: string;
   itemId: string;
-  itemGiftId: string[];
+  itemGiftId: string;
   discount: number;
   limitDiscount: number;
   status: string;
   createdAt: string;
   updatedAt: string;
   __v: number;
+  [x: string]: any;
 }
 
 export const getPromotionLinesFn = async (

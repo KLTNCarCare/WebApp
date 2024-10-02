@@ -18,6 +18,7 @@ import CategoryDetailModal from './CategoryModalDetail';
 import DeleteCategory from './DeleteCategory';
 import EditCategoryModal from './EditCategoryModal';
 import { useGetServiceByCategory } from 'src/api/category/useGetServiceByCategory';
+import StatusToggle from './StatusToggle';
 interface CategoryDataTableProps {
   dataCategory: any[];
   isLoadingCategory: boolean;
@@ -64,17 +65,20 @@ const createCategoryColumns = (
   {
     field: 'status',
     headerName: t('category.status'),
-    maxWidth: 150,
+    maxWidth: 180,
     flex: 1,
     renderCell: (params: GridRenderCellParams) => (
-      <Chip
-        label={
-          params.row.status === 'active'
-            ? t('priceCatalog.active')
-            : t('priceCatalog.inactive')
+      <div
+        onClick={(event: React.MouseEvent<HTMLDivElement>) =>
+          event.stopPropagation()
         }
-        color={params.row.status === 'active' ? 'success' : 'default'}
-      />
+      >
+        <StatusToggle
+          _id={params.row._id}
+          currentStatus={params.row.status}
+          refetch={refetch}
+        />
+      </div>
     ),
   },
   {
