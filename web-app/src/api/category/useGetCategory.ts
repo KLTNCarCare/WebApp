@@ -18,7 +18,6 @@ export interface CategoryManagement {
   _id: string;
   categoryId: string;
   categoryName: string;
-  categoryType: string;
   duration: number;
   status: string;
   createdAt: string;

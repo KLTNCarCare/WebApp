@@ -454,21 +454,7 @@ const CategoryDetailModal: React.FC<CategoryDetailModalProps> = ({
                     <Divider variant="middle" />
                   </>
                 )}
-                {categoryData.categoryType && (
-                  <>
-                    <ListItem>
-                      <ListItemText primary={t('category.categoryType')} />
-                      <Typography
-                        variant="body2"
-                        textAlign="right"
-                        color="grey.600"
-                      >
-                        {categoryData.categoryType}
-                      </Typography>
-                    </ListItem>
-                    <Divider variant="middle" />
-                  </>
-                )}
+
                 {categoryData.duration && (
                   <>
                     <ListItem>

@@ -33,3 +33,9 @@ export interface UpdatePriceCatalogFn {
   id: string;
   endDate: string;
 }
+export interface ActivePriceCatalogFn {
+  _id: string;
+}
+export interface InactivePriceCatalogFn {
+  _id: string;
+}

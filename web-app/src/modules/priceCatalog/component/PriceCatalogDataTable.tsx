@@ -30,6 +30,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import DeletePriceCatalog from './DeletePriceCatalog';
 import PriceCatalogDetailModal from './PriceCatalogDetailModal';
 import EditPriceCatalogModal from './EditPriceCatalogModal';
+import StatusToggle from './StatusToggle';
 interface PriceCatalogDataTableProps {
   dataPriceCatalog: any[];
   isLoadingPriceCatalog: boolean;
@@ -78,14 +79,17 @@ const createPriceCatalogColumns = (
     maxWidth: 200,
     flex: 1,
     renderCell: (params: GridRenderCellParams) => (
-      <Chip
-        label={
-          params.row.status === 'active'
-            ? t('priceCatalog.active')
-            : t('priceCatalog.inactive')
+      <div
+        onClick={(event: React.MouseEvent<HTMLDivElement>) =>
+          event.stopPropagation()
         }
-        color={params.row.status === 'active' ? 'success' : 'default'}
-      />
+      >
+        <StatusToggle
+          _id={params.row._id}
+          currentStatus={params.row.status}
+          refetch={refetch}
+        />
+      </div>
     ),
   },
   {

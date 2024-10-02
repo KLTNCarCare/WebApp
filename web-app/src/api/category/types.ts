@@ -1,6 +1,5 @@
 export interface CreateCategoryFn {
   categoryName: string;
-  categoryType: string;
 }
 
 export interface Category {
@@ -11,7 +10,6 @@ export interface Category {
   createdAt: string;
   updatedAt: string;
   categoryId: string;
-  categoryType: string;
   status: string;
 }
 
@@ -27,5 +25,7 @@ export interface UpdateCategoryFn {
 
 export interface InactiveStatusFn {
   _id: string;
-  categoryName: string;
+}
+export interface ActiveStatusFn {
+  _id: string;
 }

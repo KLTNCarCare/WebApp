@@ -26,7 +26,6 @@ import { useCreateCategory } from 'src/api/category/useCreateCategory';
 
 const schemaCreateCategory = yup.object({
   categoryName: yup.string().required('Vui lòng nhập tên khuyến mãi'),
-  categoryType: yup.string().required('Vui lòng nhập loại khuyến mãi'),
 });
 
 type CreateCategoryProps = {
@@ -48,7 +47,6 @@ function CreateCategoryModal({
   } = useForm<CreateCategoryFn>({
     defaultValues: {
       categoryName: '',
-      categoryType: '',
     },
     mode: 'onChange',
     resolver: yupResolver(schemaCreateCategory),
@@ -89,23 +87,6 @@ function CreateCategoryModal({
               errors.categoryName ? String(errors.categoryName.message) : ''
             }
           />
-          <FormControl fullWidth variant="filled" error={!!errors.categoryType}>
-            <InputLabel>{t('category.categoryType')}</InputLabel>
-            <Controller
-              name="categoryType"
-              control={control}
-              defaultValue=""
-              render={({ field }) => (
-                <Select {...field} native={false}>
-                  <MenuItem value="product">{t('category.product')}</MenuItem>
-                  <MenuItem value="service">{t('category.service')}</MenuItem>
-                </Select>
-              )}
-            />
-            <FormHelperText>
-              {errors.categoryType ? String(errors.categoryType.message) : ''}
-            </FormHelperText>
-          </FormControl>
           <Button
             variant="contained"
             size="medium"

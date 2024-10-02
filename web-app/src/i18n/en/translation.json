@@ -11,7 +11,9 @@
     "close": "Close",
     "collapse": "Collapse",
     "category": "Category",
-    "priceCatalog": "Price Catalog"
+    "priceCatalog": "Price Catalog",
+    "confirm": "Confirm",
+    "confirmToggle": "Do you want to confirm?"
   },
   "report": {
     "closeNotification": "Close Notification"
@@ -39,7 +41,9 @@
     "deleteSuccess": " Promotional program has been deleted successfully",
     "update": "Update",
     "updateDetailsTitle": "Update Promotional Program Successfully",
-    "updateSuccess": "Promotional program has been updated successfully"
+    "updateSuccess": "Promotional program has been updated successfully",
+    "active": "Active",
+    "inactive": "Inactive"
   },
   "promotionLine": {
     "index": "Index",
@@ -50,7 +54,8 @@
     "itemId": "Item ID",
     "itemGiftId": "Gift Item ID",
     "discount": "Discount %",
-    "limitDiscount": "Limit Discount"
+    "limitDiscount": "Limit Discount",
+    "addItem": "Add Promotion Line"
   },
   "category": {
     "userCategoryManagement": "User Category Management",
@@ -62,7 +67,6 @@
     "index": "Index",
     "categoryId": "Category ID",
     "categoryName": "Category Name",
-    "categoryType": "Category Type",
     "duration": "Duration",
     "status": "Status",
     "createdAt": "Created Date",
@@ -86,7 +90,10 @@
     "active": "Active",
     "inactive": "Inactive",
     "addService": "Add Service",
-    "description": "Description"
+    "description": "Description",
+    "toggleTitle": "Change Status",
+    "toggleSuccess": "Status has been changed successfully",
+    "toggleSuccessTitle": "Change status successfully"
   },
   "priceCatalog": {
     "userPriceCatalogManagement": "Price Catalog Management",
@@ -118,6 +125,9 @@
     "createSuccess": "Create Price Catalog Successfully",
     "deleteSuccessTitle": "Delete Price Catalog Successfully",
     "deleteSuccess": "Price Catalog has been deleted successfully",
-    "addItem": "Add Item"
+    "addItem": "Add Item",
+    "toggleTitle": "Change Status",
+    "toggleSuccess": "Status has been changed successfully",
+    "toggleSuccessTitle": "Change status successfully"
   }
 }

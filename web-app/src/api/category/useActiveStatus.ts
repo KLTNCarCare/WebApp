@@ -2,13 +2,13 @@ import { useMutation, UseMutationOptions } from '@tanstack/react-query';
 import { DefaultQueryError } from '../type';
 import httpClient from 'src/lib/httpClient';
 import apiRoutes from 'src/lib/apiRoutes';
-import { InactiveStatusFn } from './types';
+import { ActiveStatusFn } from './types';
 import { getCookie } from 'src/lib/cookies';
 
-export const inactiveStatus = async (data: InactiveStatusFn) => {
+export const ActiveStatus = async (data: ActiveStatusFn) => {
   const token = getCookie('accessToken');
   const response = await httpClient.put(
-    apiRoutes.category.inactive(data._id),
+    apiRoutes.category.active(data._id),
     {},
     {
       headers: {
@@ -19,10 +19,10 @@ export const inactiveStatus = async (data: InactiveStatusFn) => {
   return response.data;
 };
 
-export const useInactiveStatus = (
-  opts?: UseMutationOptions<void, DefaultQueryError, InactiveStatusFn>
+export const useActiveStatus = (
+  opts?: UseMutationOptions<void, DefaultQueryError, ActiveStatusFn>
 ) =>
-  useMutation<void, DefaultQueryError, InactiveStatusFn>(
-    (data) => inactiveStatus(data),
+  useMutation<void, DefaultQueryError, ActiveStatusFn>(
+    (data) => ActiveStatus(data),
     opts
   );
