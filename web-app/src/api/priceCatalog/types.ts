@@ -1,8 +1,8 @@
 export interface CreatePriceCatalogFn {
   priceName: string;
   items: Item[];
-  startDate: string;
-  endDate: string;
+  startDate: number;
+  endDate: number;
 }
 
 export interface PriceCatalog {
