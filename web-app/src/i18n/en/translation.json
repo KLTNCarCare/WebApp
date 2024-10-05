@@ -43,7 +43,10 @@
     "updateDetailsTitle": "Update Promotional Program Successfully",
     "updateSuccess": "Promotional program has been updated successfully",
     "active": "Active",
-    "inactive": "Inactive"
+    "inactive": "Inactive",
+    "updatedAt": "Updated Date",
+    "createdAt": "Created Date",
+    "items": "Promotions"
   },
   "promotionLine": {
     "index": "Index",
@@ -55,7 +58,15 @@
     "itemGiftId": "Gift Item ID",
     "discount": "Discount %",
     "limitDiscount": "Limit Discount",
-    "addItem": "Add Promotion Line"
+    "addItem": "Add Promotion Line",
+    "detail": "Promotion Details",
+    "viewDetail": "View Detail",
+    "bill": "Bill",
+    "status": "Status",
+    "back": "Back",
+    "type": "Type",
+    "discountBill": "Discount Bill",
+    "discountService": "Discount Service"
   },
   "category": {
     "userCategoryManagement": "User Category Management",

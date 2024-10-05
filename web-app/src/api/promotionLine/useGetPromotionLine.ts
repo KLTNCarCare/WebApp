@@ -4,6 +4,16 @@ import httpClient from 'src/lib/httpClient';
 import { DefaultQueryError } from '../type';
 import { getCookie } from 'src/lib/cookies';
 
+export interface Detail {
+  itemId: string | null;
+  itemGiftId: string | null;
+  bill: number;
+  discount: number;
+  limitDiscount: number;
+  status: string;
+  _id: string;
+}
+
 export interface PromotionLine {
   _id: string;
   lineId: string;
@@ -12,10 +22,7 @@ export interface PromotionLine {
   description: string;
   startDate: string;
   endDate: string;
-  itemId: string;
-  itemGiftId: string;
-  discount: number;
-  limitDiscount: number;
+  detail: Detail[];
   status: string;
   createdAt: string;
   updatedAt: string;

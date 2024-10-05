@@ -26,10 +26,10 @@ import { TEN_ITEMS_PAGE } from 'src/lib/constants';
 import CustomPagination from 'src/components/CustomPagination';
 import PromotionDetailModal from './PromotionDetailModal';
 import EmptyScreen from 'src/components/layouts/EmtyScreen';
-import { useGetPromotionLines } from 'src/api/promotion/useGetPromotionLine';
 import EditIcon from '@mui/icons-material/Edit';
 import DeletePromotion from './DeletePromotion';
 import EditPromotionModal from './EditPromotionModal';
+import { useGetPromotionLines } from 'src/api/promotionLine/useGetPromotionLine';
 interface PromotionDataTableProps {
   dataPromotion: any[];
   isLoadingPromotion: boolean;

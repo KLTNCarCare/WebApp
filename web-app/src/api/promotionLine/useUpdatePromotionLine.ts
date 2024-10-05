@@ -4,7 +4,7 @@ import { DefaultQueryError } from '../type';
 import { getCookie } from 'src/lib/cookies';
 import { useMutation, UseMutationOptions } from '@tanstack/react-query';
 import { UpdatePromotionLineFn } from './types';
-import { PromotionLine } from '../promotion/useGetPromotionLine';
+import { PromotionLine } from './useGetPromotionLine';
 
 export const updatePromotionLineFn = async (
   data: UpdatePromotionLineFn

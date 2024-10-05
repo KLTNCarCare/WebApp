@@ -53,6 +53,10 @@ const apiRoutes = {
     update: 'v1/api/promotion/update-line',
     delete: (id: string) => `v1/api/promotion/delete-line/${id}`,
   },
+  promotionDetail: {
+    create: (id: string) => `v1/api/promotion/add-promotion-detail/${id}`,
+    delete: (id: string) => `v1/api/promotion/delete-promotion-detail/${id}`,
+  },
 };
 
 export default apiRoutes;

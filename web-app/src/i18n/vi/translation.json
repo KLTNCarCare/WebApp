@@ -43,7 +43,10 @@
     "updateDetailsTitle": "Cập nhật chương trình khuyến mãi thành công",
     "updateSuccess": "Chương trình khuyến mãi đã được cập nhật thành công",
     "active": "Hoạt động",
-    "inactive": "Ngưng hoạt động"
+    "inactive": "Ngưng hoạt động",
+    "updatedAt": "Ngày cập nhật",
+    "createdAt": "Ngày tạo",
+    "items": "Khuyến mãi"
   },
   "promotionLine": {
     "index": "STT",
@@ -55,7 +58,15 @@
     "itemGiftId": "Mã quà tặng",
     "discount": "Giảm giá %",
     "limitDiscount": "Giới hạn giảm giá",
-    "addItem": "Thêm khuyến mãi"
+    "addItem": "Thêm khuyến mãi",
+    "detail": "Chi tiết khuyến mãi",
+    "viewDetail": "Xem chi tiết",
+    "bill": "Hóa đơn",
+    "status": "Trạng thái",
+    "back": "Quay lại",
+    "type": "Loại",
+    "discountBill": "Giảm giá hóa đơn",
+    "discountService": "Giảm giá dịch vụ"
   },
   "category": {
     "userCategoryManagement": "Quản lý danh mục dịch vụ",
