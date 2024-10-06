@@ -27,7 +27,6 @@ import {
   MuiBaseEvent,
   MuiEvent,
 } from '@mui/x-data-grid';
-import MaterialReactTable from 'material-react-table';
 import { useTranslation } from 'react-i18next';
 import {
   PromotionManagement,
