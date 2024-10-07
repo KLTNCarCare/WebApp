@@ -4,7 +4,7 @@ import httpClient from 'src/lib/httpClient';
 import { DefaultQueryError } from '../type';
 import { getCookie } from 'src/lib/cookies';
 import { CreatePromotionLineFn } from './types';
-import { PromotionLine } from '../promotion/useGetPromotionLine';
+import { PromotionLine } from './useGetPromotionLine';
 export const createPromotionLineFn = async (
   data: CreatePromotionLineFn
 ): Promise<PromotionLine> => {

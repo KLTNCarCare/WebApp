@@ -4,10 +4,6 @@ export interface CreatePromotionLineFn {
   startDate: string;
   endDate: string;
   type: string;
-  itemId: string;
-  itemGiftId: string;
-  discount: number;
-  limitDiscount: number;
 }
 
 export interface DeletePromotionLineFn {
@@ -19,8 +15,13 @@ export interface UpdatePromotionLineFn {
   description: string;
   startDate: string;
   endDate: string;
-  itemId?: string;
-  itemGiftId?: string;
+}
+export interface CreatePromotionDetailFn {
+  _id: string;
   discount: number;
   limitDiscount: number;
+  bill: number;
+}
+export interface DeletePromotionDetailFn {
+  _id: string;
 }
