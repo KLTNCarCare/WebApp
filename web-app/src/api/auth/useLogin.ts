@@ -3,7 +3,6 @@ import httpClient from '../../lib/httpClient';
 import { useMutation, UseMutationOptions } from '@tanstack/react-query';
 import { DefaultQueryError } from '../type';
 
-// Định nghĩa kiểu dữ liệu trả về từ API
 export interface LoginResponse {
   data: {
     accessToken: string;
@@ -15,7 +14,6 @@ export interface LoginResponse {
   statusCode: number;
 }
 
-// Cập nhật hàm loginFn để trả về LoginResponse
 export const loginFn = async (body: {
   username: string;
   password: string;
@@ -27,7 +25,6 @@ export const loginFn = async (body: {
   return response.data;
 };
 
-// Cập nhật useLogin để sử dụng kiểu LoginResponse
 export const useLogin = (
   opts?: UseMutationOptions<
     LoginResponse,

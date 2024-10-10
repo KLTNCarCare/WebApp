@@ -5,6 +5,7 @@ import {
   SubmitHandler,
   useFieldArray,
   FieldArrayWithId,
+  Controller,
 } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
@@ -26,7 +27,6 @@ import {
   Box,
   IconButton,
 } from '@mui/material';
-import { DateTimePicker } from '@mui/x-date-pickers';
 import {
   DataGrid,
   GridColDef,
@@ -55,8 +55,28 @@ dayjs.extend(timezone);
 
 const schemaCreatePriceCatalog = yup.object({
   priceName: yup.string().required('Vui lòng nhập tên khuyến mãi'),
-  startDate: yup.date().required('Vui lòng nhập ngày bắt đầu'),
-  endDate: yup.date().required('Vui lòng nhập ngày kết thúc'),
+  startDate: yup
+    .number()
+    .required('Vui lòng nhập ngày bắt đầu')
+    .positive('Ngày bắt đầu phải lớn hơn 0')
+    .test('is-after-now', 'Ngày bắt đầu phải sau ngày hiện tại', (value) => {
+      return value > Date.now();
+    }),
+  endDate: yup
+    .number()
+    .required('Vui lòng nhập ngày kết thúc')
+    .positive('Ngày kết thúc phải lớn hơn 0')
+    .test(
+      'is-after-startDate',
+      'Ngày kết thúc phải sau ngày bắt đầu',
+      function (value) {
+        const { startDate } = this.parent;
+        return value > startDate;
+      }
+    )
+    .test('is-after-now', 'Ngày kết thúc phải sau ngày hiện tại', (value) => {
+      return value > Date.now();
+    }),
   items: yup
     .array()
     .of(
@@ -126,8 +146,8 @@ function CreatePriceCatalogModal({
   } = useForm<CreatePriceCatalogFn>({
     defaultValues: {
       priceName: '',
-      startDate: 0,
-      endDate: 0,
+      startDate: undefined,
+      endDate: undefined,
       items: [],
     },
     mode: 'onChange',
@@ -167,16 +187,13 @@ function CreatePriceCatalogModal({
   const handleCreatePriceCatalog: SubmitHandler<CreatePriceCatalogFn> = (
     data
   ) => {
-    const startDate = data.startDate;
-    const endDate = data.endDate;
-
-    const payload = {
+    const transformedData = {
       ...data,
-      startDate: startDate ? Math.abs(Number(startDate)) : 0,
-      endDate: endDate ? Math.abs(Number(endDate)) : 0,
+      startDate: new Date(data.startDate).getTime(),
+      endDate: new Date(data.endDate).getTime(),
     };
 
-    createPriceCatalog(payload, {
+    createPriceCatalog(transformedData, {
       onSuccess() {
         setIsRegisterSuccess(true);
       },
@@ -313,7 +330,6 @@ function CreatePriceCatalogModal({
       headerName: t('priceCatalog.enterPrice'),
       width: 150,
       editable: true,
-      // Định dạng tiền tệ cho hiển thị
       renderCell: (params) => {
         if (params.value != null) {
           return new Intl.NumberFormat('vi-VN', {
@@ -323,12 +339,10 @@ function CreatePriceCatalogModal({
         }
         return '';
       },
-      // Chuyển đổi giá trị nhập vào thành số
       valueParser: (value) => {
         const parsedValue = parseFloat(value);
         return isNaN(parsedValue) ? 0 : parsedValue;
       },
-      // Hiển thị placeholder với hướng dẫn
       renderEditCell: (params) => (
         <TextField
           fullWidth
@@ -391,6 +405,7 @@ function CreatePriceCatalogModal({
       },
     },
   ];
+
   return (
     <>
       <Dialog maxWidth="md" fullWidth open={true} onClose={handleCloseAlert}>
@@ -436,61 +451,70 @@ function CreatePriceCatalogModal({
                   }}
                 />
               </Box>
-              <DateTimePicker
-                label={t('priceCatalog.startDate')}
-                value={
-                  watch('startDate')
-                    ? dayjs.unix(Math.abs(watch('startDate'))).toDate()
-                    : null
-                }
-                onChange={(date) => {
-                  setValue(
-                    'startDate',
-                    date ? Math.abs(dayjs(date).unix()) : 0,
-                    {
-                      shouldValidate: true,
-                    }
-                  );
-                }}
-                renderInput={(params) => (
+              <Controller
+                name="startDate"
+                control={control}
+                defaultValue={undefined}
+                render={({ field }) => (
                   <TextField
-                    {...params}
+                    {...field}
+                    label={t('priceCatalog.startDate')}
+                    type="datetime-local"
+                    InputLabelProps={{ shrink: true }}
                     error={!!errors.startDate}
                     helperText={errors.startDate?.message}
                     fullWidth
                     variant="filled"
+                    value={
+                      field.value
+                        ? dayjs(field.value).format('YYYY-MM-DDTHH:mm')
+                        : ''
+                    }
+                    onChange={(e) => {
+                      const date = new Date(e.target.value);
+                      if (date instanceof Date && !isNaN(date.getTime())) {
+                        field.onChange(date.getTime());
+                        setValue('startDate', date.getTime(), {
+                          shouldValidate: true,
+                        });
+                      }
+                    }}
                   />
                 )}
-                ampm={false}
-                inputFormat="DD/MM/YYYY HH:mm"
-                mask="__/__/____ __:__"
               />
 
-              <DateTimePicker
-                label={t('priceCatalog.endDate')}
-                value={
-                  watch('endDate')
-                    ? dayjs.unix(Math.abs(watch('endDate'))).toDate()
-                    : null
-                }
-                onChange={(date) => {
-                  setValue('endDate', date ? Math.abs(dayjs(date).unix()) : 0, {
-                    shouldValidate: true,
-                  });
-                }}
-                renderInput={(params) => (
+              <Controller
+                name="endDate"
+                control={control}
+                defaultValue={undefined}
+                render={({ field }) => (
                   <TextField
-                    {...params}
+                    {...field}
+                    label={t('priceCatalog.endDate')}
+                    type="datetime-local"
+                    InputLabelProps={{ shrink: true }}
                     error={!!errors.endDate}
                     helperText={errors.endDate?.message}
                     fullWidth
                     variant="filled"
+                    value={
+                      field.value
+                        ? dayjs(field.value).format('YYYY-MM-DDTHH:mm')
+                        : ''
+                    }
+                    onChange={(e) => {
+                      const date = new Date(e.target.value);
+                      if (date instanceof Date && !isNaN(date.getTime())) {
+                        field.onChange(date.getTime());
+                        setValue('endDate', date.getTime(), {
+                          shouldValidate: true,
+                        });
+                      }
+                    }}
                   />
                 )}
-                ampm={false}
-                inputFormat="DD/MM/YYYY HH:mm"
-                mask="__/__/____ __:__"
               />
+
               <Button
                 variant="contained"
                 size="medium"

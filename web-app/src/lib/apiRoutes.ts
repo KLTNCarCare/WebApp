@@ -1,3 +1,5 @@
+import { get } from 'http';
+import { Appointment } from './../api/appointment/types';
 import { create } from 'domain';
 
 const apiRoutes = {
@@ -42,6 +44,7 @@ const apiRoutes = {
     active: (id: string) => `v1/api/price-catalog/active-price-catalog/${id}`,
     inactive: (id: string) =>
       `v1/api/price-catalog/inactive-price-catalog/${id}`,
+    getCurrent: 'v1/api/price-catalog/get-all-price-current',
   },
   service: {
     create: 'v1/api/service/create',
@@ -53,9 +56,29 @@ const apiRoutes = {
     update: 'v1/api/promotion/update-line',
     delete: (id: string) => `v1/api/promotion/delete-line/${id}`,
   },
+  appointment: {
+    create: 'v1/api/appointment/create',
+    getAvailavleTime: 'v1/api/appointment/get-available-time',
+    slotInDay: 'v1/api/appointment/slot-in-day',
+    getAppointmentInDay: 'v1/api/appointment/get-appointment-in-day',
+    confirm: (id: string) => `v1/api/appointment/confirmed/${id}`,
+    delete: (id: string) => `v1/api/appointment/delete/${id}`,
+    inprogress: (id: string) => `v1/api/appointment/in-progress/${id}`,
+    completed: (id: string) => `v1/api/appointment/completed/${id}`,
+    addServiceToAppointment: (id: string) =>
+      `v1/api/appointment/add-service/${id}`,
+  },
   promotionDetail: {
     create: (id: string) => `v1/api/promotion/add-promotion-detail/${id}`,
     delete: (id: string) => `v1/api/promotion/delete-promotion-detail/${id}`,
+  },
+  invoice: {
+    create: 'v1/api/invoice/create',
+    getInvoiceByAppoinment: 'v1/api/invoice/get-invoice',
+    payInvoice: (id: string) => `v1/api/invoice/pay-invoice/${id}`,
+  },
+  socket: {
+    staff: 'http://localhost:8080/sockjs/staff',
   },
 };
 

@@ -136,9 +136,7 @@ const PromotionDataTable: React.FC<PromotionDataTableProps> = ({
     setSelectedPromotion(params.row as PromotionManagement);
   };
 
-  const handleStatusClick = (id: string, currentStatus: string) => {
-    console.log(`Current status for ${id} is ${currentStatus}`);
-  };
+  const handleStatusClick = (id: string, currentStatus: string) => {};
 
   const handleEditClick = (promotionData: any) => {
     setEditPromotionData(promotionData);

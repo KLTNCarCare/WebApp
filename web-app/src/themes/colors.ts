@@ -82,8 +82,6 @@ export const red = {
   '70': '#820014',
 } as const;
 
-// Flood brand colors
-// ---------------
 export const brand = {
   primary: primary[40],
   secondary: secondary[40],

@@ -1,3 +1,4 @@
+import React, { ReactNode, useEffect } from 'react';
 import { ChevronLeft } from '@mui/icons-material';
 import {
   Link,
@@ -10,10 +11,9 @@ import {
   Tooltip,
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
-import React, { ReactNode } from 'react';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import MapIcon from '@mui/icons-material/Map';
+import DashboardIcon from '@mui/icons-material/Dashboard';
 import ContactEmergencyIcon from '@mui/icons-material/ContactEmergency';
 import DiscountIcon from '@mui/icons-material/Discount';
 import CategoryIcon from '@mui/icons-material/Category';
@@ -24,21 +24,18 @@ type SidebarDashboardProps = {
   isCollapse: boolean;
   setIsCollapse: (value: boolean) => void;
 };
-const sidebarDataDashboard: Array<{
-  value: string;
-  label: string;
-  icon: ReactNode;
-}> = [
+
+const sidebarDataDashboard = [
   {
     value: '',
     label: 'selectLanguage',
     icon: <SelectLanguage />,
   },
-  // {
-  //   value: '/dashboard',
-  //   label: 'viewFloodMap',
-  //   icon: <MapIcon />,
-  // },
+  {
+    value: '/dashboard',
+    label: 'dashboard',
+    icon: <DashboardIcon />,
+  },
   {
     value: '/account-management',
     label: 'accountManagement',
@@ -77,7 +74,6 @@ const Drawer = styled(MuiDrawer, {
       duration: theme.transitions.duration.enteringScreen,
     }),
     overflowX: 'hidden',
-
     '& .MuiDrawer-paper': {
       width: SIDEBAR_WIDTH,
       transition: theme.transitions.create('width', {
@@ -110,6 +106,25 @@ const SidebarDashboard: React.FC<SidebarDashboardProps> = ({
   setIsCollapse,
 }) => {
   const { t } = useTranslation();
+  const location = useLocation();
+
+  useEffect(() => {
+    localStorage.setItem('sidebarCollapse', JSON.stringify(isCollapse));
+  }, [isCollapse]);
+
+  useEffect(() => {
+    const storedCollapseState = localStorage.getItem('sidebarCollapse');
+    if (storedCollapseState) {
+      setIsCollapse(JSON.parse(storedCollapseState));
+    }
+  }, [setIsCollapse]);
+
+  useEffect(() => {
+    const storedCollapseState = localStorage.getItem('sidebarCollapse');
+    if (storedCollapseState) {
+      setIsCollapse(JSON.parse(storedCollapseState));
+    }
+  }, [location.pathname, setIsCollapse]);
 
   const handleSidebarToggle = () => {
     setIsCollapse(!isCollapse);
@@ -169,9 +184,12 @@ const SidebarDashboard: React.FC<SidebarDashboardProps> = ({
                   to={item.value}
                   sx={(theme) => ({
                     minHeight: 48,
+                    height: 48,
                     m: 0,
                     borderRadius: 2,
                     px: 1.5,
+                    display: 'flex',
+                    alignItems: 'center',
                     '&.active': {
                       color: `${item.value ? 'primary.main' : ''}`,
                       '&:hover': {
@@ -183,11 +201,19 @@ const SidebarDashboard: React.FC<SidebarDashboardProps> = ({
                     },
                   })}
                 >
-                  <ListItemIcon>{item.icon}</ListItemIcon>
+                  <ListItemIcon sx={{ height: '100%' }}>
+                    {item.icon}
+                  </ListItemIcon>
                   <ListItemText
                     primary={t(`dashboard.${item.label}`)}
                     primaryTypographyProps={{
                       fontWeight: '600 !important',
+                      sx: {
+                        wordBreak: 'break-word',
+                        whiteSpace: 'normal',
+                        overflow: 'hidden',
+                        textOverflow: 'ellipsis',
+                      },
                     }}
                   />
                 </ListItemButton>
@@ -205,7 +231,7 @@ const SidebarDashboard: React.FC<SidebarDashboardProps> = ({
             })}
           >
             <ListItemButton
-              onClick={() => handleSidebarToggle()}
+              onClick={handleSidebarToggle}
               sx={{ p: `12px 16px !important`, justifyContent: 'center' }}
             >
               <ListItemIcon
