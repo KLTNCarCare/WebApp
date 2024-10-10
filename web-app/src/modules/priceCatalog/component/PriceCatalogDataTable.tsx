@@ -158,9 +158,7 @@ const PriceCatalogDataTable: React.FC<PriceCatalogDataTableProps> = ({
     setSelectedPriceCatalog(params.row as PriceCatalogManagement);
   };
 
-  const handleStatusClick = (id: string, currentStatus: string) => {
-    console.log(`Current status for ${id} is ${currentStatus}`);
-  };
+  const handleStatusClick = (id: string, currentStatus: string) => {};
 
   const handleEditClick = (priceCatalogData: any) => {
     setEditPriceCatalogData(priceCatalogData);

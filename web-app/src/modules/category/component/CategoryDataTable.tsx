@@ -135,9 +135,7 @@ const CategoryDataTable: React.FC<CategoryDataTableProps> = ({
     setSelectedCategory(params.row as CategoryManagement);
   };
 
-  const handleStatusClick = (id: string, currentStatus: string) => {
-    console.log(`Current status for ${id} is ${currentStatus}`);
-  };
+  const handleStatusClick = (id: string, currentStatus: string) => {};
 
   const handleEditClick = (categoryData: any) => {
     setEditCategoryData(categoryData);

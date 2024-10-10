@@ -199,7 +199,6 @@ const PromotionDetailModal: React.FC<PromotionDetailModalProps> = ({
         });
         updatedRow = { ...newRow, isNew: false, _id: response.data._id };
       } catch (error) {
-        console.error('Error creating new promotion line:', error);
         return newRow;
       }
     } else {
@@ -212,7 +211,6 @@ const PromotionDetailModal: React.FC<PromotionDetailModalProps> = ({
         });
         updatedRow = { ...newRow, isNew: false };
       } catch (error) {
-        console.error('Error updating promotion line:', error);
         return newRow;
       }
     }

@@ -54,10 +54,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         onSuccess: (res: {
           data: { accessToken: string; refreshToken: string };
         }) => {
-          console.log('Login successful:', res);
-          console.log('Access Token:', res.data.accessToken);
-          console.log('Refresh Token:', res.data.refreshToken);
-
           if (res.data.accessToken && res.data.refreshToken) {
             setCookie('accessToken', res.data.accessToken);
             setCookie('refreshToken', res.data.refreshToken);

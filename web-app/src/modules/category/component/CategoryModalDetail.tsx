@@ -169,12 +169,6 @@ const CategoryDetailModal: React.FC<CategoryDetailModalProps> = ({
   };
 
   const processRowUpdate = async (newRow: GridRowModel) => {
-    console.log('New Row Values:', {
-      serviceName: newRow.serviceName,
-      duration: newRow.duration,
-      description: newRow.description,
-    });
-
     let updatedRow: ServiceByCategory;
 
     if (newRow.isNew) {

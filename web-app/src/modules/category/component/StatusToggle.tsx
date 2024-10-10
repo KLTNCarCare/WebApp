@@ -63,9 +63,7 @@ const StatusToggle = ({ _id, currentStatus, refetch }: StatusToggleProps) => {
         await setActive({ _id });
       }
       refetch();
-    } catch (error) {
-      console.error('Failed to update status:', error);
-    }
+    } catch (error) {}
   };
 
   const handleCloseSuccessDialog = () => {
