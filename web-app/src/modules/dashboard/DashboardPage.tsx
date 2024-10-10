@@ -445,7 +445,27 @@ export function DashboardPage() {
   }, [data, t]);
 
   useEffect(() => {
+    console.log('messages', messages);
     if (messages.some((message: any) => message.mess_type === 'PAID-INVOICE')) {
+      refetch();
+    }
+    if (
+      messages.some(
+        (message: any) => message.mess_type === 'CANCELED-APPOINTMENT'
+      )
+    ) {
+      refetch();
+    }
+    if (
+      messages.some((message: any) => message.mess_type === 'SAVE-APPOINTMENT')
+    ) {
+      refetch();
+    }
+    if (
+      messages.some(
+        (message: any) => message.mess_type === 'MISSED-APPOINTMENT'
+      )
+    ) {
       refetch();
     }
   }, [messages, refetch]);

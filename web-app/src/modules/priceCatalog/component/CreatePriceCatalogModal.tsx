@@ -179,9 +179,16 @@ function CreatePriceCatalogModal({
   };
 
   const handleServiceChange = (id: GridRowId, value: string) => {
-    setRows((prevRows) =>
-      prevRows.map((row) => (row.id === id ? { ...row, itemName: value } : row))
-    );
+    const service = services?.find((service) => service.serviceName === value);
+    if (service) {
+      setRows((prevRows) =>
+        prevRows.map((row) =>
+          row.id === id
+            ? { ...row, itemId: service._id, itemName: service.serviceName }
+            : row
+        )
+      );
+    }
   };
 
   const handleCreatePriceCatalog: SubmitHandler<CreatePriceCatalogFn> = (
@@ -263,7 +270,7 @@ function CreatePriceCatalogModal({
 
   const columns: GridColDef[] = [
     {
-      field: 'itemId',
+      field: 'categoryId',
       headerName: t('priceCatalog.selectCategory'),
       width: 200,
       editable: true,
@@ -281,7 +288,7 @@ function CreatePriceCatalogModal({
             onChange={(e) => {
               params.api.setEditCellValue({
                 id: params.id,
-                field: 'itemId',
+                field: 'categoryId',
                 value: e.target.value,
               });
               handleCategoryChange(params.id, e.target.value);
@@ -314,13 +321,18 @@ function CreatePriceCatalogModal({
               });
               handleServiceChange(params.id, e.target.value);
             }}
-            disabled={!params.row.itemId}
+            disabled={!params.row.categoryId}
           >
-            {services?.map((service) => (
-              <MenuItem key={service._id} value={service.serviceName}>
-                {service.serviceName}
-              </MenuItem>
-            ))}
+            {services
+              ?.filter(
+                (service: { categoryId: string }) =>
+                  service.categoryId === params.row.categoryId
+              )
+              .map((service) => (
+                <MenuItem key={service._id} value={service.serviceName}>
+                  {service.serviceName}
+                </MenuItem>
+              ))}
           </Select>
         </FormControl>
       ),
