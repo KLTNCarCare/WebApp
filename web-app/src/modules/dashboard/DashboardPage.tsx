@@ -525,6 +525,13 @@ export function DashboardPage() {
     }
     if (
       messages.some(
+        (message: any) => message.mess_type === 'CREATED-INVOICE-APPPOINTMENT'
+      )
+    ) {
+      refetch();
+    }
+    if (
+      messages.some(
         (message: any) => message.mess_type === 'MISSED-APPOINTMENT'
       )
     ) {
