@@ -36,7 +36,9 @@
     "no": "Không",
     "complete": "Hoàn thành",
     "confirming": "Đang xác nhận",
-    "save": "Lưu"
+    "save": "Lưu",
+    "appointmentsFor": "Lịch hẹn",
+    "invoice": "Hóa đơn"
   },
   "status": {
     "confirmed": "Đã xác nhận",
@@ -228,6 +230,9 @@
     "submitPayment": "Gửi thanh toán",
     "paymentConfirmation": "Nhân viên xác nhận thanh toán {{invoiceAmount}} VND bằng tiền mặt cho khách hàng {{customerName}} ({{customerPhone}})",
     "paymentFailed": "Thanh toán thất bại. Vui lòng thử lại.",
-    "submiting": " Đang xử lý"
+    "submiting": " Đang xử lý",
+    "index": "STT",
+    "invoiceList": "Danh sách hóa đơn",
+    "userInvoiceManagement": "Quản lý hóa đơn"
   }
 }

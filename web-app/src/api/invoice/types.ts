@@ -43,3 +43,14 @@ export interface GetInvoiceByAppoinmentFn {
 export interface ConfirmPayInvoiceFn {
   invoiceId: string;
 }
+
+export interface GetInvoiceParams {
+  page: number;
+  limit: number;
+}
+
+export interface InvoiceResponse {
+  totalPage: number;
+  totalCount: number;
+  data: Invoice[];
+}

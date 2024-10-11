@@ -7,6 +7,7 @@ import {
   IconButton,
   Button,
   Grid,
+  TextField,
 } from '@mui/material';
 import { Add as AddIcon, Check as CheckIcon, Done } from '@mui/icons-material';
 import { DndProvider, useDrag, useDrop } from 'react-dnd';
@@ -24,6 +25,10 @@ import InvoiceDetailModal from './component/InvoiceDetailModal';
 import { Invoice } from 'src/api/invoice/types';
 import useSocket from 'src/lib/socket';
 import { useTranslation } from 'react-i18next';
+import { DatePicker } from '@mui/x-date-pickers';
+import AppointmentsModal from './component/AppointmentsModal';
+import dayjs from 'dayjs';
+import { cyan, green, grey, lightGreen } from '@mui/material/colors';
 
 interface Slot {
   id: string;
@@ -59,7 +64,6 @@ const DraggableAppointment: React.FC<DraggableAppointmentProps> = ({
   const [invoiceModalOpen, setInvoiceModalOpen] = useState(false);
   const [selectedInvoice, setSelectedInvoice] = useState<Invoice | null>(null);
   const [isLoadingInvoice, setIsLoadingInvoice] = useState(false);
-
   const { mutate: confirmAppointment, isLoading } = useConfirmAppointment();
   const { mutate: inProgressAppointment, isLoading: isInProgress } =
     useInProgressAppointment();
@@ -150,6 +154,21 @@ const DraggableAppointment: React.FC<DraggableAppointmentProps> = ({
     canDrag: item.status === 'confirmed',
   });
 
+  const getBackgroundColor = (status: string) => {
+    switch (status) {
+      case 'missed':
+        return grey[300];
+      case 'pending':
+        return cyan[300];
+      case 'in-progress':
+        return lightGreen[300];
+      case 'completed':
+        return green[700];
+      default:
+        return '#fff';
+    }
+  };
+
   return (
     <>
       <Paper
@@ -161,6 +180,7 @@ const DraggableAppointment: React.FC<DraggableAppointmentProps> = ({
           boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.1)',
           transition: 'box-shadow 0.3s ease',
           maxWidth: 400,
+          backgroundColor: getBackgroundColor(item.status),
           '&:hover': {
             boxShadow: '0px 6px 14px rgba(0, 0, 0, 0.15)',
           },
@@ -396,6 +416,34 @@ export function DashboardPage() {
   const [isInvoiceModalOpen, setIsInvoiceModalOpen] = useState<boolean>(false);
   const [selectedInvoice, setSelectedInvoice] = useState<Invoice | null>(null);
 
+  const [selectedDate, setSelectedDate] = useState(dayjs());
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const { data: appointments, refetch: refetchAppointments } =
+    useGetAppointmentInDay({ date: selectedDate.valueOf().toString() });
+
+  const handleDateChange = (date: any) => {
+    setSelectedDate(date);
+    if (!dayjs(date).isSame(dayjs(), 'day')) {
+      setIsModalOpen(true);
+    } else {
+      setIsModalOpen(false);
+    }
+    refetchAppointments();
+  };
+
+  const handleAppointmentsModalClose = () => {
+    setIsModalOpen(false);
+  };
+
+  const filteredAppointments =
+    appointments?.filter(
+      (item) =>
+        item.status !== 'in-progress' &&
+        item.status !== 'completed' &&
+        dayjs(item.startTime).isSame(selectedDate, 'day')
+    ) || [];
+
   const startOfToday = new Date();
   startOfToday.setHours(0, 0, 0, 0);
   const unixTimestamp = Math.floor(startOfToday.getTime());
@@ -419,6 +467,16 @@ export function DashboardPage() {
       const appointments = data.map((appointment) => ({
         ...appointment,
         services: appointment.items.map((item) => item.serviceName),
+        color:
+          appointment.status === 'missed'
+            ? grey[300]
+            : appointment.status === 'pending'
+            ? cyan[300]
+            : appointment.status === 'in-progress'
+            ? lightGreen[300]
+            : appointment.status === 'completed'
+            ? green[700]
+            : undefined,
       }));
 
       const inProgressAppointments = appointments.filter(
@@ -445,7 +503,6 @@ export function DashboardPage() {
   }, [data, t]);
 
   useEffect(() => {
-    console.log('messages', messages);
     if (messages.some((message: any) => message.mess_type === 'PAID-INVOICE')) {
       refetch();
     }
@@ -609,12 +666,41 @@ export function DashboardPage() {
                     padding: 1,
                     borderRadius: 1,
                     boxShadow: 1,
+                    flexWrap: 'nowrap',
+                    gap: 1,
                   }}
                 >
-                  <Typography variant="h6">
+                  <Typography
+                    variant="h6"
+                    sx={{
+                      flex: '1 1 auto',
+                      minWidth: '150px',
+                      whiteSpace: 'nowrap',
+                    }}
+                  >
                     {t('dashboard.appointments')}
                   </Typography>
-                  <IconButton color="primary" onClick={handleAddAppointment}>
+                  <DatePicker
+                    label="Select Date"
+                    value={selectedDate}
+                    onChange={handleDateChange}
+                    renderInput={(params) => (
+                      <TextField
+                        {...params}
+                        sx={{
+                          flex: '1 1 auto',
+                          minWidth: '150px',
+                          maxWidth: '200px',
+                          whiteSpace: 'nowrap',
+                        }}
+                      />
+                    )}
+                  />
+                  <IconButton
+                    color="primary"
+                    onClick={handleAddAppointment}
+                    sx={{ flex: '0 0 auto' }}
+                  >
                     <AddIcon />
                   </IconButton>
                 </Box>
@@ -702,6 +788,14 @@ export function DashboardPage() {
               setPaginationModel={() => {}}
             />
           )}
+
+          <AppointmentsModal
+            open={isModalOpen}
+            onClose={handleAppointmentsModalClose}
+            selectedDate={selectedDate}
+            appointments={appointments || []}
+            refetch={refetchAppointments}
+          />
         </DndProvider>
       )}
     </AdminLayout>

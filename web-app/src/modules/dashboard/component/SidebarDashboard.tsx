@@ -18,6 +18,7 @@ import ContactEmergencyIcon from '@mui/icons-material/ContactEmergency';
 import DiscountIcon from '@mui/icons-material/Discount';
 import CategoryIcon from '@mui/icons-material/Category';
 import PriceChangeIcon from '@mui/icons-material/PriceChange';
+import ReceiptLongIcon from '@mui/icons-material/ReceiptLong';
 import SelectLanguage from './SelectLanguage';
 
 type SidebarDashboardProps = {
@@ -36,10 +37,15 @@ const sidebarDataDashboard = [
     label: 'dashboard',
     icon: <DashboardIcon />,
   },
+  // {
+  //   value: '/account-management',
+  //   label: 'accountManagement',
+  //   icon: <ContactEmergencyIcon />,
+  // },
   {
-    value: '/account-management',
-    label: 'accountManagement',
-    icon: <ContactEmergencyIcon />,
+    value: '/invoice',
+    label: 'invoice',
+    icon: <ReceiptLongIcon />,
   },
   {
     value: '/promotion',

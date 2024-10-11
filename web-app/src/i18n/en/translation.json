@@ -36,7 +36,9 @@
     "no": "No",
     "complete": "Complete",
     "confirming": "Confirming",
-    "save": "Save"
+    "save": "Save",
+    "appointmentsFor": "Appointments for",
+    "invoice": "Invoice"
   },
   "status": {
     "confirmed": "Confirmed",
@@ -227,6 +229,8 @@
     "submitPayment": "Submit Payment",
     "paymentConfirmation": "Employee confirms payment of {{invoiceAmount}} VND in cash for customer {{customerName}} ({{customerPhone}})",
     "paymentFailed": "Payment failed. Please try again.",
-    "submiting": " Submitting"
+    "submiting": " Submitting",
+    "invoiceList": "Invoice List",
+    "userInvoiceManagement": "Invoice Management"
   }
 }
