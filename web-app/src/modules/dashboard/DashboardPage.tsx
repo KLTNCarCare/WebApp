@@ -29,6 +29,7 @@ import { DatePicker } from '@mui/x-date-pickers';
 import AppointmentsModal from './component/AppointmentsModal';
 import dayjs from 'dayjs';
 import { cyan, green, grey, lightGreen } from '@mui/material/colors';
+import { format } from 'date-fns';
 
 interface Slot {
   id: string;
@@ -153,6 +154,10 @@ const DraggableAppointment: React.FC<DraggableAppointmentProps> = ({
     item: { id: item._id },
     canDrag: item.status === 'confirmed',
   });
+  const formatDateTime = (dateTimeString: string) => {
+    const date = new Date(dateTimeString);
+    return format(date, 'HH:mm dd/MM/yyyy');
+  };
 
   const getBackgroundColor = (status: string) => {
     switch (status) {
@@ -284,10 +289,10 @@ const DraggableAppointment: React.FC<DraggableAppointmentProps> = ({
       >
         <Box sx={{ p: 2 }}>
           <Typography variant="body2" sx={{ fontWeight: 'bold', mb: 0.5 }}>
-            {t('dashboard.startTime')}: {item.startTime}
+            {t('dashboard.startTime')}: {formatDateTime(item.startTime)}
           </Typography>
           <Typography variant="body2" sx={{ fontWeight: 'bold', mb: 0.5 }}>
-            {t('dashboard.endTime')}: {item.endTime}
+            {t('dashboard.endTime')}: {formatDateTime(item.endTime)}
           </Typography>
           <Typography variant="body2" sx={{ fontWeight: 'bold', mb: 0.5 }}>
             {t('dashboard.notes')}: {item.notes}
@@ -311,7 +316,7 @@ const DraggableAppointment: React.FC<DraggableAppointmentProps> = ({
             {t('dashboard.status')}: {t(`status.${item.status}`)}
           </Typography>
           <Typography variant="body2" sx={{ fontWeight: 'bold', mb: 0.5 }}>
-            {t('dashboard.createdAt')}: {item.createdAt}
+            {t('dashboard.createdAt')}: : {formatDateTime(item.createdAt)}
           </Typography>
         </Box>
       </Popover>
