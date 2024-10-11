@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useForm, SubmitHandler } from 'react-hook-form';
+import { useForm, SubmitHandler, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import {
@@ -18,6 +18,7 @@ import {
 import { ReactComponent as CheckIcon } from '../../../assets/icons/CheckCircle.svg';
 import { CreatePromotionFn } from 'src/api/promotion/types';
 import { useCreatePromotion } from 'src/api/promotion/useCreatePromotion';
+import dayjs from 'dayjs';
 
 const schemaCreatePromotion = yup.object({
   promotionName: yup.string().required('Vui lòng nhập tên khuyến mãi'),
@@ -37,10 +38,12 @@ function CreatePromotionModal({
 }: CreatePromotionProps) {
   const { t } = useTranslation();
   const {
+    control,
     register,
     formState: { errors, isValid },
     handleSubmit,
     reset,
+    setValue,
   } = useForm<CreatePromotionFn>({
     defaultValues: {
       promotionName: '',
@@ -57,7 +60,12 @@ function CreatePromotionModal({
     useCreatePromotion();
 
   const handleCreatePromotion: SubmitHandler<CreatePromotionFn> = (data) => {
-    createPromotion(data, {
+    const processedData = {
+      ...data,
+      endDate: dayjs(data.endDate).endOf('day').toISOString(),
+      detail: [],
+    };
+    createPromotion(processedData, {
       onSuccess() {
         setIsRegisterSuccess(true);
       },
@@ -116,16 +124,32 @@ function CreatePromotionModal({
               errors.startDate ? String(errors.startDate.message) : ''
             }
           />
-          <TextField
-            required
-            fullWidth
-            variant="filled"
-            label={t('promotion.endDate')}
-            type="date"
-            {...register('endDate')}
-            InputLabelProps={{ shrink: true }}
-            error={!!errors.endDate}
-            helperText={errors.endDate ? String(errors.endDate.message) : ''}
+          <Controller
+            name="endDate"
+            control={control}
+            render={({ field }) => (
+              <TextField
+                {...field}
+                required
+                fullWidth
+                variant="filled"
+                label={t('promotion.endDate')}
+                type="date"
+                InputLabelProps={{ shrink: true }}
+                error={!!errors.endDate}
+                helperText={
+                  errors.endDate ? String(errors.endDate.message) : ''
+                }
+                value={
+                  field.value ? dayjs(field.value).format('YYYY-MM-DD') : ''
+                }
+                onChange={(e) => {
+                  const date = dayjs(e.target.value).endOf('day').toISOString();
+                  field.onChange(date);
+                  setValue('endDate', date, { shouldValidate: true });
+                }}
+              />
+            )}
           />
           <Button
             variant="contained"

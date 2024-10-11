@@ -508,31 +508,20 @@ export function DashboardPage() {
   }, [data, t]);
 
   useEffect(() => {
-    if (messages.some((message: any) => message.mess_type === 'PAID-INVOICE')) {
-      refetch();
-    }
+    const messageTypesToRefetch = [
+      'PAID-INVOICE',
+      'CANCELED-APPOINTMENT',
+      'SAVE-APPOINTMENT',
+      'CREATED-INVOICE-APPPOINTMENT',
+      'MISSED-APPOINTMENT',
+      'CONFIRMED-APPOINTMENT',
+      'IN-PROGRESS-APPOINTMENT',
+      'COMPLETED-APPOINTMENT',
+    ];
+
     if (
-      messages.some(
-        (message: any) => message.mess_type === 'CANCELED-APPOINTMENT'
-      )
-    ) {
-      refetch();
-    }
-    if (
-      messages.some((message: any) => message.mess_type === 'SAVE-APPOINTMENT')
-    ) {
-      refetch();
-    }
-    if (
-      messages.some(
-        (message: any) => message.mess_type === 'CREATED-INVOICE-APPPOINTMENT'
-      )
-    ) {
-      refetch();
-    }
-    if (
-      messages.some(
-        (message: any) => message.mess_type === 'MISSED-APPOINTMENT'
+      messages.some((message: any) =>
+        messageTypesToRefetch.includes(message.mess_type)
       )
     ) {
       refetch();
