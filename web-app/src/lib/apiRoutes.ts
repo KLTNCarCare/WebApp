@@ -58,10 +58,12 @@ const apiRoutes = {
   },
   appointment: {
     create: 'v1/api/appointment/create',
+    createOnSite: 'v1/api/appointment/create-on-site',
     getAvailavleTime: 'v1/api/appointment/get-available-time',
     slotInDay: 'v1/api/appointment/slot-in-day',
     getAppointmentInDay: 'v1/api/appointment/get-appointment-in-day',
     confirm: (id: string) => `v1/api/appointment/confirmed/${id}`,
+    cancel: (id: string) => `v1/api/appointment/canceled/${id}`,
     delete: (id: string) => `v1/api/appointment/delete/${id}`,
     inprogress: (id: string) => `v1/api/appointment/in-progress/${id}`,
     completed: (id: string) => `v1/api/appointment/completed/${id}`,
@@ -75,7 +77,7 @@ const apiRoutes = {
   invoice: {
     create: 'v1/api/invoice/create',
     getInvoiceByAppoinment: 'v1/api/invoice/get-invoice',
-    payInvoice: (id: string) => `v1/api/invoice/pay-invoice/${id}`,
+    payInvoice: (id: string) => `v1/api/invoice/create/${id}`,
     getAllInvoice: 'v1/api/invoice/get-all',
   },
   socket: {

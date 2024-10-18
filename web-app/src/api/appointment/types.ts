@@ -1,5 +1,3 @@
-import exp from 'constants';
-
 export interface Customer {
   phone: string;
   name: string;
@@ -75,5 +73,8 @@ export interface InProgressAppointmentFn {
 }
 
 export interface CompletedAppointmentFn {
+  _id: string;
+}
+export interface CanceledAppointmentFn {
   _id: string;
 }

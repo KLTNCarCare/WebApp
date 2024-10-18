@@ -6,6 +6,7 @@ export type ApiError<T = string> = {
   title: string;
   description: string;
   internal: string;
+  message: string;
 };
 
 export type DefaultQueryError = AxiosError<ApiError>;

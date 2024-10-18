@@ -9,6 +9,7 @@ type ItemGetCurent = {
   itemName: string;
   categoryId: string;
   categoryName: string;
+  price: number;
   duration: number;
 };
 interface ApiResponse {
@@ -16,7 +17,9 @@ interface ApiResponse {
   data: ItemGetCurent[];
 }
 
-export const getCurrentServiceActiveFn = async (): Promise<ItemGetCurent[]> => {
+export const getCurrentServiceActiveFn = async (
+  searchText: string
+): Promise<ItemGetCurent[]> => {
   const token = getCookie('accessToken');
   const response = await httpClient.get<ApiResponse>(
     apiRoutes.priceCatalog.getCurrent,
@@ -25,17 +28,21 @@ export const getCurrentServiceActiveFn = async (): Promise<ItemGetCurent[]> => {
         Authorization: `Bearer ${token}`,
         'Content-Type': 'application/x-www-form-urlencoded',
       },
+      params: {
+        searchText,
+      },
     }
   );
   return response.data.data;
 };
 
 export const useGetCurrentServiceActive = (
+  searchText: string,
   options?: UseQueryOptions<ItemGetCurent[], DefaultQueryError>
 ) => {
   return useQuery<ItemGetCurent[], DefaultQueryError>(
-    ['currentServiceActive'],
-    getCurrentServiceActiveFn,
+    ['currentServiceActive', searchText],
+    () => getCurrentServiceActiveFn(searchText),
     options
   );
 };

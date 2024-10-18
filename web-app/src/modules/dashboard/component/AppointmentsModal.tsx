@@ -3,7 +3,6 @@ import { Box, Modal, Button } from '@mui/material';
 import { DataGrid, GridColDef, GridPaginationModel } from '@mui/x-data-grid';
 import dayjs from 'dayjs';
 import { useTranslation } from 'react-i18next';
-import { backgroundColor } from 'tailwindcss/defaultTheme';
 import { cyan, green, grey, lightGreen, red } from '@mui/material/colors';
 
 interface AppointmentsModalProps {

@@ -11,7 +11,7 @@ export const createAppointmentFn = async (
 ): Promise<Appointment> => {
   const token = getCookie('accessToken');
   const response = await httpClient.post<Appointment>(
-    apiRoutes.appointment.create,
+    apiRoutes.appointment.createOnSite,
     data,
     {
       headers: {

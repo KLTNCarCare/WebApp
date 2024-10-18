@@ -17,11 +17,20 @@ import {
   TextField,
   Typography,
   FormControl,
-  InputLabel,
-  Select,
-  MenuItem,
   Box,
   IconButton,
+  Autocomplete,
+  Paper,
+  Divider,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Grid,
+  Snackbar,
+  Alert,
 } from '@mui/material';
 import { Add, Delete } from '@mui/icons-material';
 import { v4 as uuidv4 } from 'uuid';
@@ -30,6 +39,7 @@ import { useGetCurrentServiceActive } from 'src/api/appointment/useGetAllService
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import timezone from 'dayjs/plugin/timezone';
+import useDebounce from 'src/lib/hooks/useDebounce';
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
@@ -40,6 +50,7 @@ const schemaCreateAppointment = yup.object({
     name: yup.string().required('Vui lòng nhập tên khách hàng'),
   }),
   startTime: yup.date().required('Vui lòng nhập thời gian bắt đầu'),
+  // .min(new Date(), 'Thời gian bắt đầu phải lớn hơn thời gian hiện tại'),
 });
 
 type CreateAppointmentProps = {
@@ -57,7 +68,10 @@ type Item = {
   serviceName: string;
   typeId: string;
   typeName: string;
-  duration?: number;
+  price: number;
+  duration: number;
+  categoryId: string;
+  categoryName: string;
 };
 
 function CreateAppointmentModal({
@@ -73,6 +87,7 @@ function CreateAppointmentModal({
     formState: { errors, isValid },
     handleSubmit,
     setValue,
+    watch,
   } = useForm<{
     customer: { phone: string; name: string };
     vehicle: { licensePlate: string; model: string };
@@ -93,44 +108,57 @@ function CreateAppointmentModal({
     resolver: yupResolver(schemaCreateAppointment),
   });
 
-  const { fields, append, remove } = useFieldArray({
+  const { fields, append, remove, update } = useFieldArray({
     control,
     name: 'items',
   });
 
-  const { data: services, isLoading: loadingServices } =
-    useGetCurrentServiceActive();
+  const [searchText, setSearchText] = useState('');
+  const debouncedSearchText = useDebounce(searchText, 500);
+  const [selectedServices, setSelectedServices] = useState<Item[]>([]);
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState('');
+
+  const { data: services = [], isLoading: loadingServices } =
+    useGetCurrentServiceActive(
+      open && debouncedSearchText ? debouncedSearchText : ''
+    );
+
+  const startTime = watch('startTime');
+  const totalDuration = watch('total_duration');
 
   useEffect(() => {
     const totalDuration = fields.reduce(
       (acc, field) =>
         acc +
-        (services?.find((service) => service.itemId === field.itemId)
+        (selectedServices.find((service) => service.itemId === field.itemId)
           ?.duration ?? 0),
       0
     );
     setValue('total_duration', totalDuration);
-  }, [fields, services, setValue]);
+  }, [fields, selectedServices, setValue]);
 
-  const handleServiceChange = (index: number, serviceId: string) => {
-    const selectedService = services?.find(
-      (service) => service.itemId === serviceId
-    );
-    if (selectedService) {
-      const updatedFields = [...fields];
-      updatedFields[index] = {
-        ...updatedFields[index],
-        itemId: selectedService.itemId,
-        itemName: selectedService.itemName,
-        serviceId: selectedService.itemId,
-        serviceName: selectedService.itemName,
-        typeId: selectedService.categoryId,
-        typeName: selectedService.categoryName,
-        duration: selectedService.duration,
-      };
-      setValue('items', updatedFields);
+  const handleServiceChange = (index: number, service: any) => {
+    if (service) {
+      update(index, {
+        ...fields[index],
+        itemId: service.itemId,
+        itemName: service.itemName,
+        serviceId: service.itemId,
+        serviceName: service.itemName,
+        typeId: service.categoryId,
+        typeName: service.categoryName,
+        price: service.price,
+        duration: service.duration,
+        categoryId: service.categoryId,
+        categoryName: service.categoryName,
+      });
 
-      const totalDuration = updatedFields.reduce(
+      const updatedSelectedServices = [...selectedServices];
+      updatedSelectedServices[index] = service;
+      setSelectedServices(updatedSelectedServices);
+
+      const totalDuration = updatedSelectedServices.reduce(
         (sum, field) => sum + (field.duration ?? 0),
         0
       );
@@ -144,7 +172,12 @@ function CreateAppointmentModal({
       if (setIsAddAppointment) setIsAddAppointment(false);
       onClose();
     },
-    onError: (error) => {},
+    onError: (error) => {
+      const errorMessage =
+        error.response?.data?.message || 'Request failed with status code 400';
+      setSnackbarMessage(errorMessage);
+      setSnackbarOpen(true);
+    },
   });
 
   const handleCreateAppointment: SubmitHandler<any> = (data) => {
@@ -159,251 +192,383 @@ function CreateAppointmentModal({
         typeName: item.typeName,
         serviceId: item.serviceId,
         serviceName: item.serviceName,
+        price: item.price,
+        categoryId: item.categoryId,
+        categoryName: item.categoryName,
       })),
     };
 
     createAppointment(appointmentData);
   };
 
+  const totalPrice = fields.reduce((acc, field) => acc + (field.price ?? 0), 0);
+  const estimatedCompletionTime = startTime
+    ? dayjs(startTime)
+        .add(totalDuration ?? 0, 'hour')
+        .format('YYYY-MM-DD HH:mm')
+    : '';
+
   return (
-    <Dialog maxWidth="md" fullWidth open={open} onClose={onClose}>
+    <Dialog maxWidth="lg" fullWidth open={open} onClose={onClose}>
       <DialogTitle sx={{ p: 2 }}>
         <Stack>
           <Typography variant="h4">{t('priceCatalog.addNew')}</Typography>
         </Stack>
       </DialogTitle>
       <DialogContent sx={{ px: 2 }}>
-        <form
-          id="create-appointment"
-          onSubmit={handleSubmit(handleCreateAppointment)}
-        >
-          <Stack spacing={4} sx={{ paddingTop: '10px' }}>
-            {/* Customer Info Section */}
-            <Box>
-              <Typography variant="h5" gutterBottom>
-                {t('priceCatalog.customerInfo')}
-              </Typography>
-              <Stack spacing={2}>
-                <TextField
-                  required
-                  variant="filled"
-                  label={t('priceCatalog.customerName')}
-                  type="text"
-                  {...register('customer.name')}
-                  inputProps={{ inputMode: 'text' }}
-                  error={!!errors.customer?.name}
-                  helperText={
-                    errors.customer?.name
-                      ? String(errors.customer.name.message)
-                      : ''
-                  }
-                />
-                <TextField
-                  required
-                  variant="filled"
-                  label={t('priceCatalog.customerPhone')}
-                  type="text"
-                  {...register('customer.phone')}
-                  inputProps={{ inputMode: 'text' }}
-                  error={!!errors.customer?.phone}
-                  helperText={
-                    errors.customer?.phone
-                      ? String(errors.customer.phone.message)
-                      : ''
-                  }
-                />
-              </Stack>
-            </Box>
-
-            {/* Vehicle Info Section */}
-            <Box>
-              <Typography variant="h5" gutterBottom>
-                {t('priceCatalog.vehicleInfo')}
-              </Typography>
-              <Stack spacing={2}>
-                <TextField
-                  required
-                  variant="filled"
-                  label={t('priceCatalog.vehicleModel')}
-                  type="text"
-                  {...register('vehicle.model')}
-                  inputProps={{ inputMode: 'text' }}
-                  error={!!errors.vehicle?.model}
-                  helperText={
-                    errors.vehicle?.model
-                      ? String(errors.vehicle.model.message)
-                      : ''
-                  }
-                />
-                <TextField
-                  required
-                  variant="filled"
-                  label={t('priceCatalog.vehicleLicensePlate')}
-                  type="text"
-                  {...register('vehicle.licensePlate')}
-                  inputProps={{ inputMode: 'text' }}
-                  error={!!errors.vehicle?.licensePlate}
-                  helperText={
-                    errors.vehicle?.licensePlate
-                      ? String(errors.vehicle.licensePlate.message)
-                      : ''
-                  }
-                />
-              </Stack>
-            </Box>
-
-            {/* Service Selection Section */}
-            <Box>
-              <Typography variant="h5" gutterBottom>
-                {t('priceCatalog.serviceSelection')}
-              </Typography>
-              {fields.map((field, index) => (
-                <Box
-                  key={field.id}
-                  sx={{ display: 'flex', alignItems: 'center' }}
-                >
-                  <FormControl fullWidth variant="filled" sx={{ mr: 2 }}>
-                    <InputLabel>{t('priceCatalog.selectService')}</InputLabel>
-                    <Controller
-                      name={`items.${index}.itemId`}
-                      control={control}
-                      render={({ field }) => (
-                        <Select
-                          {...field}
-                          onChange={(e) => {
-                            field.onChange(e.target.value);
-                            handleServiceChange(index, e.target.value);
-                          }}
-                        >
-                          {services?.map((service) => (
-                            <MenuItem
-                              key={service.itemId}
-                              value={service.itemId}
-                            >
-                              {service.itemName}
-                            </MenuItem>
-                          ))}
-                        </Select>
-                      )}
-                    />
-                  </FormControl>
-                  <IconButton
-                    color="secondary"
-                    onClick={() => remove(index)}
-                    disabled={fields.length === 1}
-                  >
-                    <Delete />
-                  </IconButton>
-                </Box>
-              ))}
-              <Button
-                variant="outlined"
-                startIcon={<Add />}
-                onClick={() =>
-                  append({
-                    id: uuidv4(),
-                    itemId: '',
-                    itemName: '',
-                    serviceId: '',
-                    serviceName: '',
-                    typeId: '',
-                    typeName: '',
-                    duration: 0,
-                  })
-                }
-              >
-                {t('priceCatalog.addItem')}
-              </Button>
-            </Box>
-
-            {/* Additional Details Section */}
-            <Box>
-              <Typography variant="h5" gutterBottom>
-                {t('priceCatalog.additionalDetails')}
-              </Typography>
-              <Stack spacing={2}>
-                <Controller
-                  name="startTime"
-                  control={control}
-                  defaultValue={undefined}
-                  render={({ field }) => (
+        <Paper elevation={3} sx={{ p: 3 }}>
+          <form
+            id="create-appointment"
+            onSubmit={handleSubmit(handleCreateAppointment)}
+          >
+            <Stack spacing={3} sx={{ paddingTop: '10px' }}>
+              {/* Customer Info Section */}
+              <Box>
+                <Typography variant="h5" gutterBottom>
+                  {t('priceCatalog.customerInfo')}
+                </Typography>
+                <Grid container spacing={2}>
+                  <Grid item xs={12} sm={6}>
                     <TextField
-                      {...field}
-                      label={t('priceCatalog.startDate')}
-                      type="datetime-local"
-                      InputLabelProps={{ shrink: true }}
-                      error={!!errors.startTime}
-                      helperText={errors.startTime?.message}
-                      fullWidth
+                      required
                       variant="filled"
-                      value={
-                        field.value
-                          ? dayjs(field.value).format('YYYY-MM-DDTHH:mm')
+                      label={t('priceCatalog.customerName')}
+                      type="text"
+                      {...register('customer.name')}
+                      inputProps={{ inputMode: 'text' }}
+                      error={!!errors.customer?.name}
+                      helperText={
+                        errors.customer?.name
+                          ? String(errors.customer.name.message)
                           : ''
                       }
-                      onChange={(e) => {
-                        const date = new Date(e.target.value);
-                        if (date instanceof Date && !isNaN(date.getTime())) {
-                          field.onChange(date.getTime());
-                          setValue('startTime', date, { shouldValidate: true });
-                        }
-                      }}
-                    />
-                  )}
-                />
-                <Controller
-                  name="total_duration"
-                  control={control}
-                  defaultValue={undefined}
-                  render={({ field }) => (
-                    <TextField
-                      {...field}
-                      label={t('priceCatalog.totalDuration')}
-                      type="number"
-                      InputLabelProps={{ shrink: true }}
-                      error={!!errors.total_duration}
-                      helperText={errors.total_duration?.message}
                       fullWidth
-                      variant="filled"
-                      value={field.value}
-                      disabled
-                      onChange={(e) => {
-                        const value = parseFloat(e.target.value);
-                        if (!isNaN(value)) {
-                          field.onChange(value);
-                          setValue('total_duration', value, {
-                            shouldValidate: true,
-                          });
-                        }
-                      }}
                     />
-                  )}
-                />
-                <TextField
-                  required
-                  variant="filled"
-                  label={t('priceCatalog.notes')}
-                  type="text"
-                  {...register('notes')}
-                  inputProps={{ inputMode: 'text' }}
-                  error={!!errors.notes}
-                  helperText={errors.notes ? String(errors.notes.message) : ''}
-                />
-              </Stack>
-            </Box>
+                  </Grid>
+                  <Grid item xs={12} sm={6}>
+                    <TextField
+                      required
+                      variant="filled"
+                      label={t('priceCatalog.customerPhone')}
+                      type="text"
+                      {...register('customer.phone')}
+                      inputProps={{ inputMode: 'text' }}
+                      error={!!errors.customer?.phone}
+                      helperText={
+                        errors.customer?.phone
+                          ? String(errors.customer.phone.message)
+                          : ''
+                      }
+                      fullWidth
+                    />
+                  </Grid>
+                </Grid>
+              </Box>
+              <Divider sx={{ my: 2 }} />
 
-            <Button
-              variant="contained"
-              size="medium"
-              fullWidth
-              type="submit"
-              disabled={!isValid}
-            >
-              {t('priceCatalog.addNew')}
-            </Button>
-          </Stack>
-        </form>
+              {/* Vehicle Info Section */}
+              <Box>
+                <Typography variant="h5" gutterBottom>
+                  {t('priceCatalog.vehicleInfo')}
+                </Typography>
+                <Grid container spacing={2}>
+                  <Grid item xs={12} sm={6}>
+                    <TextField
+                      required
+                      variant="filled"
+                      label={t('priceCatalog.vehicleModel')}
+                      type="text"
+                      {...register('vehicle.model')}
+                      inputProps={{ inputMode: 'text' }}
+                      error={!!errors.vehicle?.model}
+                      helperText={
+                        errors.vehicle?.model
+                          ? String(errors.vehicle.model.message)
+                          : ''
+                      }
+                      fullWidth
+                    />
+                  </Grid>
+                  <Grid item xs={12} sm={6}>
+                    <TextField
+                      required
+                      variant="filled"
+                      label={t('priceCatalog.vehicleLicensePlate')}
+                      type="text"
+                      {...register('vehicle.licensePlate')}
+                      inputProps={{ inputMode: 'text' }}
+                      error={!!errors.vehicle?.licensePlate}
+                      helperText={
+                        errors.vehicle?.licensePlate
+                          ? String(errors.vehicle.licensePlate.message)
+                          : ''
+                      }
+                      fullWidth
+                    />
+                  </Grid>
+                </Grid>
+              </Box>
+              <Divider sx={{ my: 2 }} />
+
+              {/* Service Selection Section */}
+              <Box>
+                <Typography variant="h5" gutterBottom>
+                  {t('priceCatalog.serviceSelection')}
+                </Typography>
+                <TableContainer component={Paper}>
+                  <Table>
+                    <TableHead>
+                      <TableRow>
+                        <TableCell>{t('priceCatalog.serviceName')}</TableCell>
+                        <TableCell>{t('priceCatalog.servicePrice')}</TableCell>
+                        <TableCell>{t('priceCatalog.duration')}</TableCell>
+                        <TableCell></TableCell>
+                      </TableRow>
+                    </TableHead>
+                    <TableBody>
+                      {fields.map((field, index) => (
+                        <TableRow key={field.id}>
+                          <TableCell>
+                            <FormControl fullWidth variant="filled">
+                              <Controller
+                                name={`items.${index}.itemId`}
+                                control={control}
+                                render={({ field: controllerField }) => (
+                                  <Autocomplete
+                                    options={services || []}
+                                    getOptionLabel={(option) =>
+                                      `${option.itemName}`
+                                    }
+                                    onChange={(event, value) => {
+                                      controllerField.onChange(
+                                        value?.itemId || ''
+                                      );
+                                      handleServiceChange(index, value);
+                                    }}
+                                    onInputChange={(event, value, reason) => {
+                                      if (reason === 'input') {
+                                        setSearchText(value);
+                                      }
+                                    }}
+                                    renderInput={(params) => (
+                                      <TextField {...params} variant="filled" />
+                                    )}
+                                    renderOption={(props, option) => (
+                                      <Box component="li" {...props}>
+                                        <Typography variant="body1">
+                                          {option.itemName}
+                                        </Typography>
+                                        <Typography
+                                          color="primary"
+                                          sx={{ ml: 1 }}
+                                        >
+                                          - {t('priceCatalog.servicePrice')}:{' '}
+                                          {option.price.toLocaleString()} VND
+                                        </Typography>
+                                        <Typography
+                                          variant="body2"
+                                          color="secondary"
+                                          sx={{ ml: 1 }}
+                                        >
+                                          , {t('priceCatalog.duration')}:{' '}
+                                          {option.duration}{' '}
+                                          {t('priceCatalog.hours')}
+                                        </Typography>
+                                      </Box>
+                                    )}
+                                    value={
+                                      selectedServices[index] ||
+                                      services.find(
+                                        (service) =>
+                                          service.itemId ===
+                                          controllerField.value
+                                      ) ||
+                                      null
+                                    }
+                                  />
+                                )}
+                              />
+                            </FormControl>
+                          </TableCell>
+                          <TableCell>
+                            {field.price.toLocaleString()} VND
+                          </TableCell>
+                          <TableCell>
+                            {field.duration} {t('priceCatalog.hours')}
+                          </TableCell>
+                          <TableCell>
+                            <IconButton
+                              color="secondary"
+                              onClick={() => {
+                                remove(index);
+                                setSelectedServices((prev) =>
+                                  prev.filter((_, i) => i !== index)
+                                );
+                              }}
+                              disabled={fields.length === 1}
+                            >
+                              <Delete />
+                            </IconButton>
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </TableContainer>
+                <Box
+                  sx={{
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                    mt: 2,
+                  }}
+                >
+                  <Button
+                    variant="outlined"
+                    startIcon={<Add />}
+                    onClick={() => {
+                      append({
+                        id: uuidv4(),
+                        itemId: '',
+                        itemName: '',
+                        serviceId: '',
+                        serviceName: '',
+                        typeId: '',
+                        typeName: '',
+                        price: 0,
+                        duration: 0 as number,
+                        categoryId: '',
+                        categoryName: '',
+                      });
+                      setSelectedServices((prev) => [
+                        ...prev,
+                        {
+                          id: uuidv4(),
+                          itemId: '',
+                          itemName: '',
+                          serviceId: '',
+                          serviceName: '',
+                          typeId: '',
+                          typeName: '',
+                          price: 0,
+                          duration: 0,
+                          categoryId: '',
+                          categoryName: '',
+                        },
+                      ]);
+                    }}
+                  >
+                    {t('priceCatalog.addItem')}
+                  </Button>
+                  <Box textAlign={'right'}>
+                    <Typography variant="h6" color="primary">
+                      {t('priceCatalog.totalPrice')}:{' '}
+                      {totalPrice.toLocaleString()} VND
+                    </Typography>
+                    <Divider sx={{ my: 0.3 }} />
+                    <Typography variant="h6" color="primary">
+                      {t('priceCatalog.totalDuration')}: {totalDuration}{' '}
+                      {t('priceCatalog.hours')}
+                    </Typography>
+                    <Divider sx={{ my: 0.3 }} />
+                    <Typography variant="h6" color="primary">
+                      {t('priceCatalog.estimatedCompletionTime')}:{' '}
+                      {estimatedCompletionTime}
+                    </Typography>
+                  </Box>
+                </Box>
+              </Box>
+
+              {/* Additional Details Section */}
+              <Box>
+                <Grid container spacing={2}>
+                  <Grid item xs={12} sm={6}>
+                    <Controller
+                      name="startTime"
+                      control={control}
+                      defaultValue={undefined}
+                      render={({ field }) => (
+                        <TextField
+                          {...field}
+                          label={t('priceCatalog.startDate')}
+                          type="datetime-local"
+                          InputLabelProps={{ shrink: true }}
+                          error={!!errors.startTime}
+                          helperText={errors.startTime?.message}
+                          fullWidth
+                          variant="filled"
+                          value={
+                            field.value
+                              ? dayjs(field.value).format('YYYY-MM-DDTHH:mm')
+                              : ''
+                          }
+                          onChange={(e) => {
+                            const date = new Date(e.target.value);
+                            if (
+                              date instanceof Date &&
+                              !isNaN(date.getTime())
+                            ) {
+                              field.onChange(date.getTime());
+                              setValue('startTime', date, {
+                                shouldValidate: true,
+                              });
+                            }
+                          }}
+                        />
+                      )}
+                    />
+                  </Grid>
+                  <Grid item xs={12}>
+                    <TextField
+                      variant="filled"
+                      label={t('priceCatalog.notes')}
+                      type="text"
+                      {...register('notes')}
+                      inputProps={{ inputMode: 'text' }}
+                      error={!!errors.notes}
+                      helperText={
+                        errors.notes ? String(errors.notes.message) : ''
+                      }
+                      fullWidth
+                    />
+                  </Grid>
+                </Grid>
+              </Box>
+              <Divider sx={{ my: 2 }} />
+
+              <Box
+                sx={{
+                  position: 'sticky',
+                  bottom: 0,
+                  backgroundColor: 'white',
+                  py: 2,
+                  mt: 2,
+                  zIndex: 1,
+                }}
+              >
+                <Button
+                  variant="contained"
+                  size="medium"
+                  fullWidth
+                  type="submit"
+                  disabled={!isValid}
+                >
+                  {t('priceCatalog.addNew')}
+                </Button>
+              </Box>
+            </Stack>
+          </form>
+        </Paper>
       </DialogContent>
+      <Snackbar
+        open={snackbarOpen}
+        autoHideDuration={6000}
+        onClose={() => setSnackbarOpen(false)}
+      >
+        <Alert onClose={() => setSnackbarOpen(false)} severity="error">
+          {snackbarMessage}
+        </Alert>
+      </Snackbar>
     </Dialog>
   );
 }

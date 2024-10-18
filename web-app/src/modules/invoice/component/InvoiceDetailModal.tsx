@@ -18,15 +18,13 @@ import { DataGrid, GridColDef, GridValueGetterParams } from '@mui/x-data-grid';
 import { useTranslation } from 'react-i18next';
 import EmptyScreen from 'src/components/layouts/EmtyScreen';
 import { Invoice } from 'src/api/invoice/types';
-import InvoicePrintModal from './InvoicePrintModal';
-import PaymentModal from './PaymentModal';
+import InvoicePrintModal from 'src/modules/dashboard/component/InvoicePrintModal';
 
 interface InvoiceDetailModalProps {
   open: boolean;
   onClose: () => void;
-  invoiceData: Invoice;
+  invoiceData: Invoice | null; // Cập nhật kiểu dữ liệu để chấp nhận null
   refetch: () => void;
-  dataInvoice: Invoice | null;
   isLoadingInvoice: boolean;
   paginationModel: { pageSize: number; page: number };
   setPaginationModel: React.Dispatch<
@@ -69,7 +67,6 @@ const InvoiceDetailModal: React.FC<InvoiceDetailModalProps> = ({
   onClose,
   invoiceData,
   refetch,
-  dataInvoice,
   isLoadingInvoice,
   paginationModel,
   setPaginationModel,
@@ -78,7 +75,6 @@ const InvoiceDetailModal: React.FC<InvoiceDetailModalProps> = ({
   const [printModalOpen, setPrintModalOpen] = useState(false);
   const [paymentModalOpen, setPaymentModalOpen] = useState(false);
   const [shouldReopen, setShouldReopen] = useState(false);
-  const [invoiceDetails, setInvoiceDetails] = useState<Invoice | null>(null);
 
   const itemColumns = createItemColumns(t);
 
@@ -90,11 +86,7 @@ const InvoiceDetailModal: React.FC<InvoiceDetailModalProps> = ({
     setPaymentModalOpen(true);
   };
 
-  const handlePaymentSubmit = (
-    paymentMethod: string,
-    invoiceDetails: Invoice
-  ) => {
-    setInvoiceDetails(invoiceDetails); // Store invoice details
+  const handlePaymentSubmit = (paymentMethod: string) => {
     refetch();
     setShouldReopen(true);
   };
@@ -108,6 +100,8 @@ const InvoiceDetailModal: React.FC<InvoiceDetailModalProps> = ({
       }, 500);
     }
   }, [shouldReopen, onClose, refetch]);
+
+  if (!invoiceData) return null; // Kiểm tra nếu không có dữ liệu hóa đơn
 
   const invoiceArray = Array.isArray(invoiceData) ? invoiceData : [invoiceData];
 
@@ -336,7 +330,7 @@ const InvoiceDetailModal: React.FC<InvoiceDetailModalProps> = ({
         </DialogContent>
 
         {/* Dialog Actions */}
-        <DialogActions sx={{ p: 3, justifyContent: 'space-between' }}>
+        {/* <DialogActions sx={{ p: 3, justifyContent: 'space-between' }}>
           <Button onClick={handlePrint} color="primary" variant="contained">
             {t('invoice.print')}
           </Button>
@@ -345,26 +339,15 @@ const InvoiceDetailModal: React.FC<InvoiceDetailModalProps> = ({
               {t('invoice.pay')}
             </Button>
           )}
-        </DialogActions>
+        </DialogActions> */}
       </Dialog>
 
       {/* Print and Payment Modals */}
-      <InvoicePrintModal
+      {/* <InvoicePrintModal
         open={printModalOpen}
         onClose={() => setPrintModalOpen(false)}
         invoiceData={invoiceData}
-      />
-
-      <PaymentModal
-        open={paymentModalOpen}
-        onClose={() => setPaymentModalOpen(false)}
-        onSubmit={handlePaymentSubmit}
-        invoiceAmount={invoiceData.final_total}
-        appointmentId={invoiceData._id}
-        customerName={invoiceData.customer.name}
-        customerPhone={invoiceData.customer.phone}
-        refetch={refetch}
-      />
+      /> */}
     </>
   );
 };

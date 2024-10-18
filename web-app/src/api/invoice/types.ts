@@ -41,7 +41,8 @@ export interface GetInvoiceByAppoinmentFn {
   appointmentId: string;
 }
 export interface ConfirmPayInvoiceFn {
-  invoiceId: string;
+  appointmentId: string;
+  paymentMethod: string;
 }
 
 export interface GetInvoiceParams {

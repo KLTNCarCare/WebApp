@@ -119,11 +119,15 @@ const InvoicePrintModal: React.FC<InvoicePrintModalProps> = ({
               },
               {
                 label: t('invoice.createdAt'),
-                value: new Date(invoiceData.createdAt).toLocaleDateString(),
+                value: invoiceData.createdAt
+                  ? new Date(invoiceData.createdAt).toLocaleDateString()
+                  : 'N/A',
               },
               {
                 label: t('invoice.updatedAt'),
-                value: new Date(invoiceData.updatedAt).toLocaleDateString(),
+                value: invoiceData.updatedAt
+                  ? new Date(invoiceData.updatedAt).toLocaleDateString()
+                  : 'N/A',
               },
             ].map(({ label, value }) => (
               <Box
@@ -173,24 +177,28 @@ const InvoicePrintModal: React.FC<InvoicePrintModalProps> = ({
                   {index + 1}. {item.serviceName}
                 </Typography>
                 <Typography variant="body2">
-                  {item.price.toLocaleString()} VND
+                  {item.price ? item.price.toLocaleString() : 'N/A'} VND
                 </Typography>
               </Box>
               <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
                 <Typography variant="body2">
                   {t('invoice.discount')}:
                 </Typography>
-                <Typography variant="body2">{item.discount}%</Typography>
+                <Typography variant="body2">
+                  {item.discount ? item.discount : 'N/A'}%
+                </Typography>
               </Box>
               <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
                 <Typography variant="body2" sx={{ fontWeight: 'bold' }}>
                   {t('invoice.total')}:
                 </Typography>
                 <Typography variant="body2">
-                  {(
-                    item.price -
-                    (item.price * item.discount) / 100
-                  ).toLocaleString()}{' '}
+                  {item.price && item.discount !== undefined
+                    ? (
+                        item.price -
+                        (item.price * item.discount) / 100
+                      ).toLocaleString()
+                    : 'N/A'}{' '}
                   VND
                 </Typography>
               </Box>
@@ -203,13 +211,18 @@ const InvoicePrintModal: React.FC<InvoicePrintModalProps> = ({
             {[
               {
                 label: t('invoice.subTotal'),
-                value: `${invoiceData.sub_total.toLocaleString()} VND`,
+                value: invoiceData.sub_total
+                  ? `${invoiceData.sub_total.toLocaleString()} VND`
+                  : 'N/A',
               },
               {
                 label: t('invoice.discount'),
-                value: `${
-                  invoiceData.discount.per
-                }% (${invoiceData.discount.value_max.toLocaleString()} VND)`,
+                value:
+                  invoiceData.discount.per && invoiceData.discount.value_max
+                    ? `${
+                        invoiceData.discount.per
+                      }% (${invoiceData.discount.value_max.toLocaleString()} VND)`
+                    : 'N/A',
               },
             ].map(({ label, value }) => (
               <Box
@@ -243,7 +256,10 @@ const InvoicePrintModal: React.FC<InvoicePrintModalProps> = ({
                 variant="body2"
                 sx={{ fontWeight: 'bold', fontSize: '16px', color: '#d32f2f' }}
               >
-                {invoiceData.final_total.toLocaleString()} VND
+                {invoiceData.final_total
+                  ? invoiceData.final_total.toLocaleString()
+                  : 'N/A'}{' '}
+                VND
               </Typography>
             </Box>
           </Box>

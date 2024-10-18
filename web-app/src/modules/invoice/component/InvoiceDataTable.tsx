@@ -27,6 +27,7 @@ import CustomPagination from 'src/components/CustomPagination';
 import EmptyScreen from 'src/components/layouts/EmtyScreen';
 import EditIcon from '@mui/icons-material/Edit';
 import { Invoice } from 'src/api/invoice/types';
+import InvoiceDetailModal from './InvoiceDetailModal';
 
 interface InvoiceDataTableProps {
   dataInvoice: any[];
@@ -144,9 +145,11 @@ const InvoiceDataTable: React.FC<InvoiceDataTableProps> = ({
   const [previousPage, setPreviousPage] = useState(0);
   const [isEditInvoiceOpen, setIsEditInvoiceOpen] = useState(false);
   const [editInvoiceData, setEditInvoiceData] = useState<any>(null);
+  const [isDetailModalOpen, setIsDetailModalOpen] = useState(false);
 
   const handleRowClick = (params: GridRowParams) => {
     setSelectedInvoice(params.row as Invoice);
+    setIsDetailModalOpen(true);
   };
 
   const handleStatusClick = (id: string, currentStatus: string) => {};
@@ -209,6 +212,17 @@ const InvoiceDataTable: React.FC<InvoiceDataTableProps> = ({
           />
         </div>
       </Paper>
+      {selectedInvoice && (
+        <InvoiceDetailModal
+          open={isDetailModalOpen}
+          onClose={() => setIsDetailModalOpen(false)}
+          invoiceData={selectedInvoice}
+          refetch={refetch}
+          isLoadingInvoice={isLoadingInvoice}
+          paginationModel={paginationModel}
+          setPaginationModel={setPaginationModel}
+        />
+      )}
     </>
   );
 };
