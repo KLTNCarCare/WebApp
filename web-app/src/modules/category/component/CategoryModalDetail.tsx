@@ -13,21 +13,17 @@ import {
   LinearProgress,
   Button,
   Chip,
-  TextField,
+  Snackbar,
+  Alert,
 } from '@mui/material';
 import {
   DataGrid,
   GridColDef,
   GridRenderCellParams,
   GridValueGetterParams,
-  GridRowModesModel,
-  GridRowModes,
   GridActionsCellItem,
   GridToolbarContainer,
-  GridEventListener,
   GridRowId,
-  GridRowModel,
-  GridRowEditStopReasons,
 } from '@mui/x-data-grid';
 import { useTranslation } from 'react-i18next';
 import {
@@ -36,10 +32,12 @@ import {
 } from 'src/api/category/useGetCategory';
 import EmptyScreen from 'src/components/layouts/EmtyScreen';
 import { ServiceByCategory } from 'src/api/category/useGetServiceByCategory';
-import { Add, Edit, Delete, Cancel, Save } from '@mui/icons-material';
+import { Add, Edit, Delete } from '@mui/icons-material';
 import { createServiceFn } from 'src/api/service/useCreateService';
 import { updateServiceFn } from 'src/api/service/useUpdateService';
 import { useDeleteService } from 'src/api/service/useDeleteService';
+import ServiceDetailModal from './ServiceDetailModal';
+import { v4 as uuidv4 } from 'uuid';
 
 interface CategoryDetailModalProps {
   open: boolean;
@@ -57,46 +55,16 @@ interface CategoryDetailModalProps {
 }
 
 interface EditToolbarProps {
-  setRows: (
-    newRows: (oldRows: ServiceByCategory[]) => ServiceByCategory[]
-  ) => void;
-  setRowModesModel: (
-    newModel: (oldModel: GridRowModesModel) => GridRowModesModel
-  ) => void;
+  onAddService: () => void;
 }
 
 function EditToolbar(props: EditToolbarProps) {
-  const { setRows, setRowModesModel } = props;
-
-  const handleClick = () => {
-    const id = 'new';
-    setRows((oldRows) => [
-      ...oldRows,
-      {
-        _id: id,
-        serviceName: '',
-        duration: 0,
-        description: '',
-        isNew: true,
-        serviceId: '',
-        categoryId: '',
-        status: 'inactive',
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString(),
-        __v: 0,
-      },
-    ]);
-    setRowModesModel((oldModel) => ({
-      ...oldModel,
-      [id]: { mode: GridRowModes.Edit, fieldToFocus: 'serviceName' },
-    }));
-  };
-
+  const { onAddService } = props;
   const { t } = useTranslation();
 
   return (
     <GridToolbarContainer>
-      <Button color="primary" startIcon={<Add />} onClick={handleClick}>
+      <Button color="primary" startIcon={<Add />} onClick={onAddService}>
         {t('category.addService')}
       </Button>
     </GridToolbarContainer>
@@ -117,87 +85,113 @@ const CategoryDetailModal: React.FC<CategoryDetailModalProps> = ({
 }) => {
   const { t } = useTranslation();
   const [rows, setRows] = useState<ServiceByCategory[]>([]);
-  const [rowModesModel, setRowModesModel] = useState<GridRowModesModel>({});
+  const [selectedService, setSelectedService] =
+    useState<ServiceByCategory | null>(null);
+  const [isServiceDetailModalOpen, setServiceDetailModalOpen] = useState(false);
+  const [modalMode, setModalMode] = useState<'edit' | 'add'>('edit');
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState('');
 
   const { mutate: deleteService } = useDeleteService({
     onSuccess: () => {
       refetch();
+      handleApiResponse({ message: t('category.serviceDeletedSuccessfully') });
     },
   });
 
   useEffect(() => {
     if (serviceByCategorytData) {
-      setRows(serviceByCategorytData);
+      setRows(
+        serviceByCategorytData.map((service) => ({
+          ...service,
+          id: service._id,
+        }))
+      );
     }
   }, [serviceByCategorytData]);
 
-  const handleRowEditStop: GridEventListener<'rowEditStop'> = (
-    params,
-    event
-  ) => {
-    if (params.reason === GridRowEditStopReasons.rowFocusOut) {
-      event.defaultMuiPrevented = true;
+  const handleApiResponse = (response: { message?: string }) => {
+    if (response.message) {
+      setSnackbarMessage(response.message);
+      setSnackbarOpen(true);
     }
   };
 
   const handleEditClick = (id: GridRowId) => () => {
-    setRowModesModel({ ...rowModesModel, [id]: { mode: GridRowModes.Edit } });
+    const service = rows.find((row) => row.id === id);
+    if (service) {
+      setSelectedService(service);
+      setModalMode('edit');
+      setServiceDetailModalOpen(true);
+    }
   };
 
-  const handleSaveClick = (id: GridRowId) => () => {
-    setRowModesModel({ ...rowModesModel, [id]: { mode: GridRowModes.View } });
+  const handleAddService = () => {
+    const newService: ServiceByCategory = {
+      _id: uuidv4(),
+      serviceName: '',
+      duration: 0,
+      description: '',
+      isNew: true,
+      serviceId: '',
+      categoryId: categoryData._id,
+      status: 'inactive',
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+      __v: 0,
+    };
+    setSelectedService(newService);
+    setModalMode('add');
+    setServiceDetailModalOpen(true);
+  };
+
+  const handleSaveService = async (
+    updatedService: ServiceByCategory
+  ): Promise<{ code: number; message: string }> => {
+    try {
+      let response;
+      if (updatedService.isNew) {
+        response = await createServiceFn({
+          serviceName: updatedService.serviceName,
+          categoryId: categoryData._id,
+          duration: updatedService.duration,
+          description: updatedService.description,
+        });
+      } else {
+        response = await updateServiceFn({
+          id: updatedService._id,
+          serviceName: updatedService.serviceName,
+          duration: updatedService.duration,
+          description: updatedService.description,
+          status: updatedService.status,
+        });
+      }
+      setServiceDetailModalOpen(false);
+      refetch();
+      handleApiResponse({ message: t('category.serviceSavedSuccessfully') });
+      return { code: 200, message: 'Success' };
+    } catch (error) {
+      return { code: 500, message: 'Error' };
+    }
   };
 
   const handleDeleteClick = (id: GridRowId) => () => {
-    const rowToDelete = rows.find((row) => row._id === id);
+    const rowToDelete = rows.find((row) => row.id === id);
     if (rowToDelete) {
       deleteService({ _id: rowToDelete._id });
-      setRows(rows.filter((row) => row._id !== id));
+      setRows(rows.filter((row) => row.id !== id));
     }
   };
 
-  const handleCancelClick = (id: GridRowId) => () => {
-    setRowModesModel({
-      ...rowModesModel,
-      [id]: { mode: GridRowModes.View, ignoreModifications: true },
-    });
-
-    const editedRow = rows.find((row) => row._id === id);
-    if (editedRow && editedRow.isNew) {
-      setRows(rows.filter((row) => row._id !== id));
-    }
+  const handleCloseServiceDetailModal = () => {
+    setServiceDetailModalOpen(false);
+    refetch();
   };
 
-  const processRowUpdate = async (newRow: GridRowModel) => {
-    let updatedRow: ServiceByCategory;
-
-    if (newRow.isNew) {
-      const createdService = await createServiceFn({
-        serviceName: newRow.serviceName,
-        categoryId: categoryData._id,
-        duration: newRow.duration,
-        description: newRow.description,
-      });
-      updatedRow = { ...createdService, isNew: false };
-    } else {
-      const updatedService = await updateServiceFn({
-        id: newRow._id,
-        serviceName: newRow.serviceName,
-        duration: newRow.duration,
-        description: newRow.description,
-      });
-      updatedRow = { ...updatedService, isNew: false };
-    }
-
-    setRows((prevRows) =>
-      prevRows.map((row) => (row._id === newRow._id ? updatedRow : row))
-    );
-    return updatedRow;
+  const handleCloseSnackbar = () => {
+    setSnackbarOpen(false);
   };
 
-  const handleRowModesModelChange = (newRowModesModel: GridRowModesModel) => {
-    setRowModesModel(newRowModesModel);
-  };
   const columns: GridColDef[] = [
     {
       field: 'id',
@@ -224,7 +218,6 @@ const CategoryDetailModal: React.FC<CategoryDetailModalProps> = ({
       headerName: t('category.serviceName'),
       maxWidth: 300,
       flex: 1,
-      editable: true,
       cellClassName: (params) =>
         params.row.isNew ? 'highlight-cell' : 'wrap-cell',
       renderCell: (params) => (
@@ -244,33 +237,9 @@ const CategoryDetailModal: React.FC<CategoryDetailModalProps> = ({
       headerName: t('category.duration'),
       maxWidth: 130,
       flex: 1,
-      editable: true,
       type: 'number',
-      preProcessEditCellProps: (params) => {
-        const hasError = params.props.value < 0;
-        return { ...params.props, error: hasError };
-      },
       cellClassName: (params) =>
         params.row.isNew ? 'highlight-cell' : 'wrap-cell',
-      renderEditCell: (params) => (
-        <TextField
-          {...params}
-          id={String(params.id)}
-          error={params.error}
-          helperText={params.error ? t('category.invalidDuration') : ''}
-          type="number"
-          inputProps={{ min: 0, step: 0.5 }}
-          sx={{ width: '100%' }}
-          onChange={(event) => {
-            const value = event.target.value;
-            params.api.setEditCellValue({
-              id: params.id,
-              field: 'duration',
-              value,
-            });
-          }}
-        />
-      ),
       renderCell: (params) => (
         <Box
           sx={{
@@ -279,7 +248,7 @@ const CategoryDetailModal: React.FC<CategoryDetailModalProps> = ({
             overflowWrap: 'break-word',
           }}
         >
-          {params.value}
+          {params.value} {t('category.hours')}
         </Box>
       ),
     },
@@ -288,7 +257,6 @@ const CategoryDetailModal: React.FC<CategoryDetailModalProps> = ({
       headerName: t('category.description'),
       maxWidth: 300,
       flex: 1,
-      editable: true,
       cellClassName: (params) =>
         params.row.isNew ? 'highlight-cell' : 'wrap-cell',
       renderCell: (params) => (
@@ -366,45 +334,21 @@ const CategoryDetailModal: React.FC<CategoryDetailModalProps> = ({
       headerName: 'Actions',
       width: 100,
       cellClassName: 'actions',
-      getActions: ({ id }) => {
-        const isInEditMode = rowModesModel[id]?.mode === GridRowModes.Edit;
-
-        if (isInEditMode) {
-          return [
-            <GridActionsCellItem
-              icon={<Save />}
-              label="Save"
-              sx={{
-                color: 'primary.main',
-              }}
-              onClick={handleSaveClick(id)}
-            />,
-            <GridActionsCellItem
-              icon={<Cancel />}
-              label="Cancel"
-              className="textPrimary"
-              onClick={handleCancelClick(id)}
-              color="inherit"
-            />,
-          ];
-        }
-
-        return [
-          <GridActionsCellItem
-            icon={<Edit />}
-            label="Edit"
-            className="textPrimary"
-            onClick={handleEditClick(id)}
-            color="inherit"
-          />,
-          <GridActionsCellItem
-            icon={<Delete />}
-            label="Delete"
-            onClick={handleDeleteClick(id)}
-            color="inherit"
-          />,
-        ];
-      },
+      getActions: ({ id }) => [
+        <GridActionsCellItem
+          icon={<Edit />}
+          label="Edit"
+          className="textPrimary"
+          onClick={handleEditClick(id)}
+          color="inherit"
+        />,
+        <GridActionsCellItem
+          icon={<Delete />}
+          label="Delete"
+          onClick={handleDeleteClick(id)}
+          color="inherit"
+        />,
+      ],
     },
   ];
 
@@ -464,27 +408,6 @@ const CategoryDetailModal: React.FC<CategoryDetailModalProps> = ({
                     <Divider variant="middle" />
                   </>
                 )}
-                {categoryData.status && (
-                  <>
-                    <ListItem>
-                      <ListItemText primary={t('category.status')} />
-                      <Chip
-                        label={
-                          categoryData.status === 'active'
-                            ? t('category.active')
-                            : t('category.inactive')
-                        }
-                        color={
-                          categoryData.status === 'active'
-                            ? 'success'
-                            : 'default'
-                        }
-                        sx={{ ml: 1 }}
-                      />
-                    </ListItem>
-                    <Divider variant="middle" />
-                  </>
-                )}
                 {categoryData.createdAt && (
                   <>
                     <ListItem>
@@ -522,7 +445,8 @@ const CategoryDetailModal: React.FC<CategoryDetailModalProps> = ({
 
         <Box
           sx={{
-            height: 500,
+            flex: 1,
+            minHeight: 500,
             width: '100%',
             '& .actions': {
               color: 'text.secondary',
@@ -538,18 +462,13 @@ const CategoryDetailModal: React.FC<CategoryDetailModalProps> = ({
           <Typography variant="h4">
             {t('category.serviceByCategory')}
           </Typography>
-          <Paper sx={{ height: 400, width: '100%' }}>
+          <Paper sx={{ flex: 1, minHeight: 400, width: '100%' }}>
             {isLoadingServiceByCategory ? (
               <LinearProgress />
             ) : (
               <DataGrid
                 rows={rows}
                 columns={columns}
-                editMode="row"
-                rowModesModel={rowModesModel}
-                onRowModesModelChange={handleRowModesModelChange}
-                onRowEditStop={handleRowEditStop}
-                processRowUpdate={processRowUpdate}
                 pagination
                 paginationModel={{
                   pageSize: paginationModel.pageSize,
@@ -558,7 +477,7 @@ const CategoryDetailModal: React.FC<CategoryDetailModalProps> = ({
                 onPaginationModelChange={(model) => setPaginationModel(model)}
                 disableRowSelectionOnClick
                 autoHeight
-                getRowId={(row) => row._id}
+                getRowId={(row) => row._id || uuidv4()}
                 sx={{
                   '& .MuiDataGrid-cell': {
                     whiteSpace: 'normal',
@@ -573,13 +492,32 @@ const CategoryDetailModal: React.FC<CategoryDetailModalProps> = ({
                   ),
                 }}
                 slotProps={{
-                  toolbar: { setRows, setRowModesModel },
+                  toolbar: { onAddService: handleAddService },
                 }}
               />
             )}
           </Paper>
         </Box>
       </DialogContent>
+      {selectedService && (
+        <ServiceDetailModal
+          open={isServiceDetailModalOpen}
+          onClose={handleCloseServiceDetailModal}
+          serviceData={selectedService}
+          onSave={handleSaveService}
+          mode={modalMode}
+          refetch={refetch}
+        />
+      )}
+      <Snackbar
+        open={snackbarOpen}
+        autoHideDuration={6000}
+        onClose={handleCloseSnackbar}
+      >
+        <Alert onClose={handleCloseSnackbar} severity="success">
+          {snackbarMessage}
+        </Alert>
+      </Snackbar>
     </Dialog>
   );
 };

@@ -10,7 +10,7 @@
     "delete": "Xóa",
     "close": "Đóng",
     "collapse": "Thu gọn",
-    "category": "Danh mục",
+    "category": "Dịch vụ",
     "priceCatalog": "Bảng giá",
     "confirm": "Xác nhận",
     "confirmToggle": "Bạn có muốn xác nhận không?",
@@ -148,7 +148,15 @@
     "description": "Mô tả",
     "toggleTitle": "Chuyển đổi trạng thái",
     "toggleSuccessTitle": "Chuyển đổi trạng thái thành công",
-    "toggleSuccess": "Danh mục đã được chuyển đổi trạng thái thành công"
+    "toggleSuccess": "Danh mục đã được chuyển đổi trạng thái thành công",
+    "editService": "Chỉnh sửa dịch vụ",
+    "cancel": "Hủy",
+    "save": "Lưu",
+    "hours": "giờ",
+    "serviceNameRequired": "Tên dịch vụ không được để trống",
+    "durationRequired": "Thời gian dự kiến hoàn thành không được để trống",
+    "serviceDeletedSuccessfully": "Dịch vụ đã được xóa thành công",
+    "serviceSavedSuccessfully": "Dịch vụ đã được lưu thành công"
   },
   "priceCatalog": {
     "userPriceCatalogManagement": "Quản lý bảng giá",

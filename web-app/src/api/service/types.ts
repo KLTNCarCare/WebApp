@@ -14,4 +14,5 @@ export interface UpdateServiceFn {
   serviceName: string;
   duration: number;
   description: string;
+  status: string;
 }

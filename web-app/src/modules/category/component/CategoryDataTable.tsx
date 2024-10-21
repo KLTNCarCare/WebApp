@@ -19,6 +19,7 @@ import DeleteCategory from './DeleteCategory';
 import EditCategoryModal from './EditCategoryModal';
 import { useGetServiceByCategory } from 'src/api/category/useGetServiceByCategory';
 import StatusToggle from './StatusToggle';
+
 interface CategoryDataTableProps {
   dataCategory: any[];
   isLoadingCategory: boolean;
@@ -43,17 +44,11 @@ const createCategoryColumns = (
     maxWidth: 50,
     flex: 1,
     valueGetter: (params: GridValueGetterParams) => {
-      const allRowIds = params.api.getAllRowIds();
-      return allRowIds.indexOf(params.id) + 1;
+      const index =
+        paginationModel.page * paginationModel.pageSize +
+        params.api.getAllRowIds().indexOf(params.id);
+      return index + 1;
     },
-  },
-  {
-    field: 'categoryName',
-    headerName: t('category.categoryName'),
-    minWidth: 250,
-    flex: 1,
-    valueGetter: (params: GridValueGetterParams) =>
-      params.row.categoryName || '',
   },
   {
     field: 'categoryId',
@@ -63,23 +58,12 @@ const createCategoryColumns = (
     valueGetter: (params: GridValueGetterParams) => params.row.categoryId || '',
   },
   {
-    field: 'status',
-    headerName: t('category.status'),
-    maxWidth: 180,
+    field: 'categoryName',
+    headerName: t('category.categoryName'),
+    minWidth: 250,
     flex: 1,
-    renderCell: (params: GridRenderCellParams) => (
-      <div
-        onClick={(event: React.MouseEvent<HTMLDivElement>) =>
-          event.stopPropagation()
-        }
-      >
-        <StatusToggle
-          _id={params.row._id}
-          currentStatus={params.row.status}
-          refetch={refetch}
-        />
-      </div>
-    ),
+    valueGetter: (params: GridValueGetterParams) =>
+      params.row.categoryName || '',
   },
   {
     field: 'action',
@@ -164,7 +148,9 @@ const CategoryDataTable: React.FC<CategoryDataTableProps> = ({
               refetch
             )}
             localeText={viVN.components.MuiDataGrid.defaultProps.localeText}
-            getRowId={(row) => row._id}
+            getRowId={(row) =>
+              row._id || row.id || Math.random().toString(36).substr(2, 9)
+            }
             paginationMode="server"
             paginationModel={paginationModel}
             onPaginationModelChange={(model) => {
@@ -201,7 +187,7 @@ const CategoryDataTable: React.FC<CategoryDataTableProps> = ({
           open={!!selectedCategory}
           onClose={() => setSelectedCategory(null)}
           categoryData={selectedCategory}
-          refetch={refetch}
+          refetch={refetchCategoryLine}
           dataCategory={null}
           isLoadingCategory={isLoadingCategory}
           paginationModel={paginationModel}
