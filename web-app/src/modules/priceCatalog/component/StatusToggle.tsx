@@ -15,15 +15,15 @@ import {
 import { LoadingButton } from '@mui/lab';
 import { useTranslation } from 'react-i18next';
 import { ReactComponent as CheckIcon } from '../../../assets/icons/CheckCircle.svg';
-import { useInactivePriceCatalog } from 'src/api/priceCatalog/useInactivePriceCatalog';
-import { useActivePriceCatalog } from 'src/api/priceCatalog/useActivePriceCatalog';
+import { useUpdateEndatePriceCatalog } from 'src/api/priceCatalog/useUpdateEndatePriceCatalog';
 
 type StatusToggleProps = {
   _id: string;
   currentStatus: string;
   refetch: () => void;
 };
-const ToggleButton = styled(Button)<{ isActive: boolean }>`
+
+const StyledToggleButton = styled(Button)<{ isActive: boolean }>`
   background-color: ${(props) =>
     props.isActive
       ? props.theme.palette.success.main
@@ -33,38 +33,35 @@ const ToggleButton = styled(Button)<{ isActive: boolean }>`
     transform: scale(0.95);
   }
 `;
+
 const StatusToggle = ({ _id, currentStatus, refetch }: StatusToggleProps) => {
   const { t } = useTranslation();
   const theme = useTheme();
   const [isOpenToggleDialog, setIsOpenToggleDialog] = useState(false);
   const [isSuccessDialogOpen, setIsSuccessDialogOpen] = useState(false);
 
-  const { mutateAsync: setInactive, isLoading: isLoadingInactive } =
-    useInactivePriceCatalog({
+  const { mutateAsync: updateEndDate, isLoading } = useUpdateEndatePriceCatalog(
+    {
       onSuccess: () => {
         setIsOpenToggleDialog(false);
         setIsSuccessDialogOpen(true);
+        refetch();
       },
-    });
+    }
+  );
 
-  const { mutateAsync: setActive, isLoading: isLoadingActive } =
-    useActivePriceCatalog({
-      onSuccess: () => {
-        setIsOpenToggleDialog(false);
-        setIsSuccessDialogOpen(true);
-      },
-    });
-
-  const handleToggle = async () => {
-    try {
-      if (currentStatus === 'active') {
-        await setInactive({ _id });
-      } else {
-        await setActive({ _id });
-      }
-      refetch();
-    } catch (error) {}
-  };
+  // const handleToggle = async () => {
+  //   try {
+  //     if (currentStatus === 'active') {
+  //       await updateEndDate({
+  //         id: _id,
+  //         data: { id: _id, endDate: new Date().getTime() },
+  //       });
+  //     }
+  //   } catch (error) {
+  //     // Handle error
+  //   }
+  // };
 
   const handleCloseSuccessDialog = () => {
     setIsSuccessDialogOpen(false);
@@ -73,14 +70,15 @@ const StatusToggle = ({ _id, currentStatus, refetch }: StatusToggleProps) => {
 
   return (
     <>
-      <ToggleButton
+      <StyledToggleButton
         isActive={currentStatus === 'active'}
         onClick={() => setIsOpenToggleDialog(true)}
+        disabled={currentStatus !== 'active'}
       >
         {currentStatus === 'active'
           ? t('priceCatalog.active')
           : t('priceCatalog.inactive')}
-      </ToggleButton>
+      </StyledToggleButton>
 
       <Dialog
         open={isOpenToggleDialog}
@@ -108,11 +106,11 @@ const StatusToggle = ({ _id, currentStatus, refetch }: StatusToggleProps) => {
             {t('dashboard.cancel')}
           </LoadingButton>
           <LoadingButton
-            onClick={handleToggle}
+            // onClick={handleToggle}
             autoFocus
             color="primary"
             variant="contained"
-            loading={isLoadingInactive || isLoadingActive}
+            loading={isLoading}
           >
             {t('dashboard.confirm')}
           </LoadingButton>

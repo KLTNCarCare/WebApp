@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   Dialog,
   DialogTitle,
@@ -6,12 +6,12 @@ import {
   Typography,
   Box,
   Paper,
-  LinearProgress,
   Divider,
   ListItemText,
   ListItem,
   List,
   Chip,
+  Button,
 } from '@mui/material';
 import { DataGrid, GridColDef, GridValueGetterParams } from '@mui/x-data-grid';
 import { useTranslation } from 'react-i18next';
@@ -20,6 +20,7 @@ import {
   PriceCatalogResponse,
 } from 'src/api/priceCatalog/useGetPriceCatalog';
 import EmptyScreen from 'src/components/layouts/EmtyScreen';
+import EditPriceCatalogModal from './EditPriceCatalogModal';
 
 interface PriceCatalogDetailModalProps {
   open: boolean;
@@ -46,7 +47,11 @@ const createItemColumns = (t: (key: string) => string): GridColDef[] => [
     headerName: t('priceCatalog.itemPrice'),
     minWidth: 150,
     flex: 1,
-    valueGetter: (params: GridValueGetterParams) => `${params.row.price} VND`,
+    valueGetter: (params: GridValueGetterParams) =>
+      new Intl.NumberFormat('vi-VN', {
+        style: 'currency',
+        currency: 'VND',
+      }).format(params.row.price),
   },
 ];
 
@@ -61,6 +66,20 @@ const PriceCatalogDetailModal: React.FC<PriceCatalogDetailModalProps> = ({
   setPaginationModel,
 }) => {
   const { t } = useTranslation();
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+
+  const handleOpenEditModal = () => {
+    setIsEditModalOpen(true);
+  };
+
+  const handleCloseEditModal = () => {
+    setIsEditModalOpen(false);
+    refetch();
+  };
+
+  const isInactiveAndFutureStartDate =
+    priceCatalogData.status === 'inactive' &&
+    new Date(priceCatalogData.startDate) > new Date();
 
   const itemColumns = createItemColumns(t);
 
@@ -169,7 +188,7 @@ const PriceCatalogDetailModal: React.FC<PriceCatalogDetailModalProps> = ({
 
         <Box sx={{ mb: 2 }}>
           <Typography variant="h4">{t('priceCatalog.items')}</Typography>
-          <Paper sx={{ height: 400, width: '100%' }}>
+          <Paper sx={{ width: '100%' }}>
             <DataGrid
               rows={priceCatalogData.items || []}
               columns={itemColumns}
@@ -196,7 +215,25 @@ const PriceCatalogDetailModal: React.FC<PriceCatalogDetailModalProps> = ({
             />
           </Paper>
         </Box>
+
+        <Box sx={{ display: 'flex', justifyContent: 'flex-end', mt: 2 }}>
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={handleOpenEditModal}
+          >
+            {t('priceCatalog.edit')}
+          </Button>
+        </Box>
       </DialogContent>
+
+      <EditPriceCatalogModal
+        open={isEditModalOpen}
+        onClose={handleCloseEditModal}
+        priceCatalogData={priceCatalogData}
+        refetch={refetch}
+        setIsEditPriceCatalog={setIsEditModalOpen}
+      />
     </Dialog>
   );
 };

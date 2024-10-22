@@ -18,7 +18,7 @@ export interface PriceCatalogManagement {
   priceName: string;
   startDate: string;
   endDate: string;
-  status: string;
+  status: 'inactive' | 'active' | 'expires';
   items: Item[];
   createdDate: string;
   updatedDate: string;

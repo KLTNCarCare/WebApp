@@ -23,19 +23,21 @@ export interface Item {
   itemId: string;
   itemName: string;
   price: number;
-  _id: string;
 }
 
 export interface DeletePriceCatalogFn {
   _id: string;
 }
-export interface UpdatePriceCatalogFn {
+export interface UpdateEndatePriceCatalogFn {
   id: string;
   endDate: string;
 }
 export interface ActivePriceCatalogFn {
   _id: string;
 }
-export interface InactivePriceCatalogFn {
-  _id: string;
-}
+export type UpdatePriceCatalogFn = {
+  priceName: string;
+  startDate: string;
+  endDate: string;
+  items: Item[];
+};

@@ -10,6 +10,8 @@ import {
   Stack,
   Toolbar,
   Typography,
+  Snackbar,
+  Alert,
 } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import CloseIcon from '@mui/icons-material/Close';
@@ -45,6 +47,25 @@ export function PriceCatalogPage() {
 
   const totalPage = data?.totalPage || 0;
   const priceCatalogList: PriceCatalogManagement[] = data?.data ?? [];
+
+  const [snackbarOpen, setSnackbarOpen] = useState<boolean>(false);
+  const [snackbarMessage, setSnackbarMessage] = useState<string>('');
+  const [snackbarSeverity, setSnackbarSeverity] = useState<'success' | 'error'>(
+    'success'
+  );
+
+  const handleSnackbarClose = () => {
+    setSnackbarOpen(false);
+  };
+
+  const handleApiResponse = (
+    message: string,
+    severity: 'success' | 'error'
+  ) => {
+    setSnackbarMessage(message);
+    setSnackbarSeverity(severity);
+    setSnackbarOpen(true);
+  };
 
   return (
     <>
@@ -154,9 +175,24 @@ export function PriceCatalogPage() {
           <CreatePriceCatalogModal
             refetch={refetch}
             setIsAddPriceCatalog={setIsRegisterPriceCatalog}
+            handleApiResponse={handleApiResponse}
           />
         </Dialog>
       </AdminLayout>
+
+      <Snackbar
+        open={snackbarOpen}
+        autoHideDuration={6000}
+        onClose={handleSnackbarClose}
+      >
+        <Alert
+          onClose={handleSnackbarClose}
+          severity={snackbarSeverity}
+          sx={{ width: '100%' }}
+        >
+          {snackbarMessage}
+        </Alert>
+      </Snackbar>
     </>
   );
 }

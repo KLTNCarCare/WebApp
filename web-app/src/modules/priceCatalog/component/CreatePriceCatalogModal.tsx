@@ -49,6 +49,7 @@ import { Add, Cancel, Delete, Edit, Save } from '@mui/icons-material';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import timezone from 'dayjs/plugin/timezone';
+import snackbarUtils from 'src/lib/snackbarUtils'; // Import snackbarUtils
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
@@ -95,6 +96,7 @@ const schemaCreatePriceCatalog = yup.object({
 type CreatePriceCatalogProps = {
   refetch?: () => void;
   setIsAddPriceCatalog?: (value: boolean) => void;
+  handleApiResponse: (message: string, severity: 'success' | 'error') => void;
 };
 
 interface Item extends FieldArrayWithId<CreatePriceCatalogFn, 'items', 'id'> {
@@ -133,6 +135,7 @@ function EditToolbar({ setRows, setRowModesModel }: EditToolbarProps) {
 function CreatePriceCatalogModal({
   refetch,
   setIsAddPriceCatalog,
+  handleApiResponse,
 }: CreatePriceCatalogProps) {
   const { t } = useTranslation();
   const {
@@ -163,7 +166,7 @@ function CreatePriceCatalogModal({
   const { mutate: createPriceCatalog, isLoading: loadingCreatePriceCatalog } =
     useCreatePriceCatalog();
 
-  const { data: categories } = useGetListCategory({ page: 1, limit: 10 });
+  const { data: categories } = useGetListCategory({ page: 1, limit: 100 });
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const { data: services } = useGetServiceByCategory(selectedCategory || '', {
     enabled: !!selectedCategory,
@@ -203,6 +206,10 @@ function CreatePriceCatalogModal({
     createPriceCatalog(transformedData, {
       onSuccess() {
         setIsRegisterSuccess(true);
+        handleApiResponse(t('priceCatalog.createSuccess'), 'success');
+      },
+      onError(error) {
+        handleApiResponse(t('priceCatalog.createError'), 'error');
       },
     });
   };

@@ -114,7 +114,6 @@ const AppointmentDetailModal: React.FC<AppointmentDetailModalProps> = ({
             </Grid>
           </Grid>
 
-          {/* Quy trình bắt đầu và kết thúc */}
           <Box
             sx={{
               mt: 2,

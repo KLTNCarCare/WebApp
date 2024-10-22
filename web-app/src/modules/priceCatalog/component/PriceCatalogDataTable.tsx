@@ -84,10 +84,13 @@ const createPriceCatalogColumns = (
           event.stopPropagation()
         }
       >
-        <StatusToggle
-          _id={params.row._id}
-          currentStatus={params.row.status}
-          refetch={refetch}
+        <Chip
+          label={
+            params.row.status === 'active'
+              ? t('category.active')
+              : t('category.inactive')
+          }
+          color={params.row.status === 'active' ? 'success' : 'default'}
         />
       </div>
     ),
@@ -240,6 +243,8 @@ const PriceCatalogDataTable: React.FC<PriceCatalogDataTableProps> = ({
       >
         {isEditPriceCatalogOpen && editPriceCatalogData && (
           <EditPriceCatalogModal
+            open={isEditPriceCatalogOpen}
+            onClose={() => setIsEditPriceCatalogOpen(false)}
             priceCatalogData={editPriceCatalogData}
             refetch={refetch}
             setIsEditPriceCatalog={setIsEditPriceCatalogOpen}

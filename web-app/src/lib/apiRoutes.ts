@@ -39,11 +39,9 @@ const apiRoutes = {
   priceCatalog: {
     list: 'v1/api/price-catalog/get-all',
     create: 'v1/api/price-catalog/create',
-    update: 'v1/api/price-catalog/update-end-date',
+    update: 'v1/api/price-catalog/update',
+    updateEndDate: 'v1/api/price-catalog/update-end-date',
     delete: (id: string) => `v1/api/price-catalog/delete-price-catalog/${id}`,
-    active: (id: string) => `v1/api/price-catalog/active-price-catalog/${id}`,
-    inactive: (id: string) =>
-      `v1/api/price-catalog/inactive-price-catalog/${id}`,
     getCurrent: 'v1/api/price-catalog/get-all-price-current',
   },
   service: {

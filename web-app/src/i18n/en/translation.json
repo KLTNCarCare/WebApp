@@ -205,7 +205,9 @@
     "duration": "Duration",
     "hours": "Hours",
     "totalPrice": "Total Price",
-    "serviceName": "Service"
+    "serviceName": "Service",
+    "cannotUpdate": "Price Catalog has expired and cannot be updated",
+    "edit": "Edit"
   },
   "slot": {
     "title1": "Slot 1",

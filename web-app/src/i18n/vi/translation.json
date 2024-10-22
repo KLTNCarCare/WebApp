@@ -167,8 +167,8 @@
     "priceId": "Mã bảng giá",
     "priceName": "Tên bảng giá",
     "status": "Trạng thái",
-    "startDate": "Thời gian ",
-    "endDate": "Ngày kết thúc",
+    "startDate": "Thời gian bắt đầu ",
+    "endDate": "Thời gian kết thúc",
     "priceCatalogDetails": "Chi tiết bảng giá",
     "header": "Thông tin bảng giá",
     "items": "Chi tiết bảng giá",
@@ -207,7 +207,9 @@
     "hours": "giờ",
     "totalPrice": "Tổng giá",
     "serviceName": "Dịch vụ",
-    "estimatedCompletionTime": "Thời gian dự kiến"
+    "estimatedCompletionTime": "Thời gian dự kiến",
+    "cannotUpdate": "Bảng giá hết hạn không thể cập nhật",
+    "edit": "Chỉnh sửa"
   },
   "slot": {
     "title1": "Vị trí 1",
