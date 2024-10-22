@@ -213,7 +213,8 @@
     "edit": "Chỉnh sửa",
     "expires": "Hết hạn",
     "deleteTitle": "Xóa bảng giá",
-    "deleteError": "Bảng giá không thể xóa vì đã hết hạn"
+    "deleteError": "Bảng giá không thể xóa vì đã hết hạn",
+    "price": "Giá"
   },
   "slot": {
     "title1": "Vị trí 1",

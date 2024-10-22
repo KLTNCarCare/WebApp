@@ -75,6 +75,7 @@ const PriceCatalogDetailModal: React.FC<PriceCatalogDetailModalProps> = ({
   const handleCloseEditModal = () => {
     setIsEditModalOpen(false);
     refetch();
+    onClose();
   };
 
   const isInactiveAndFutureStartDate =
@@ -111,7 +112,7 @@ const PriceCatalogDetailModal: React.FC<PriceCatalogDetailModalProps> = ({
                     <Divider variant="middle" />
                   </>
                 )}
-                {priceCatalogData.priceName && (
+                {priceCatalogData._id && (
                   <>
                     <ListItem>
                       <ListItemText primary={t('priceCatalog.priceName')} />
@@ -147,6 +148,23 @@ const PriceCatalogDetailModal: React.FC<PriceCatalogDetailModalProps> = ({
                         }
                         sx={{ ml: 1 }}
                       />
+                    </ListItem>
+                    <Divider variant="middle" />
+                  </>
+                )}
+                {priceCatalogData.startDate && (
+                  <>
+                    <ListItem>
+                      <ListItemText primary={t('priceCatalog.startDate')} />
+                      <Typography
+                        variant="body2"
+                        textAlign="right"
+                        color="grey.600"
+                      >
+                        {new Date(
+                          priceCatalogData.startDate
+                        ).toLocaleDateString()}
+                      </Typography>
                     </ListItem>
                     <Divider variant="middle" />
                   </>

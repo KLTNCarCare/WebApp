@@ -26,7 +26,7 @@ import { useUpdatePriceCatalog } from 'src/api/priceCatalog/useUpdatePriceCatalo
 import { useUpdateEndatePriceCatalog } from 'src/api/priceCatalog/useUpdateEndatePriceCatalog';
 import { useGetCurrentServiceActive } from 'src/api/appointment/useGetAllServiceActive';
 import useDebounce from 'src/lib/hooks/useDebounce';
-import snackbarUtils from 'src/lib/snackbarUtils'; // Import snackbarUtils
+import snackbarUtils from 'src/lib/snackbarUtils';
 
 interface EditPriceCatalogModalProps {
   open: boolean;
@@ -47,17 +47,34 @@ interface EditPriceCatalogModalProps {
   setIsEditPriceCatalog: (value: boolean) => void;
 }
 
-const schemaUpdatePriceCatalog = yup.object().shape({
-  endDate: yup.date().required(),
-  priceName: yup.string().required(),
-  startDate: yup.date().required(),
-  items: yup.array().of(
-    yup.object().shape({
-      itemId: yup.string().required(),
-      itemName: yup.string().required(),
-      price: yup.number().required(),
-    })
-  ),
+const schemaInactive = yup.object({
+  priceName: yup.string().required('Vui lòng nhập tên khuyến mãi'),
+  startDate: yup
+    .date()
+    .required('Vui lòng nhập ngày bắt đầu')
+    .min(new Date(), 'Ngày bắt đầu phải sau ngày hiện tại'),
+  endDate: yup
+    .date()
+    .required('Vui lòng nhập ngày kết thúc')
+    .min(yup.ref('startDate'), 'Ngày kết thúc phải sau ngày bắt đầu')
+    .min(new Date(), 'Ngày kết thúc phải sau ngày hiện tại'),
+  items: yup
+    .array()
+    .of(
+      yup.object({
+        itemId: yup.string().required('Vui lòng chọn dịch vụ'),
+        itemName: yup.string().required('Vui lòng nhập tên dịch vụ'),
+        price: yup
+          .number()
+          .required('Vui lòng nhập giá dịch vụ')
+          .positive('Giá dịch vụ phải lớn hơn 0'),
+      })
+    )
+    .required('Vui lòng nhập danh sách dịch vụ'),
+});
+
+const schemaActive = yup.object({
+  endDate: yup.date().required('Vui lòng nhập ngày kết thúc'),
 });
 
 const EditPriceCatalogModal = ({
@@ -74,15 +91,18 @@ const EditPriceCatalogModal = ({
   const [searchText, setSearchText] = useState<string>('');
   const debouncedSearchText = useDebounce(searchText, 500);
 
+  const schema =
+    priceCatalogData.status === 'active' ? schemaActive : schemaInactive;
+
   const {
     register,
     handleSubmit,
     setValue,
     control,
-    formState: { errors, isValid },
+    formState: { errors, isValid, isDirty },
     watch,
   } = useForm<UpdatePriceCatalogFn>({
-    resolver: yupResolver(schemaUpdatePriceCatalog),
+    resolver: yupResolver(schema),
     defaultValues: {
       endDate: format(new Date(priceCatalogData.endDate), 'yyyy-MM-dd'),
       priceName: priceCatalogData.priceName,
@@ -106,6 +126,7 @@ const EditPriceCatalogModal = ({
       setIsSuccessDialogOpen(true);
       setIsLoading(false);
       snackbarUtils.success('Update successful');
+      onClose();
     },
     onError: (error) => {
       setIsLoading(false);
@@ -121,6 +142,7 @@ const EditPriceCatalogModal = ({
       setIsSuccessDialogOpen(true);
       setIsLoading(false);
       snackbarUtils.success('Update successful');
+      onClose();
     },
     onError: (error) => {
       setIsLoading(false);
@@ -231,7 +253,7 @@ const EditPriceCatalogModal = ({
                     size="medium"
                     fullWidth
                     type="submit"
-                    disabled={!isValid || isLoading}
+                    disabled={!isValid || !isDirty || isLoading}
                   >
                     {isLoading
                       ? t('priceCatalog.updating')
@@ -391,7 +413,7 @@ const EditPriceCatalogModal = ({
                     size="medium"
                     fullWidth
                     type="submit"
-                    disabled={!isValid || isLoading}
+                    disabled={!isValid || !isDirty || isLoading}
                   >
                     {isLoading
                       ? t('priceCatalog.updating')

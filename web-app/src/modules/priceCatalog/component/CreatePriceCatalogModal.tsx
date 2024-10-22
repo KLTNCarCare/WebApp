@@ -422,7 +422,7 @@ function CreatePriceCatalogModal({
     {
       field: 'actions',
       type: 'actions',
-      headerName: 'Actions',
+      headerName: '',
       width: 100,
       getActions: ({ id }) => {
         const isInEditMode = rowModesModel[id]?.mode === GridRowModes.Edit;

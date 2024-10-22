@@ -211,7 +211,8 @@
     "edit": "Edit",
     "expires": "Expires",
     "deleteTitle": "Delete Price Catalog",
-    "deleteError": "Price Catalog has expired and cannot be deleted"
+    "deleteError": "Price Catalog has expired and cannot be deleted",
+    "price": "Price"
   },
   "slot": {
     "title1": "Slot 1",
