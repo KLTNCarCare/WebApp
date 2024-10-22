@@ -15,11 +15,17 @@ import { LoadingButton } from '@mui/lab';
 import { useTranslation } from 'react-i18next';
 import { ReactComponent as CheckIcon } from '../../../assets/icons/CheckCircle.svg';
 import { useDeletePriceCatalog } from 'src/api/priceCatalog/useDeletPriceCatalog';
+import snackbarUtils from 'src/lib/snackbarUtils'; // Import snackbarUtils
 
 type DeletePriceCatalogProps = {
   _id: string;
   refetch: () => void;
 };
+
+interface ApiResponse {
+  message: string;
+  [key: string]: any;
+}
 
 const DeletePriceCatalog = ({ _id, refetch }: DeletePriceCatalogProps) => {
   const { t } = useTranslation();
@@ -27,9 +33,15 @@ const DeletePriceCatalog = ({ _id, refetch }: DeletePriceCatalogProps) => {
   const [isSuccessDialogOpen, setIsSuccessDialogOpen] = useState(false);
 
   const { mutate: deletePriceCatalog, isLoading } = useDeletePriceCatalog({
-    onSuccess: () => {
+    onSuccess: (_, variables: { _id: string }) => {
       setIsOpenDeleteDialog(false);
       setIsSuccessDialogOpen(true);
+      snackbarUtils.success(t('priceCatalog.deleteSuccess'));
+    },
+    onError: (error) => {
+      snackbarUtils.error(
+        error.response?.data?.message || t('priceCatalog.deleteError')
+      );
     },
   });
 

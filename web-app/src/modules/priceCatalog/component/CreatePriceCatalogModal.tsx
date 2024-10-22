@@ -49,7 +49,7 @@ import { Add, Cancel, Delete, Edit, Save } from '@mui/icons-material';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import timezone from 'dayjs/plugin/timezone';
-import snackbarUtils from 'src/lib/snackbarUtils'; // Import snackbarUtils
+import snackbarUtils from 'src/lib/snackbarUtils';
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
@@ -478,16 +478,14 @@ function CreatePriceCatalogModal({
                   <TextField
                     {...field}
                     label={t('priceCatalog.startDate')}
-                    type="datetime-local"
+                    type="date" // Change to date
                     InputLabelProps={{ shrink: true }}
                     error={!!errors.startDate}
                     helperText={errors.startDate?.message}
                     fullWidth
                     variant="filled"
                     value={
-                      field.value
-                        ? dayjs(field.value).format('YYYY-MM-DDTHH:mm')
-                        : ''
+                      field.value ? dayjs(field.value).format('YYYY-MM-DD') : ''
                     }
                     onChange={(e) => {
                       const date = new Date(e.target.value);
@@ -510,16 +508,14 @@ function CreatePriceCatalogModal({
                   <TextField
                     {...field}
                     label={t('priceCatalog.endDate')}
-                    type="datetime-local"
+                    type="date" // Change to date
                     InputLabelProps={{ shrink: true }}
                     error={!!errors.endDate}
                     helperText={errors.endDate?.message}
                     fullWidth
                     variant="filled"
                     value={
-                      field.value
-                        ? dayjs(field.value).format('YYYY-MM-DDTHH:mm')
-                        : ''
+                      field.value ? dayjs(field.value).format('YYYY-MM-DD') : ''
                     }
                     onChange={(e) => {
                       const date = new Date(e.target.value);

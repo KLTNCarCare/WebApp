@@ -84,7 +84,7 @@ const PriceCatalogDetailModal: React.FC<PriceCatalogDetailModalProps> = ({
   const itemColumns = createItemColumns(t);
 
   return (
-    <Dialog open={open} onClose={onClose} fullWidth maxWidth="xl">
+    <Dialog open={open} onClose={onClose} fullWidth maxWidth="md">
       <DialogTitle>
         <Typography variant="h2">
           {t('priceCatalog.priceCatalogDetails')}
@@ -134,12 +134,16 @@ const PriceCatalogDetailModal: React.FC<PriceCatalogDetailModalProps> = ({
                         label={
                           priceCatalogData.status === 'active'
                             ? t('priceCatalog.active')
-                            : t('priceCatalog.inactive')
+                            : priceCatalogData.status === 'inactive'
+                            ? t('priceCatalog.inactive')
+                            : t('priceCatalog.expires')
                         }
                         color={
                           priceCatalogData.status === 'active'
                             ? 'success'
-                            : 'default'
+                            : priceCatalogData.status === 'inactive'
+                            ? 'default'
+                            : 'error'
                         }
                         sx={{ ml: 1 }}
                       />

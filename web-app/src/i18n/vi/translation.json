@@ -156,7 +156,8 @@
     "serviceNameRequired": "Tên dịch vụ không được để trống",
     "durationRequired": "Thời gian dự kiến hoàn thành không được để trống",
     "serviceDeletedSuccessfully": "Dịch vụ đã được xóa thành công",
-    "serviceSavedSuccessfully": "Dịch vụ đã được lưu thành công"
+    "serviceSavedSuccessfully": "Dịch vụ đã được lưu thành công",
+    "expires": "Hết hạn"
   },
   "priceCatalog": {
     "userPriceCatalogManagement": "Quản lý bảng giá",
@@ -171,7 +172,7 @@
     "endDate": "Thời gian kết thúc",
     "priceCatalogDetails": "Chi tiết bảng giá",
     "header": "Thông tin bảng giá",
-    "items": "Chi tiết bảng giá",
+    "items": "Chi tiết giá dịch vụ",
     "itemName": "Tên dịch vụ",
     "itemPrice": "Giá dịch vụ",
     "active": "Hoạt động",
@@ -209,7 +210,10 @@
     "serviceName": "Dịch vụ",
     "estimatedCompletionTime": "Thời gian dự kiến",
     "cannotUpdate": "Bảng giá hết hạn không thể cập nhật",
-    "edit": "Chỉnh sửa"
+    "edit": "Chỉnh sửa",
+    "expires": "Hết hạn",
+    "deleteTitle": "Xóa bảng giá",
+    "deleteError": "Bảng giá không thể xóa vì đã hết hạn"
   },
   "slot": {
     "title1": "Vị trí 1",

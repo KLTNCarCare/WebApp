@@ -88,9 +88,17 @@ const createPriceCatalogColumns = (
           label={
             params.row.status === 'active'
               ? t('category.active')
-              : t('category.inactive')
+              : params.row.status === 'inactive'
+              ? t('category.inactive')
+              : t('category.expires')
           }
-          color={params.row.status === 'active' ? 'success' : 'default'}
+          color={
+            params.row.status === 'active'
+              ? 'success'
+              : params.row.status === 'inactive'
+              ? 'default'
+              : 'error'
+          }
         />
       </div>
     ),

@@ -155,7 +155,8 @@
     "serviceNameRequired": "Service name cannot be empty",
     "durationRequired": "Estimated completion time cannot be empty",
     "serviceDeletedSuccessfully": "Service has been deleted successfully",
-    "serviceSavedSuccessfully": "Service has been saved successfully"
+    "serviceSavedSuccessfully": "Service has been saved successfully",
+    "expires": "Expires"
   },
   "priceCatalog": {
     "userPriceCatalogManagement": "Price Catalog Management",
@@ -207,7 +208,10 @@
     "totalPrice": "Total Price",
     "serviceName": "Service",
     "cannotUpdate": "Price Catalog has expired and cannot be updated",
-    "edit": "Edit"
+    "edit": "Edit",
+    "expires": "Expires",
+    "deleteTitle": "Delete Price Catalog",
+    "deleteError": "Price Catalog has expired and cannot be deleted"
   },
   "slot": {
     "title1": "Slot 1",
