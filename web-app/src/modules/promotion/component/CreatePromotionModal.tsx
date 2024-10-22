@@ -23,6 +23,7 @@ import snackbarUtils from 'src/lib/snackbarUtils';
 
 const schemaCreatePromotion = yup.object({
   promotionName: yup.string().required('Vui lòng nhập tên khuyến mãi'),
+  description: yup.string().required('Vui lòng nhập mô tả'),
   startDate: yup
     .number()
     .required('Vui lòng nhập ngày bắt đầu')
@@ -36,10 +37,10 @@ const schemaCreatePromotion = yup.object({
     .positive('Ngày kết thúc phải lớn hơn 0')
     .test(
       'is-after-startDate',
-      'Ngày kết thúc phải sau ngày bắt đầu',
+      'Ngày kết thúc phải sau hoặc bằng ngày bắt đầu',
       function (value) {
         const { startDate } = this.parent;
-        return value > startDate;
+        return value >= startDate;
       }
     )
     .test('is-after-now', 'Ngày kết thúc phải sau ngày hiện tại', (value) => {
@@ -68,8 +69,8 @@ function CreatePromotionModal({
     defaultValues: {
       promotionName: '',
       description: '',
-      startDate: '',
-      endDate: '',
+      startDate: undefined,
+      endDate: undefined,
     },
     mode: 'onChange',
     resolver: yupResolver(schemaCreatePromotion),
@@ -80,12 +81,13 @@ function CreatePromotionModal({
     useCreatePromotion();
 
   const handleCreatePromotion: SubmitHandler<CreatePromotionFn> = (data) => {
-    const processedData = {
+    const transformedData = {
       ...data,
-      startDate: dayjs(data.startDate).startOf('day').toISOString(),
-      endDate: dayjs(data.endDate).endOf('day').toISOString(),
+      startDate: new Date(data.startDate).getTime(),
+      endDate: new Date(data.endDate).getTime(),
     };
-    createPromotion(processedData, {
+
+    createPromotion(transformedData, {
       onSuccess() {
         setIsRegisterSuccess(true);
         snackbarUtils.success(t('promotion.createSuccess'));
@@ -148,6 +150,7 @@ function CreatePromotionModal({
               <Controller
                 name="startDate"
                 control={control}
+                defaultValue={undefined}
                 render={({ field }) => (
                   <TextField
                     {...field}
@@ -165,7 +168,7 @@ function CreatePromotionModal({
                       const date = new Date(e.target.value);
                       if (date instanceof Date && !isNaN(date.getTime())) {
                         field.onChange(date.getTime());
-                        setValue('startDate', date.getTime().toString(), {
+                        setValue('startDate', date.getTime(), {
                           shouldValidate: true,
                         });
                       }
@@ -173,9 +176,11 @@ function CreatePromotionModal({
                   />
                 )}
               />
+
               <Controller
                 name="endDate"
                 control={control}
+                defaultValue={undefined}
                 render={({ field }) => (
                   <TextField
                     {...field}
@@ -193,7 +198,7 @@ function CreatePromotionModal({
                       const date = new Date(e.target.value);
                       if (date instanceof Date && !isNaN(date.getTime())) {
                         field.onChange(date.getTime());
-                        setValue('endDate', date.getTime().toString(), {
+                        setValue('endDate', date.getTime(), {
                           shouldValidate: true,
                         });
                       }

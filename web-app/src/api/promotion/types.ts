@@ -3,8 +3,8 @@
 export interface CreatePromotionFn {
   promotionName: string;
   description: string;
-  startDate: string;
-  endDate: string;
+  startDate: number;
+  endDate: number;
 }
 
 export interface Promotion {

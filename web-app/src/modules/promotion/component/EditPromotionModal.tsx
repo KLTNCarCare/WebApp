@@ -158,22 +158,20 @@ const EditPromotionModal = ({
                     : ''
                 }
               />
+              <TextField
+                fullWidth
+                variant="filled"
+                label={t('promotion.description')}
+                type="text"
+                {...register('description')}
+                inputProps={{ inputMode: 'text' }}
+                error={!!errors.description}
+                helperText={
+                  errors.description ? String(errors.description.message) : ''
+                }
+              />
               {!hasLines && (
                 <>
-                  <TextField
-                    fullWidth
-                    variant="filled"
-                    label={t('promotion.description')}
-                    type="text"
-                    {...register('description')}
-                    inputProps={{ inputMode: 'text' }}
-                    error={!!errors.description}
-                    helperText={
-                      errors.description
-                        ? String(errors.description.message)
-                        : ''
-                    }
-                  />
                   <TextField
                     required
                     fullWidth
