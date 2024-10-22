@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useForm, useFieldArray } from 'react-hook-form';
+import { useForm, useFieldArray, Controller } from 'react-hook-form';
 import {
   Dialog,
   DialogTitle,
@@ -8,9 +8,11 @@ import {
   Button,
   TextField,
   Typography,
-  Avatar,
   IconButton,
   Autocomplete,
+  Avatar,
+  DialogActions,
+  DialogContentText,
 } from '@mui/material';
 import CheckIcon from '@mui/icons-material/Check';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -25,7 +27,6 @@ import { useUpdateEndatePriceCatalog } from 'src/api/priceCatalog/useUpdateEndat
 import { useGetCurrentServiceActive } from 'src/api/appointment/useGetAllServiceActive';
 import useDebounce from 'src/lib/hooks/useDebounce';
 import snackbarUtils from 'src/lib/snackbarUtils'; // Import snackbarUtils
-import { PriceCatalog } from 'src/api/appointment/types';
 
 interface EditPriceCatalogModalProps {
   open: boolean;
@@ -44,11 +45,6 @@ interface EditPriceCatalogModalProps {
   };
   refetch: () => void;
   setIsEditPriceCatalog: (value: boolean) => void;
-}
-
-interface ApiResponse {
-  message: string;
-  [key: string]: any;
 }
 
 const schemaUpdatePriceCatalog = yup.object().shape({
@@ -84,6 +80,7 @@ const EditPriceCatalogModal = ({
     setValue,
     control,
     formState: { errors, isValid },
+    watch,
   } = useForm<UpdatePriceCatalogFn>({
     resolver: yupResolver(schemaUpdatePriceCatalog),
     defaultValues: {
@@ -104,7 +101,7 @@ const EditPriceCatalogModal = ({
     useGetCurrentServiceActive(debouncedSearchText);
 
   const { mutate: updateEndatePriceCatalog } = useUpdateEndatePriceCatalog({
-    onSuccess: (data: PriceCatalog) => {
+    onSuccess: (data) => {
       refetch();
       setIsSuccessDialogOpen(true);
       setIsLoading(false);
@@ -112,12 +109,14 @@ const EditPriceCatalogModal = ({
     },
     onError: (error) => {
       setIsLoading(false);
-      snackbarUtils.error(error.response?.data?.message || 'An error occurred');
+      snackbarUtils.error(
+        error.response?.data?.message || t('priceCatalog.updateError')
+      );
     },
   });
 
   const { mutate: updatePriceCatalog } = useUpdatePriceCatalog({
-    onSuccess: (data: PriceCatalog) => {
+    onSuccess: (data) => {
       refetch();
       setIsSuccessDialogOpen(true);
       setIsLoading(false);
@@ -125,7 +124,9 @@ const EditPriceCatalogModal = ({
     },
     onError: (error) => {
       setIsLoading(false);
-      snackbarUtils.error(error.response?.data?.message || 'An error occurred');
+      snackbarUtils.error(
+        error.response?.data?.message || t('priceCatalog.updateError')
+      );
     },
   });
 
@@ -165,6 +166,32 @@ const EditPriceCatalogModal = ({
       currency: 'VND',
     });
   };
+
+  const [inputValues, setInputValues] = useState(
+    priceCatalogData.items.map((item) => formatCurrency(item.price))
+  );
+
+  const handleFocus = (idx: number) => {
+    setInputValues((prev) =>
+      prev.map((val, i) =>
+        i === idx ? watch(`items.${idx}.price`).toString() : val
+      )
+    );
+  };
+
+  const handleBlur = (idx: number, field: { value: number }) => {
+    const formattedValue = formatCurrency(field.value);
+    setInputValues((prev) =>
+      prev.map((val, i) => (i === idx ? formattedValue : val))
+    );
+  };
+
+  const handleAddItem = () => {
+    append({ itemId: '', itemName: '', price: 0 });
+    setInputValues((prev) => [...prev, formatCurrency(0)]);
+  };
+
+  const selectedItems = watch('items').map((item) => item.itemId);
 
   return (
     <>
@@ -266,7 +293,12 @@ const EditPriceCatalogModal = ({
                   >
                     <Autocomplete
                       fullWidth
-                      options={currentItems || []}
+                      options={
+                        currentItems?.filter(
+                          (currentItem) =>
+                            !selectedItems.includes(currentItem.itemId)
+                        ) || []
+                      }
                       getOptionLabel={(option) => option.itemName}
                       defaultValue={{
                         itemId: item.itemId,
@@ -303,23 +335,35 @@ const EditPriceCatalogModal = ({
                         />
                       )}
                     />
-                    <TextField
-                      required
-                      fullWidth
-                      variant="filled"
-                      label={t('priceCatalog.price')}
-                      type="text"
-                      value={formatCurrency(item.price)}
-                      onChange={(e) => {
-                        const value = e.target.value.replace(/\D/g, '');
-                        setValue(`items.${index}.price`, Number(value));
-                      }}
-                      error={!!errors.items?.[index]?.price}
-                      helperText={
-                        errors.items?.[index]?.price
-                          ? t(errors.items[index]?.price?.message || '')
-                          : ''
-                      }
+                    <Controller
+                      name={`items.${index}.price`}
+                      control={control}
+                      render={({ field }) => (
+                        <TextField
+                          {...field}
+                          required
+                          fullWidth
+                          variant="filled"
+                          label={t('priceCatalog.price')}
+                          type="text"
+                          value={inputValues[index]}
+                          onFocus={() => handleFocus(index)}
+                          onChange={(e) => {
+                            const value = e.target.value.replace(/\D/g, '');
+                            setInputValues((prev) =>
+                              prev.map((val, i) => (i === index ? value : val))
+                            );
+                            field.onChange(Number(value));
+                          }}
+                          onBlur={() => handleBlur(index, field)}
+                          error={!!errors.items?.[index]?.price}
+                          helperText={
+                            errors.items?.[index]?.price
+                              ? t(errors.items[index]?.price?.message || '')
+                              : ''
+                          }
+                        />
+                      )}
                     />
                     <IconButton onClick={() => remove(index)}>
                       <DeleteIcon />
@@ -329,7 +373,7 @@ const EditPriceCatalogModal = ({
                 <Button
                   variant="outlined"
                   startIcon={<AddIcon />}
-                  onClick={() => append({ itemId: '', itemName: '', price: 0 })}
+                  onClick={handleAddItem}
                 >
                   {t('priceCatalog.addItem')}
                 </Button>

@@ -210,6 +210,9 @@ function CreatePriceCatalogModal({
       },
       onError(error) {
         handleApiResponse(t('priceCatalog.createError'), 'error');
+        snackbarUtils.error(
+          error.response?.data?.message || t('priceCatalog.createError')
+        );
       },
     });
   };
@@ -315,34 +318,64 @@ function CreatePriceCatalogModal({
       headerName: t('priceCatalog.selectService'),
       width: 200,
       editable: true,
-      renderEditCell: (params) => (
-        <FormControl fullWidth variant="filled">
-          <InputLabel>{t('priceCatalog.selectService')}</InputLabel>
-          <Select
-            value={params.value}
-            onChange={(e) => {
-              params.api.setEditCellValue({
-                id: params.id,
-                field: 'itemName',
-                value: e.target.value,
-              });
-              handleServiceChange(params.id, e.target.value);
-            }}
-            disabled={!params.row.categoryId}
-          >
-            {services
-              ?.filter(
-                (service: { categoryId: string }) =>
-                  service.categoryId === params.row.categoryId
-              )
-              .map((service) => (
-                <MenuItem key={service._id} value={service.serviceName}>
-                  {service.serviceName}
-                </MenuItem>
-              ))}
-          </Select>
-        </FormControl>
-      ),
+      renderEditCell: (params) => {
+        const selectedServices = rows
+          .filter((row) => row.id !== params.id)
+          .map((row) => row.itemName);
+
+        return (
+          <FormControl fullWidth variant="filled">
+            <InputLabel>{t('priceCatalog.selectService')}</InputLabel>
+            <Select
+              value={params.value}
+              onChange={(e) => {
+                const selectedServiceName = e.target.value;
+                const selectedService = services?.find(
+                  (service) => service.serviceName === selectedServiceName
+                );
+
+                if (selectedService) {
+                  params.api.setEditCellValue({
+                    id: params.id,
+                    field: 'itemName',
+                    value: selectedServiceName,
+                  });
+                  params.api.stopCellEditMode({
+                    id: params.id,
+                    field: 'itemName',
+                  });
+                  setRows((prevRows) =>
+                    prevRows.map((row) =>
+                      row.id === params.id
+                        ? {
+                            ...row,
+                            itemId: selectedService._id,
+                            itemName: selectedService.serviceName,
+                          }
+                        : row
+                    )
+                  );
+                  handleServiceChange(params.id, selectedServiceName);
+                }
+              }}
+              disabled={!params.row.categoryId}
+            >
+              {services
+                ?.filter(
+                  (service) =>
+                    service.categoryId === params.row.categoryId &&
+                    (!selectedServices.includes(service.serviceName) ||
+                      service.serviceName === params.value)
+                )
+                .map((service) => (
+                  <MenuItem key={service._id} value={service.serviceName}>
+                    {service.serviceName}
+                  </MenuItem>
+                ))}
+            </Select>
+          </FormControl>
+        );
+      },
     },
     {
       field: 'price',
@@ -478,7 +511,7 @@ function CreatePriceCatalogModal({
                   <TextField
                     {...field}
                     label={t('priceCatalog.startDate')}
-                    type="date" // Change to date
+                    type="date"
                     InputLabelProps={{ shrink: true }}
                     error={!!errors.startDate}
                     helperText={errors.startDate?.message}
@@ -508,7 +541,7 @@ function CreatePriceCatalogModal({
                   <TextField
                     {...field}
                     label={t('priceCatalog.endDate')}
-                    type="date" // Change to date
+                    type="date"
                     InputLabelProps={{ shrink: true }}
                     error={!!errors.endDate}
                     helperText={errors.endDate?.message}
