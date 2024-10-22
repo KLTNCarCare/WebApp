@@ -89,7 +89,8 @@
     "inactive": "Chưa hoạt động",
     "updatedAt": "Ngày cập nhật",
     "createdAt": "Ngày tạo",
-    "items": "Khuyến mãi"
+    "items": "Khuyến mãi",
+    "updating": "Đang cập nhật"
   },
   "promotionLine": {
     "index": "STT",

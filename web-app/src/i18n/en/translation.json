@@ -89,7 +89,8 @@
     "inactive": "Inactive",
     "updatedAt": "Updated Date",
     "createdAt": "Created Date",
-    "items": "Promotions"
+    "items": "Promotions",
+    "updating": "Updating"
   },
   "promotionLine": {
     "index": "Index",

@@ -55,7 +55,7 @@ dayjs.extend(utc);
 dayjs.extend(timezone);
 
 const schemaCreatePriceCatalog = yup.object({
-  priceName: yup.string().required('Vui lòng nhập tên khuyến mãi'),
+  priceName: yup.string().required('Vui lòng nhập tên bảng giá'),
   startDate: yup
     .number()
     .required('Vui lòng nhập ngày bắt đầu')
@@ -69,10 +69,10 @@ const schemaCreatePriceCatalog = yup.object({
     .positive('Ngày kết thúc phải lớn hơn 0')
     .test(
       'is-after-startDate',
-      'Ngày kết thúc phải sau ngày bắt đầu',
+      'Ngày kết thúc phải sau hoặc bằng ngày bắt đầu',
       function (value) {
         const { startDate } = this.parent;
-        return value > startDate;
+        return value >= startDate;
       }
     )
     .test('is-after-now', 'Ngày kết thúc phải sau ngày hiện tại', (value) => {
@@ -209,10 +209,9 @@ function CreatePriceCatalogModal({
         handleApiResponse(t('priceCatalog.createSuccess'), 'success');
       },
       onError(error) {
-        handleApiResponse(t('priceCatalog.createError'), 'error');
-        snackbarUtils.error(
-          error.response?.data?.message || t('priceCatalog.createError')
-        );
+        const message =
+          error.response?.data?.message || t('priceCatalog.createError');
+        snackbarUtils.error(message);
       },
     });
   };

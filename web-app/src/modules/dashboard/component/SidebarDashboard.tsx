@@ -37,21 +37,6 @@ const sidebarDataDashboard = [
     label: 'dashboard',
     icon: <DashboardIcon />,
   },
-  // {
-  //   value: '/account-management',
-  //   label: 'accountManagement',
-  //   icon: <ContactEmergencyIcon />,
-  // },
-  {
-    value: '/invoice',
-    label: 'invoice',
-    icon: <ReceiptLongIcon />,
-  },
-  {
-    value: '/promotion',
-    label: 'promotion',
-    icon: <DiscountIcon />,
-  },
   {
     value: '/category',
     label: 'category',
@@ -62,6 +47,21 @@ const sidebarDataDashboard = [
     label: 'priceCatalog',
     icon: <PriceChangeIcon />,
   },
+  {
+    value: '/promotion',
+    label: 'promotion',
+    icon: <DiscountIcon />,
+  },
+  {
+    value: '/invoice',
+    label: 'invoice',
+    icon: <ReceiptLongIcon />,
+  },
+  // {
+  //   value: '/account-management',
+  //   label: 'accountManagement',
+  //   icon: <ContactEmergencyIcon />,
+  // },
 ];
 
 const SIDEBAR_WIDTH = 240;

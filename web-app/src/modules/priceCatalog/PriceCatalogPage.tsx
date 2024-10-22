@@ -180,9 +180,9 @@ export function PriceCatalogPage() {
         </Dialog>
       </AdminLayout>
 
-      <Snackbar
+      {/* <Snackbar
         open={snackbarOpen}
-        autoHideDuration={6000}
+        autoHideDuration={0}
         onClose={handleSnackbarClose}
       >
         <Alert
@@ -192,7 +192,7 @@ export function PriceCatalogPage() {
         >
           {snackbarMessage}
         </Alert>
-      </Snackbar>
+      </Snackbar> */}
     </>
   );
 }

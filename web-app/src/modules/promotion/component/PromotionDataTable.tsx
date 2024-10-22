@@ -231,6 +231,7 @@ const PromotionDataTable: React.FC<PromotionDataTableProps> = ({
           <EditPromotionModal
             promotionData={editPromotionData}
             refetch={refetch}
+            // onClose={() => setIsEditPromotionOpen(false)}
             setIsEditPromotion={setIsEditPromotionOpen}
           />
         )}

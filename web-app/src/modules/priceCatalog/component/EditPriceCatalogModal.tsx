@@ -56,8 +56,14 @@ const schemaInactive = yup.object({
   endDate: yup
     .date()
     .required('Vui lòng nhập ngày kết thúc')
-    .min(yup.ref('startDate'), 'Ngày kết thúc phải sau ngày bắt đầu')
-    .min(new Date(), 'Ngày kết thúc phải sau ngày hiện tại'),
+    .min(yup.ref('startDate'), 'Ngày kết thúc phải sau hoặc bằng ngày bắt đầu')
+    .test(
+      'is-greater-than-today',
+      'Ngày kết thúc phải sau ngày hiện tại',
+      function (value) {
+        return value > new Date();
+      }
+    ),
   items: yup
     .array()
     .of(
