@@ -38,6 +38,7 @@ import { updateServiceFn } from 'src/api/service/useUpdateService';
 import { useDeleteService } from 'src/api/service/useDeleteService';
 import ServiceDetailModal from './ServiceDetailModal';
 import { v4 as uuidv4 } from 'uuid';
+import snackbarUtils from 'src/lib/snackbarUtils';
 
 interface CategoryDetailModalProps {
   open: boolean;
@@ -168,10 +169,23 @@ const CategoryDetailModal: React.FC<CategoryDetailModalProps> = ({
       }
       setServiceDetailModalOpen(false);
       refetch();
-      handleApiResponse({ message: t('category.serviceSavedSuccessfully') });
+      snackbarUtils.success(t('category.serviceSavedSuccessfully'));
       return { code: 200, message: 'Success' };
     } catch (error) {
-      return { code: 500, message: 'Error' };
+      if ((error as any).response) {
+        const errorMessage =
+          (error as any).response.data?.message || 'Có lỗi xảy ra';
+        snackbarUtils.error(errorMessage);
+        return { code: (error as any).response.status, message: errorMessage };
+      } else if ((error as any).request) {
+        const errorMessage = 'Không thể kết nối đến máy chủ';
+        snackbarUtils.error(errorMessage);
+        return { code: 500, message: errorMessage };
+      } else {
+        const errorMessage = 'Có lỗi xảy ra';
+        snackbarUtils.error(errorMessage);
+        return { code: 500, message: errorMessage };
+      }
     }
   };
 
