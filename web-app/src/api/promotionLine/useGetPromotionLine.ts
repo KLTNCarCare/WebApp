@@ -5,12 +5,16 @@ import { DefaultQueryError } from '../type';
 import { getCookie } from 'src/lib/cookies';
 
 export interface Detail {
+  code: string;
   itemId: string | null;
   itemGiftId: string | null;
-  bill: number;
+  bill?: number;
   discount: number;
-  limitDiscount: number;
+  limitDiscount?: number;
   status: string;
+  description: string;
+  itemName?: string;
+  itemGiftName?: string;
   _id: string;
 }
 

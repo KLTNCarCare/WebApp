@@ -114,7 +114,10 @@
     "discountService": "Giảm giá dịch vụ",
     "header": "Thông tin khuyến mãi",
     "code": "Mã khuyến mãi",
-    "itemName": "Dịch vụ áp dụng"
+    "itemName": "Dịch vụ áp dụng",
+    "addNewLine": "Thêm khuyến mãi",
+    "addDetail": "Thêm chi tiết",
+    "itemGiftName": "Dịch vụ được khuyến mãi"
   },
   "category": {
     "userCategoryManagement": "Quản lý danh mục dịch vụ",

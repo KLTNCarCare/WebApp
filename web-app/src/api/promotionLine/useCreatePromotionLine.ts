@@ -5,6 +5,7 @@ import { DefaultQueryError } from '../type';
 import { getCookie } from 'src/lib/cookies';
 import { CreatePromotionLineFn } from './types';
 import { PromotionLine } from './useGetPromotionLine';
+
 export const createPromotionLineFn = async (
   data: CreatePromotionLineFn
 ): Promise<PromotionLine> => {
@@ -15,6 +16,7 @@ export const createPromotionLineFn = async (
     {
       headers: {
         Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json',
       },
     }
   );

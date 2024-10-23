@@ -102,27 +102,6 @@ const PromotionDetailModal: React.FC<PromotionDetailModalProps> = ({
                     <Divider variant="middle" />
                   </>
                 )}
-                {promotionData.status && (
-                  <>
-                    <ListItem>
-                      <ListItemText primary={t('promotion.status')} />
-                      <Chip
-                        label={
-                          promotionData.status === 'active'
-                            ? t('promotion.active')
-                            : t('promotion.inactive')
-                        }
-                        color={
-                          promotionData.status === 'active'
-                            ? 'success'
-                            : 'default'
-                        }
-                        sx={{ ml: 1 }}
-                      />
-                    </ListItem>
-                    <Divider variant="middle" />
-                  </>
-                )}
                 {promotionData.startDate && (
                   <>
                     <ListItem>
@@ -187,7 +166,21 @@ const PromotionDetailModal: React.FC<PromotionDetailModalProps> = ({
             )}
           </List>
           {promotionLineData && (
-            <PromotionLineDataGrid promotionLineData={promotionLineData} />
+            <Box
+              sx={{
+                display: 'flex',
+                flexDirection: 'column',
+                width: '100%',
+                mt: 2,
+              }}
+            >
+              <Box sx={{ flexGrow: 1 }}>
+                <PromotionLineDataGrid
+                  promotionLineData={promotionLineData}
+                  promotionId={promotionData._id}
+                />
+              </Box>
+            </Box>
           )}
         </Box>
       </DialogContent>

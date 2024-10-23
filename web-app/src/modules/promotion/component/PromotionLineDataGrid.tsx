@@ -7,20 +7,34 @@ import {
 } from '@mui/x-data-grid';
 import { PromotionLine } from 'src/api/promotionLine/useGetPromotionLine';
 import { useTranslation } from 'react-i18next';
-import { Chip } from '@mui/material';
+import { Chip, Button, Box } from '@mui/material';
 import PromotionLineDetail from './PromotionLineDetail';
+import AddPromotionLineModal from './AddPromotionLineModal';
+import EmptyScreen from 'src/components/layouts/EmtyScreen';
+import { useCreatePromotionLine } from 'src/api/promotionLine/useCreatePromotionLine';
+import { CreatePromotionLineFn } from 'src/api/promotionLine/types';
 
 interface PromotionLineDataGridProps {
   promotionLineData: PromotionLine[];
+  promotionId: string;
 }
 
 const PromotionLineDataGrid: React.FC<PromotionLineDataGridProps> = ({
   promotionLineData,
+  promotionId,
 }) => {
   const { t } = useTranslation();
   const [selectedPromotionLine, setSelectedPromotionLine] =
     React.useState<PromotionLine | null>(null);
   const [detailOpen, setDetailOpen] = React.useState(false);
+  const [addModalOpen, setAddModalOpen] = React.useState(false);
+  const [rows, setRows] = React.useState<PromotionLine[]>(promotionLineData);
+
+  const createPromotionLineMutation = useCreatePromotionLine({
+    onSuccess: (newLine) => {
+      setRows((prevRows) => [...prevRows, newLine]);
+    },
+  });
 
   const handleRowClick = (params: any) => {
     setSelectedPromotionLine(params.row);
@@ -30,6 +44,32 @@ const PromotionLineDataGrid: React.FC<PromotionLineDataGridProps> = ({
   const handleCloseDetail = () => {
     setDetailOpen(false);
     setSelectedPromotionLine(null);
+  };
+
+  const handleAddNewLine = () => {
+    setAddModalOpen(true);
+  };
+
+  const handleCloseAddModal = () => {
+    setAddModalOpen(false);
+  };
+
+  const handleAdd = (newLine: PromotionLine) => {
+    const newLineData: CreatePromotionLineFn = {
+      parentId: newLine.parentId,
+      description: newLine.description,
+      type: newLine.type as 'discount-service' | 'discount-bill',
+      startDate: new Date(newLine.startDate).getTime(),
+      endDate: new Date(newLine.endDate).getTime(),
+      detail: newLine.detail.map((d) => ({
+        ...d,
+        itemId: d.itemId ?? undefined,
+        itemGiftId: d.itemGiftId ?? undefined,
+      })),
+      status: newLine.status,
+    };
+    createPromotionLineMutation.mutate(newLineData);
+    setAddModalOpen(false);
   };
 
   const columns: GridColDef<PromotionLine>[] = [
@@ -91,20 +131,37 @@ const PromotionLineDataGrid: React.FC<PromotionLineDataGridProps> = ({
 
   return (
     <>
-      <div style={{ height: 400, width: '100%' }}>
+      <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 2 }}>
+        <Button variant="contained" color="primary" onClick={handleAddNewLine}>
+          {t('promotionLine.addNewLine')}
+        </Button>
+      </Box>
+      <div style={{ width: '100%' }}>
         <DataGrid
-          rows={promotionLineData}
+          rows={rows}
           columns={columns}
           pageSizeOptions={[5]}
           pagination
           getRowId={(row) => row._id}
           onRowClick={handleRowClick}
+          autoHeight
+          slots={{
+            noRowsOverlay: () => (
+              <EmptyScreen titleEmpty={t('dashboard.noDataAvailable')} />
+            ),
+          }}
         />
       </div>
       <PromotionLineDetail
         open={detailOpen}
         onClose={handleCloseDetail}
         promotionLine={selectedPromotionLine}
+      />
+      <AddPromotionLineModal
+        open={addModalOpen}
+        onClose={handleCloseAddModal}
+        onAdd={handleAdd}
+        promotionId={promotionId}
       />
     </>
   );

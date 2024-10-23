@@ -114,7 +114,10 @@
     "discountService": "Discount Service",
     "header": "Promotion Line Information",
     "code": "Promotion Code",
-    "itemName": "Service Name"
+    "itemName": "Service Name",
+    "addNewLine": "Add Promotion Line",
+    "addDetail": "Add Detail",
+    "itemGiftName": "Gift Service Name"
   },
   "category": {
     "userCategoryManagement": "User Category Management",
