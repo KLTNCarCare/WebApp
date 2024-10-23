@@ -1,7 +1,7 @@
 export interface Detail {
-  itemId?: string;
+  itemId?: string | null;
   itemName?: string;
-  itemGiftId?: string;
+  itemGiftId?: string | null;
   itemGiftName?: string;
   bill?: number;
   discount: number;
@@ -12,10 +12,9 @@ export interface CreatePromotionLineFn {
   parentId: string;
   description: string;
   type: 'discount-service' | 'discount-bill';
-  startDate: number;
-  endDate: number;
+  startDate: string | number;
+  endDate: string | number;
   detail: Detail[];
-  status: string;
 }
 export interface DeletePromotionLineFn {
   _id: string;

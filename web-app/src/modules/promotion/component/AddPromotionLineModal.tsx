@@ -10,6 +10,7 @@ import {
   Box,
   Typography,
   IconButton,
+  CircularProgress,
 } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import {
@@ -23,6 +24,7 @@ import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
 import { useCreatePromotionLine } from 'src/api/promotionLine/useCreatePromotionLine';
 import { CreatePromotionLineFn, Detail } from 'src/api/promotionLine/types';
+import { useGetCurrentServiceActive } from 'src/api/appointment/useGetAllServiceActive';
 import dayjs from 'dayjs';
 
 interface AddPromotionLineModalProps {
@@ -54,6 +56,9 @@ const AddPromotionLineModal: React.FC<AddPromotionLineModalProps> = ({
       reset();
     },
   });
+
+  const { data: services, isLoading: isLoadingServices } =
+    useGetCurrentServiceActive('');
 
   const filterDetails = (details: Detail[], type: string): Detail[] => {
     return details.map((detail) => {
@@ -189,19 +194,6 @@ const AddPromotionLineModal: React.FC<AddPromotionLineModalProps> = ({
                     sx={{ display: 'flex', alignItems: 'center', mb: 2 }}
                   >
                     <Controller
-                      name={`detail.${index}.itemId`}
-                      control={control}
-                      defaultValue={field.itemId}
-                      render={({ field }) => (
-                        <TextField
-                          {...field}
-                          label={t('promotionLine.itemId')}
-                          fullWidth
-                          margin="normal"
-                        />
-                      )}
-                    />
-                    <Controller
                       name={`detail.${index}.itemName`}
                       control={control}
                       defaultValue={field.itemName}
@@ -209,22 +201,37 @@ const AddPromotionLineModal: React.FC<AddPromotionLineModalProps> = ({
                         <TextField
                           {...field}
                           label={t('promotionLine.itemName')}
+                          select
                           fullWidth
                           margin="normal"
-                        />
-                      )}
-                    />
-                    <Controller
-                      name={`detail.${index}.itemGiftId`}
-                      control={control}
-                      defaultValue={field.itemGiftId}
-                      render={({ field }) => (
-                        <TextField
-                          {...field}
-                          label={t('promotionLine.itemGiftId')}
-                          fullWidth
-                          margin="normal"
-                        />
+                          onChange={(e) => {
+                            const selectedService = services?.find(
+                              (service) => service.itemName === e.target.value
+                            );
+                            if (selectedService) {
+                              setValue(
+                                `detail.${index}.itemId`,
+                                selectedService.itemId
+                              );
+                              field.onChange(selectedService.itemName);
+                            }
+                          }}
+                        >
+                          {isLoadingServices ? (
+                            <MenuItem disabled>
+                              <CircularProgress size={24} />
+                            </MenuItem>
+                          ) : (
+                            services?.map((service) => (
+                              <MenuItem
+                                key={service.itemId}
+                                value={service.itemName}
+                              >
+                                {service.itemName}
+                              </MenuItem>
+                            ))
+                          )}
+                        </TextField>
                       )}
                     />
                     <Controller
@@ -235,9 +242,37 @@ const AddPromotionLineModal: React.FC<AddPromotionLineModalProps> = ({
                         <TextField
                           {...field}
                           label={t('promotionLine.itemGiftName')}
+                          select
                           fullWidth
                           margin="normal"
-                        />
+                          onChange={(e) => {
+                            const selectedService = services?.find(
+                              (service) => service.itemName === e.target.value
+                            );
+                            if (selectedService) {
+                              setValue(
+                                `detail.${index}.itemGiftId`,
+                                selectedService.itemId
+                              );
+                              field.onChange(selectedService.itemName);
+                            }
+                          }}
+                        >
+                          {isLoadingServices ? (
+                            <MenuItem disabled>
+                              <CircularProgress size={24} />
+                            </MenuItem>
+                          ) : (
+                            services?.map((service) => (
+                              <MenuItem
+                                key={service.itemId}
+                                value={service.itemName}
+                              >
+                                {service.itemName}
+                              </MenuItem>
+                            ))
+                          )}
+                        </TextField>
                       )}
                     />
                     <Controller

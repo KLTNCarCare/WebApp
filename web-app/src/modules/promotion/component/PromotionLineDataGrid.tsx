@@ -55,21 +55,20 @@ const PromotionLineDataGrid: React.FC<PromotionLineDataGridProps> = ({
   };
 
   const handleAdd = (newLine: PromotionLine) => {
-    const newLineData: CreatePromotionLineFn = {
-      parentId: newLine.parentId,
-      description: newLine.description,
-      type: newLine.type as 'discount-service' | 'discount-bill',
-      startDate: new Date(newLine.startDate).getTime(),
-      endDate: new Date(newLine.endDate).getTime(),
-      detail: newLine.detail.map((d) => ({
-        ...d,
-        itemId: d.itemId ?? undefined,
-        itemGiftId: d.itemGiftId ?? undefined,
-      })),
-      status: newLine.status,
-    };
-    createPromotionLineMutation.mutate(newLineData);
-    setAddModalOpen(false);
+    if (newLine.detail && Array.isArray(newLine.detail)) {
+      const newLineData: CreatePromotionLineFn = {
+        parentId: newLine.parentId,
+        description: newLine.description,
+        type: newLine.type as 'discount-service' | 'discount-bill',
+        startDate: new Date(newLine.startDate).getTime(),
+        endDate: new Date(newLine.endDate).getTime(),
+        detail: newLine.detail,
+      };
+      createPromotionLineMutation.mutate(newLineData);
+      setAddModalOpen(false);
+    } else {
+      console.error('Invalid detail data:', newLine.detail);
+    }
   };
 
   const columns: GridColDef<PromotionLine>[] = [
