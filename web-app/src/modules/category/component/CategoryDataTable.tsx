@@ -124,6 +124,7 @@ const CategoryDataTable: React.FC<CategoryDataTableProps> = ({
   const handleEditClick = (categoryData: any) => {
     setEditCategoryData(categoryData);
     setIsEditCategoryOpen(true);
+    refetch();
   };
 
   useEffect(() => {

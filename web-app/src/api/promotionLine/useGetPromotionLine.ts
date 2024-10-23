@@ -5,33 +5,27 @@ import { DefaultQueryError } from '../type';
 import { getCookie } from 'src/lib/cookies';
 
 export interface Detail {
+  _id: string;
   code: string;
-  itemId: string | null;
-  itemGiftId: string | null;
-  bill?: number;
-  discount: number;
-  limitDiscount?: number;
   status: string;
   description: string;
+  itemId?: string;
   itemName?: string;
-  itemGiftName?: string;
-  _id: string;
+  discount: number;
+  bill?: number;
+  limitDiscount?: number;
 }
 
 export interface PromotionLine {
   _id: string;
   lineId: string;
   parentId: string;
-  type: string;
   description: string;
   startDate: string;
   endDate: string;
+  type: 'discount-service' | 'discount-bill';
+  status: 'active' | 'inactive' | 'expired';
   detail: Detail[];
-  status: string;
-  createdAt: string;
-  updatedAt: string;
-  __v: number;
-  [x: string]: any;
 }
 
 export const getPromotionLinesFn = async (

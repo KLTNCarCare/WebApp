@@ -117,7 +117,10 @@
     "itemName": "Service Name",
     "addNewLine": "Add Promotion Line",
     "addDetail": "Add Detail",
-    "itemGiftName": "Gift Service Name"
+    "itemGiftName": "Gift Service Name",
+    "deleteTitle": "Delete Promotion",
+    "deleteSuccessTitle": "Delete Promotion Successfully",
+    "deleteSuccess": "Promotion has been deleted successfully"
   },
   "category": {
     "userCategoryManagement": "User Category Management",
@@ -268,6 +271,11 @@
     "paymentFailed": "Payment failed. Please try again.",
     "submiting": " Submitting",
     "invoiceList": "Invoice List",
-    "userInvoiceManagement": "Invoice Management"
+    "userInvoiceManagement": "Invoice Management",
+    "promotionCode": "Promotion Code",
+    "promotionDescription": "Promotion Description",
+    "promotion": "Promotion",
+    "promotionDetails": "Promotion Details",
+    "noPromotions": "No promotions"
   }
 }

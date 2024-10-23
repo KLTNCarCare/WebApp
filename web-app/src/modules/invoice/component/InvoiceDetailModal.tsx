@@ -23,7 +23,7 @@ import InvoicePrintModal from 'src/modules/dashboard/component/InvoicePrintModal
 interface InvoiceDetailModalProps {
   open: boolean;
   onClose: () => void;
-  invoiceData: Invoice | null; // Cập nhật kiểu dữ liệu để chấp nhận null
+  invoiceData: Invoice | null;
   refetch: () => void;
   isLoadingInvoice: boolean;
   paginationModel: { pageSize: number; page: number };
@@ -44,7 +44,12 @@ const createItemColumns = (t: (key: string) => string): GridColDef[] => [
     headerName: t('invoice.itemPrice'),
     minWidth: 150,
     flex: 1,
-    valueGetter: (params: GridValueGetterParams) => `${params.row.price} VND`,
+    valueGetter: (params: GridValueGetterParams) =>
+      new Intl.NumberFormat('vi-VN', {
+        style: 'currency',
+        currency: 'VND',
+        minimumFractionDigits: 0,
+      }).format(params.row.price),
   },
   {
     field: 'discount',
@@ -58,7 +63,12 @@ const createItemColumns = (t: (key: string) => string): GridColDef[] => [
     headerName: t('invoice.itemTotal'),
     minWidth: 150,
     flex: 1,
-    valueGetter: (params: GridValueGetterParams) => `${params.row.total} VND`,
+    valueGetter: (params: GridValueGetterParams) =>
+      new Intl.NumberFormat('vi-VN', {
+        style: 'currency',
+        currency: 'VND',
+        minimumFractionDigits: 0,
+      }).format(params.row.total),
   },
 ];
 
@@ -195,7 +205,7 @@ const InvoiceDetailModal: React.FC<InvoiceDetailModalProps> = ({
                     <Divider variant="middle" />
                   </>
                 )}
-                {invoice.status && (
+                {/* {invoice.status && (
                   <>
                     <ListItem>
                       <ListItemText primary={t('invoice.status')} />
@@ -213,7 +223,7 @@ const InvoiceDetailModal: React.FC<InvoiceDetailModalProps> = ({
                     </ListItem>
                     <Divider variant="middle" />
                   </>
-                )}
+                )} */}
                 {invoice.createdAt && (
                   <>
                     <ListItem>
@@ -287,6 +297,70 @@ const InvoiceDetailModal: React.FC<InvoiceDetailModalProps> = ({
                   />
                 </Paper>
               </Box>
+              <Box
+                sx={{
+                  mb: 2,
+                  display: 'flex',
+                  flexDirection: 'column',
+                  height: '100%',
+                }}
+              >
+                <Typography variant="h4">{t('invoice.promotion')}</Typography>
+                <Paper sx={{ flex: 1, p: 2 }}>
+                  {invoice.promotion && invoice.promotion.length > 0 ? (
+                    <DataGrid
+                      rows={invoice.promotion || []}
+                      columns={[
+                        {
+                          field: 'code',
+                          headerName: t('invoice.promotionCode'),
+                          minWidth: 150,
+                          flex: 1,
+                        },
+                        {
+                          field: 'description',
+                          headerName: t('invoice.promotionDescription'),
+                          minWidth: 300,
+                          flex: 1,
+                        },
+                      ]}
+                      pagination
+                      paginationModel={{
+                        pageSize: paginationModel.pageSize,
+                        page: paginationModel.page,
+                      }}
+                      onPaginationModelChange={(model) =>
+                        setPaginationModel(model)
+                      }
+                      disableRowSelectionOnClick
+                      autoHeight
+                      getRowId={(row) => row.promotion_line}
+                      sx={{
+                        '& .MuiDataGrid-cell': {
+                          whiteSpace: 'normal',
+                          wordBreak: 'break-word',
+                          overflowWrap: 'break-word',
+                        },
+                      }}
+                      slots={{
+                        noRowsOverlay: () => (
+                          <EmptyScreen
+                            titleEmpty={t('dashboard.noDataAvailable')}
+                          />
+                        ),
+                      }}
+                    />
+                  ) : (
+                    <Typography
+                      variant="body2"
+                      textAlign="center"
+                      color="grey.600"
+                    >
+                      {t('invoice.noPromotions')}
+                    </Typography>
+                  )}
+                </Paper>
+              </Box>
 
               <Box sx={{ mb: 2 }}>
                 <Typography variant="h4">{t('invoice.summary')}</Typography>
@@ -298,7 +372,10 @@ const InvoiceDetailModal: React.FC<InvoiceDetailModalProps> = ({
                       textAlign="right"
                       color="grey.600"
                     >
-                      {invoice.sub_total} VND
+                      {new Intl.NumberFormat('vi-VN', {
+                        style: 'currency',
+                        currency: 'VND',
+                      }).format(invoice.sub_total)}
                     </Typography>
                   </ListItem>
                   <Divider variant="middle" />
@@ -309,7 +386,12 @@ const InvoiceDetailModal: React.FC<InvoiceDetailModalProps> = ({
                       textAlign="right"
                       color="grey.600"
                     >
-                      {invoice.discount.per}% ({invoice.discount.value_max} VND)
+                      {invoice.discount.per}% (
+                      {new Intl.NumberFormat('vi-VN', {
+                        style: 'currency',
+                        currency: 'VND',
+                      }).format(invoice.discount.value_max)}
+                      )
                     </Typography>
                   </ListItem>
                   <Divider variant="middle" />
@@ -320,7 +402,10 @@ const InvoiceDetailModal: React.FC<InvoiceDetailModalProps> = ({
                       textAlign="right"
                       color="grey.600"
                     >
-                      {invoice.final_total} VND
+                      {new Intl.NumberFormat('vi-VN', {
+                        style: 'currency',
+                        currency: 'VND',
+                      }).format(invoice.final_total)}
                     </Typography>
                   </ListItem>
                 </List>
@@ -330,7 +415,7 @@ const InvoiceDetailModal: React.FC<InvoiceDetailModalProps> = ({
         </DialogContent>
 
         {/* Dialog Actions */}
-        {/* <DialogActions sx={{ p: 3, justifyContent: 'space-between' }}>
+        <DialogActions sx={{ p: 3, justifyContent: 'space-between' }}>
           <Button onClick={handlePrint} color="primary" variant="contained">
             {t('invoice.print')}
           </Button>
@@ -339,15 +424,15 @@ const InvoiceDetailModal: React.FC<InvoiceDetailModalProps> = ({
               {t('invoice.pay')}
             </Button>
           )}
-        </DialogActions> */}
+        </DialogActions>
       </Dialog>
 
       {/* Print and Payment Modals */}
-      {/* <InvoicePrintModal
+      <InvoicePrintModal
         open={printModalOpen}
         onClose={() => setPrintModalOpen(false)}
         invoiceData={invoiceData}
-      /> */}
+      />
     </>
   );
 };

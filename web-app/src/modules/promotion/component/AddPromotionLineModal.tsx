@@ -26,12 +26,22 @@ import { useCreatePromotionLine } from 'src/api/promotionLine/useCreatePromotion
 import { CreatePromotionLineFn, Detail } from 'src/api/promotionLine/types';
 import { useGetCurrentServiceActive } from 'src/api/appointment/useGetAllServiceActive';
 import dayjs from 'dayjs';
+import snackbarUtils from 'src/lib/snackbarUtils';
+import { useQueryClient } from '@tanstack/react-query';
+
+const formatCurrency = (value: number) => {
+  return Number(value).toLocaleString('vi-VN', {
+    style: 'currency',
+    currency: 'VND',
+  });
+};
 
 interface AddPromotionLineModalProps {
   open: boolean;
   onClose: () => void;
   onAdd: (newLine: PromotionLine) => void;
   promotionId: string;
+  promotionLine?: PromotionLine | null;
 }
 
 const AddPromotionLineModal: React.FC<AddPromotionLineModalProps> = ({
@@ -39,21 +49,51 @@ const AddPromotionLineModal: React.FC<AddPromotionLineModalProps> = ({
   onClose,
   onAdd,
   promotionId,
+  promotionLine, // Nhận prop promotionLine
 }) => {
   const { t } = useTranslation();
   const { control, handleSubmit, watch, reset, setValue } =
-    useForm<CreatePromotionLineFn>();
+    useForm<CreatePromotionLineFn>({
+      defaultValues: promotionLine
+        ? {
+            ...promotionLine,
+            type: promotionLine.type as 'discount-service' | 'discount-bill',
+          }
+        : {},
+    });
   const { fields, append, remove } = useFieldArray({
     control,
     name: 'detail',
   });
   const type = watch('type');
+  const [inputValues, setInputValues] = React.useState<string[]>([]);
+
+  const handleFocus = (index: number) => {
+    setInputValues((prev) => prev.map((val, i) => (i === index ? '' : val)));
+  };
+
+  const handleBlur = (index: number, value: number) => {
+    setInputValues((prev) =>
+      prev.map((val, i) => (i === index ? formatCurrency(value) : val))
+    );
+  };
+
+  const queryClient = useQueryClient();
 
   const createPromotionLineMutation = useCreatePromotionLine({
-    onSuccess: (newLine) => {
+    onSuccess: (newLine, variables, context) => {
       onAdd(newLine);
       onClose();
       reset();
+      snackbarUtils.success('Promotion line created successfully!');
+      queryClient.invalidateQueries(['promotionLines']);
+    },
+    onError: (error: any) => {
+      snackbarUtils.error(
+        `Failed to create promotion line: ${
+          error.response?.data?.message || error.message
+        }`
+      );
     },
   });
 
@@ -112,7 +152,6 @@ const AddPromotionLineModal: React.FC<AddPromotionLineModalProps> = ({
           <Controller
             name="type"
             control={control}
-            defaultValue="discount-service"
             render={({ field }) => (
               <TextField
                 {...field}
@@ -329,23 +368,19 @@ const AddPromotionLineModal: React.FC<AddPromotionLineModalProps> = ({
                         <TextField
                           {...field}
                           label={t('promotionLine.bill')}
-                          type="number"
+                          type="text"
                           fullWidth
                           margin="normal"
-                        />
-                      )}
-                    />
-                    <Controller
-                      name={`detail.${index}.discount`}
-                      control={control}
-                      defaultValue={field.discount}
-                      render={({ field }) => (
-                        <TextField
-                          {...field}
-                          label={t('promotionLine.discount')}
-                          type="number"
-                          fullWidth
-                          margin="normal"
+                          value={inputValues[index]}
+                          onFocus={() => handleFocus(index)}
+                          onChange={(e) => {
+                            const value = e.target.value.replace(/\D/g, '');
+                            setInputValues((prev) =>
+                              prev.map((val, i) => (i === index ? value : val))
+                            );
+                            field.onChange(Number(value));
+                          }}
+                          onBlur={() => handleBlur(index, field.value ?? 0)}
                         />
                       )}
                     />
@@ -357,6 +392,30 @@ const AddPromotionLineModal: React.FC<AddPromotionLineModalProps> = ({
                         <TextField
                           {...field}
                           label={t('promotionLine.limitDiscount')}
+                          type="text"
+                          fullWidth
+                          margin="normal"
+                          value={inputValues[index]}
+                          onFocus={() => handleFocus(index)}
+                          onChange={(e) => {
+                            const value = e.target.value.replace(/\D/g, '');
+                            setInputValues((prev) =>
+                              prev.map((val, i) => (i === index ? value : val))
+                            );
+                            field.onChange(Number(value));
+                          }}
+                          onBlur={() => handleBlur(index, field.value ?? 0)}
+                        />
+                      )}
+                    />
+                    <Controller
+                      name={`detail.${index}.discount`}
+                      control={control}
+                      defaultValue={field.discount}
+                      render={({ field }) => (
+                        <TextField
+                          {...field}
+                          label={t('promotionLine.discount')}
                           type="number"
                           fullWidth
                           margin="normal"
@@ -388,10 +447,10 @@ const AddPromotionLineModal: React.FC<AddPromotionLineModalProps> = ({
       </DialogContent>
       <DialogActions>
         <Button onClick={onClose} color="secondary">
-          {t('dashboard.cancel')}
+          {t('common.cancel')}
         </Button>
         <Button onClick={handleSubmit(onSubmit)} color="primary">
-          {t('dashboard.save')}
+          {t('common.save')}
         </Button>
       </DialogActions>
     </Dialog>

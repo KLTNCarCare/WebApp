@@ -54,6 +54,7 @@ const ServiceDetailModal: React.FC<ServiceDetailModalProps> = ({
     handleSubmit,
     formState: { errors, isValid },
     setValue,
+    reset,
   } = useForm<ServiceByCategory>({
     defaultValues: serviceData || {
       serviceName: '',
@@ -67,12 +68,9 @@ const ServiceDetailModal: React.FC<ServiceDetailModalProps> = ({
 
   useEffect(() => {
     if (serviceData) {
-      setValue('serviceName', serviceData.serviceName);
-      setValue('duration', serviceData.duration);
-      setValue('description', serviceData.description);
-      setValue('status', serviceData.status);
+      reset(serviceData);
     }
-  }, [serviceData, setValue]);
+  }, [serviceData, reset]);
 
   const handleSave: SubmitHandler<ServiceByCategory> = async (data) => {
     try {
@@ -90,6 +88,7 @@ const ServiceDetailModal: React.FC<ServiceDetailModalProps> = ({
 
   const handleSnackbarClose = () => {
     setSnackbarOpen(false);
+    refetch();
   };
 
   return (

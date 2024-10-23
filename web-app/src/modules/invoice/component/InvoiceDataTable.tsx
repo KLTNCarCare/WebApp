@@ -96,19 +96,19 @@ const createInvoiceColumns = (
     valueGetter: (params: GridValueGetterParams) =>
       params.row.vehicle.model || '',
   },
-  {
-    field: 'status',
-    headerName: t('invoice.status'),
-    maxWidth: 180,
-    flex: 1,
-    renderCell: (params: GridRenderCellParams) => (
-      <Chip
-        label={t(`invoice.${params.value}`)}
-        color={params.value === 'paid' ? 'success' : 'warning'}
-        onClick={() => handleStatusClick(params.row._id, params.value)}
-      />
-    ),
-  },
+  // {
+  //   field: 'status',
+  //   headerName: t('invoice.status'),
+  //   maxWidth: 180,
+  //   flex: 1,
+  //   renderCell: (params: GridRenderCellParams) => (
+  //     <Chip
+  //       label={t(`invoice.${params.value}`)}
+  //       color={params.value === 'paid' ? 'success' : 'warning'}
+  //       onClick={() => handleStatusClick(params.row._id, params.value)}
+  //     />
+  //   ),
+  // },
   {
     field: 'createdAt',
     headerName: t('invoice.createdAt'),

@@ -21,10 +21,11 @@ export interface DeletePromotionLineFn {
 }
 
 export interface UpdatePromotionLineFn {
-  id: string;
-  description: string;
-  startDate: string;
-  endDate: string;
+  id?: string;
+  description?: string;
+  startDate?: string;
+  endDate?: string;
+  detail?: Detail[];
 }
 export interface CreatePromotionDetailFn {
   _id: string;
@@ -34,4 +35,19 @@ export interface CreatePromotionDetailFn {
 }
 export interface DeletePromotionDetailFn {
   _id: string;
+}
+export interface PromotionLine {
+  _id: string;
+  description: string;
+  startDate: string;
+  endDate: string;
+  type: 'discount-service' | 'discount-bill';
+  status: 'active' | 'inactive' | 'expired';
+  detail: {
+    itemId: string;
+    itemName: string;
+    discount: number;
+    bill?: number;
+    limitDiscount?: number;
+  }[];
 }

@@ -117,7 +117,12 @@
     "itemName": "Dịch vụ áp dụng",
     "addNewLine": "Thêm khuyến mãi",
     "addDetail": "Thêm chi tiết",
-    "itemGiftName": "Dịch vụ được khuyến mãi"
+    "itemGiftName": "Dịch vụ được khuyến mãi",
+    "deleteTitle": "Xóa  khuyến mãi",
+    "deleteSuccessTitle": "Xóa  khuyến mãi thành công",
+    "deleteSuccess": "Khuyến mãi đã được xóa thành công",
+    "update": "Cập nhật",
+    "updating": "Đang cập nhật"
   },
   "category": {
     "userCategoryManagement": "Quản lý danh mục dịch vụ",
@@ -248,9 +253,9 @@
     "itemPrice": "Giá dịch vụ",
     "itemTotal": "Tổng",
     "itemDiscount": "Giảm giá",
-    "summary": "Tóm tắt",
+    "summary": "Chi tiết thanh toán",
     "subTotal": "Tổng giá dịch vụ",
-    "discount": "Giảm giá",
+    "discount": "Chiết khấu",
     "finalTotal": "Thành tiền",
     "print": "In",
     "pay": "Thanh toán",
@@ -271,6 +276,11 @@
     "submiting": " Đang xử lý",
     "index": "STT",
     "invoiceList": "Danh sách hóa đơn",
-    "userInvoiceManagement": "Quản lý hóa đơn"
+    "userInvoiceManagement": "Quản lý hóa đơn",
+    "promotionCode": "Mã khuyến mãi",
+    "promotionDescription": "Mô tả khuyến mãi",
+    "promotion": "Khuyến mãi áp dụng",
+    "promotionDetails": "Chi tiết khuyến mãi",
+    "noPromotions": "Không có khuyến mãi"
   }
 }

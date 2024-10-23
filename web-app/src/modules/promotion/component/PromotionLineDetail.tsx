@@ -35,16 +35,16 @@ const PromotionLineDetail: React.FC<PromotionLineDetailProps> = ({
   }
 
   const columns: GridColDef[] = [
-    { field: 'code', headerName: t('promotionLine.code'), width: 150 },
+    { field: 'code', headerName: t('promotionLine.code'), width: 120 },
     {
       field: 'itemName',
       headerName: t('promotionLine.itemName'),
-      width: 200,
+      width: 230,
     },
     {
       field: 'description',
       headerName: t('promotionLine.description'),
-      width: 300,
+      minWidth: 250,
     },
     {
       field: 'discount',
@@ -55,7 +55,7 @@ const PromotionLineDetail: React.FC<PromotionLineDetailProps> = ({
     {
       field: 'limitDiscount',
       headerName: t('promotionLine.limitDiscount'),
-      width: 150,
+      width: 200,
       valueFormatter: (params) => {
         const value = params.value || 0;
         return new Intl.NumberFormat('vi-VN', {
@@ -63,22 +63,6 @@ const PromotionLineDetail: React.FC<PromotionLineDetailProps> = ({
           currency: 'VND',
         }).format(value);
       },
-    },
-    {
-      field: 'status',
-      headerName: t('promotionLine.status'),
-      width: 100,
-      renderCell: (params: GridRenderCellParams) => (
-        <Chip
-          label={
-            params.value === 'active'
-              ? t('promotion.active')
-              : t('promotion.inactive')
-          }
-          color={params.value === 'active' ? 'success' : 'default'}
-          sx={{ ml: 1 }}
-        />
-      ),
     },
   ];
 
@@ -88,7 +72,7 @@ const PromotionLineDetail: React.FC<PromotionLineDetailProps> = ({
   }));
 
   return (
-    <Dialog open={open} onClose={onClose} fullWidth maxWidth="xl">
+    <Dialog open={open} onClose={onClose} fullWidth maxWidth="lg">
       <DialogTitle>
         <Typography variant="h2">{t('promotionLine.detail')}</Typography>
       </DialogTitle>

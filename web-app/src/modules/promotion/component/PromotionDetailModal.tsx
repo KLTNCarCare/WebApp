@@ -178,6 +178,7 @@ const PromotionDetailModal: React.FC<PromotionDetailModalProps> = ({
                 <PromotionLineDataGrid
                   promotionLineData={promotionLineData}
                   promotionId={promotionData._id}
+                  refetch={refetchPromotionLine}
                 />
               </Box>
             </Box>

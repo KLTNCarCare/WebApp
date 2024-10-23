@@ -10,29 +10,41 @@ import { useTranslation } from 'react-i18next';
 import { Chip, Button, Box } from '@mui/material';
 import PromotionLineDetail from './PromotionLineDetail';
 import AddPromotionLineModal from './AddPromotionLineModal';
+import EditPromotionLineModal from './EditPromotionLineModal'; // Import EditPromotionLineModal
 import EmptyScreen from 'src/components/layouts/EmtyScreen';
 import { useCreatePromotionLine } from 'src/api/promotionLine/useCreatePromotionLine';
 import { CreatePromotionLineFn } from 'src/api/promotionLine/types';
+import snackbarUtils from 'src/lib/snackbarUtils';
+import EditIcon from '@mui/icons-material/Edit';
+import DeletePromotionLine from './DeletePromotionLine';
 
 interface PromotionLineDataGridProps {
   promotionLineData: PromotionLine[];
   promotionId: string;
+  refetch: () => void;
 }
 
 const PromotionLineDataGrid: React.FC<PromotionLineDataGridProps> = ({
   promotionLineData,
   promotionId,
+  refetch,
 }) => {
   const { t } = useTranslation();
   const [selectedPromotionLine, setSelectedPromotionLine] =
     React.useState<PromotionLine | null>(null);
   const [detailOpen, setDetailOpen] = React.useState(false);
   const [addModalOpen, setAddModalOpen] = React.useState(false);
+  const [editModalOpen, setEditModalOpen] = React.useState(false);
   const [rows, setRows] = React.useState<PromotionLine[]>(promotionLineData);
 
   const createPromotionLineMutation = useCreatePromotionLine({
     onSuccess: (newLine) => {
       setRows((prevRows) => [...prevRows, newLine]);
+      snackbarUtils.success('Thêm thành công!');
+      refetch();
+    },
+    onError: (error: any) => {
+      snackbarUtils.error(`${error.message}`);
     },
   });
 
@@ -52,6 +64,16 @@ const PromotionLineDataGrid: React.FC<PromotionLineDataGridProps> = ({
 
   const handleCloseAddModal = () => {
     setAddModalOpen(false);
+  };
+
+  const handleEditClick = (line: PromotionLine) => {
+    setSelectedPromotionLine(line);
+    setEditModalOpen(true);
+  };
+
+  const handleCloseEditModal = () => {
+    setEditModalOpen(false);
+    setSelectedPromotionLine(null);
   };
 
   const handleAdd = (newLine: PromotionLine) => {
@@ -126,6 +148,30 @@ const PromotionLineDataGrid: React.FC<PromotionLineDataGridProps> = ({
         />
       ),
     },
+    {
+      field: 'action',
+      headerName: '',
+      minWidth: 150,
+      align: 'center',
+      sortable: false,
+      renderCell: (params: GridRenderCellParams) => (
+        <div
+          onClick={(event) => event.stopPropagation()}
+          style={{
+            display: 'flex',
+            justifyContent: 'flex-end',
+            gap: '10px',
+            paddingRight: '15px',
+          }}
+        >
+          {/* <EditIcon
+            sx={{ cursor: 'pointer', color: '#a1a0a0' }}
+            onClick={() => handleEditClick(params.row)}
+          /> */}
+          <DeletePromotionLine _id={params.row._id} refetch={refetch} />
+        </div>
+      ),
+    },
   ];
 
   return (
@@ -162,6 +208,14 @@ const PromotionLineDataGrid: React.FC<PromotionLineDataGridProps> = ({
         onAdd={handleAdd}
         promotionId={promotionId}
       />
+      {selectedPromotionLine && (
+        <EditPromotionLineModal
+          open={editModalOpen}
+          onClose={handleCloseEditModal}
+          promotionLineData={selectedPromotionLine}
+          refetch={refetch}
+        />
+      )}
     </>
   );
 };

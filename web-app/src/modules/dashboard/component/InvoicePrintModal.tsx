@@ -110,13 +110,13 @@ const InvoicePrintModal: React.FC<InvoicePrintModalProps> = ({
                 label: t('invoice.vehicleModel'),
                 value: invoiceData.vehicle.model,
               },
-              {
-                label: t('invoice.status'),
-                value:
-                  invoiceData.status === 'unpaid'
-                    ? t('invoice.unpaid')
-                    : t('invoice.paid'),
-              },
+              // {
+              //   label: t('invoice.status'),
+              //   value:
+              //     invoiceData.status === 'unpaid'
+              //       ? t('invoice.unpaid')
+              //       : t('invoice.paid'),
+              // },
               {
                 label: t('invoice.createdAt'),
                 value: invoiceData.createdAt
@@ -185,7 +185,7 @@ const InvoicePrintModal: React.FC<InvoicePrintModalProps> = ({
                   {t('invoice.discount')}:
                 </Typography>
                 <Typography variant="body2">
-                  {item.discount ? item.discount : 'N/A'}%
+                  {item.discount ? item.discount : '0'}%
                 </Typography>
               </Box>
               <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
@@ -204,6 +204,37 @@ const InvoicePrintModal: React.FC<InvoicePrintModalProps> = ({
               </Box>
             </Box>
           ))}
+          {/* Promotion detail */}
+          <Typography
+            variant="h6"
+            align="center"
+            sx={{ fontWeight: 'bold', marginBottom: 1, color: '#2196f3' }}
+          >
+            {t('invoice.promotionDetails')}
+          </Typography>
+          {invoiceData.promotion && invoiceData.promotion.length > 0 ? (
+            invoiceData.promotion.map((promotion: any, index: number) => (
+              <Box
+                key={index}
+                sx={{
+                  marginBottom: 1,
+                  padding: 1,
+                  backgroundColor: '#f1f1f1',
+                  borderRadius: 1,
+                }}
+              >
+                <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+                  <Typography variant="body2">
+                    {promotion.description}
+                  </Typography>
+                </Box>
+              </Box>
+            ))
+          ) : (
+            <Typography variant="body2" align="center">
+              {t('invoice.noPromotions')}
+            </Typography>
+          )}
 
           {/* Final Calculation */}
           <Divider sx={{ margin: '10px 0' }} />
