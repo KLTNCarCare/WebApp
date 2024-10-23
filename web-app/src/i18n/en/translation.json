@@ -90,7 +90,8 @@
     "updatedAt": "Updated Date",
     "createdAt": "Created Date",
     "items": "Promotions",
-    "updating": "Updating"
+    "updating": "Updating",
+    "addLine": "Add Promotion Line"
   },
   "promotionLine": {
     "index": "Index",
@@ -110,7 +111,10 @@
     "back": "Back",
     "type": "Type",
     "discountBill": "Discount Bill",
-    "discountService": "Discount Service"
+    "discountService": "Discount Service",
+    "header": "Promotion Line Information",
+    "code": "Promotion Code",
+    "itemName": "Service Name"
   },
   "category": {
     "userCategoryManagement": "User Category Management",

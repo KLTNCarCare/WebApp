@@ -90,7 +90,8 @@
     "updatedAt": "Ngày cập nhật",
     "createdAt": "Ngày tạo",
     "items": "Khuyến mãi",
-    "updating": "Đang cập nhật"
+    "updating": "Đang cập nhật",
+    "addLine": "Thêm khuyến mãi"
   },
   "promotionLine": {
     "index": "STT",
@@ -110,7 +111,10 @@
     "back": "Quay lại",
     "type": "Loại",
     "discountBill": "Giảm giá hóa đơn",
-    "discountService": "Giảm giá dịch vụ"
+    "discountService": "Giảm giá dịch vụ",
+    "header": "Thông tin khuyến mãi",
+    "code": "Mã khuyến mãi",
+    "itemName": "Dịch vụ áp dụng"
   },
   "category": {
     "userCategoryManagement": "Quản lý danh mục dịch vụ",

@@ -20,7 +20,6 @@ import {
   viVN,
 } from '@mui/x-data-grid';
 import { useTranslation } from 'react-i18next';
-import { Close as CloseIcon } from '@mui/icons-material';
 import { PromotionManagement } from 'src/api/promotion/useGetPromotion';
 import { TEN_ITEMS_PAGE } from 'src/lib/constants';
 import CustomPagination from 'src/components/CustomPagination';
