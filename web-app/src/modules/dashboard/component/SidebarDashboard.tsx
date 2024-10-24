@@ -19,6 +19,7 @@ import DiscountIcon from '@mui/icons-material/Discount';
 import CategoryIcon from '@mui/icons-material/Category';
 import PriceChangeIcon from '@mui/icons-material/PriceChange';
 import ReceiptLongIcon from '@mui/icons-material/ReceiptLong';
+import SupervisedUserCircleIcon from '@mui/icons-material/SupervisedUserCircle';
 import SelectLanguage from './SelectLanguage';
 
 type SidebarDashboardProps = {
@@ -36,6 +37,11 @@ const sidebarDataDashboard = [
     value: '/dashboard',
     label: 'dashboard',
     icon: <DashboardIcon />,
+  },
+  {
+    value: '/customer',
+    label: 'customer',
+    icon: <SupervisedUserCircleIcon />,
   },
   {
     value: '/category',
@@ -57,6 +63,7 @@ const sidebarDataDashboard = [
     label: 'invoice',
     icon: <ReceiptLongIcon />,
   },
+
   // {
   //   value: '/account-management',
   //   label: 'accountManagement',

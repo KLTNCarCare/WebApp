@@ -47,7 +47,8 @@
     "process": "Tiến trình",
     "na": "N/A",
     "receiveAppointment": "Tiếp nhận xe",
-    "payAndCreateInvoice": "Thanh toán"
+    "payAndCreateInvoice": "Thanh toán",
+    "customer": "Khách hàng"
   },
   "status": {
     "confirmed": "Đã xác nhận",
@@ -282,5 +283,38 @@
     "promotion": "Khuyến mãi áp dụng",
     "promotionDetails": "Chi tiết khuyến mãi",
     "noPromotions": "Không có khuyến mãi"
+  },
+  "customer": {
+    "userCustomerManagement": "Quản lý khách hàng",
+    "addNew": "Thêm khách hàng mới",
+    "filter": "Bộ lọc",
+    "customerList": "Danh sách khách hàng",
+    "moreVehicles": "Xe khác",
+    "customerId": "Mã khách hàng",
+    "customerName": "Tên khách hàng",
+    "phone": "Số điện thoại",
+    "email": "Email",
+    "address": "Địa chỉ",
+    "dob": "Ngày sinh",
+    "createdAt": "Ngày tạo",
+    "updatedAt": "Ngày cập nhật",
+    "vehicles": "Phương tiện",
+    "vehicleModel": "Mẫu xe",
+    "licensePlate": "Biển số xe",
+    "status": "Trạng thái",
+    "customerDetails": "Chi tiết khách hàng",
+    "index": "STT",
+    "editCustomer": "Chỉnh sửa khách hàng",
+    "update": "Cập nhật",
+    "updating": "Đang cập nhật",
+    "updateDetailsTitle": "Cập nhật khách hàng thành công",
+    "updateSuccess": "Khách hàng đã được cập nhật thành công",
+    "addVehicle": "Thêm xe",
+    "addCustomer": "Thêm khách hàng",
+    "create": "Thêm",
+    "creating": "Đang thêm",
+    "createDetailsTitle": "Thêm khách hàng thành công",
+    "createSuccess": "Khách hàng đã được thêm thành công",
+    "searchByPhone": "Tìm kiếm theo số điện thoại"
   }
 }

@@ -47,7 +47,8 @@
     "process": "Process",
     "na": "N/A",
     "receiveAppointment": "Receive Appointment",
-    "payAndCreateInvoice": "Pay"
+    "payAndCreateInvoice": "Pay",
+    "customer": "Customer"
   },
   "status": {
     "confirmed": "Confirmed",
@@ -277,5 +278,36 @@
     "promotion": "Promotion",
     "promotionDetails": "Promotion Details",
     "noPromotions": "No promotions"
+  },
+  "customer": {
+    "userCustomerManagement": "User Customer Management",
+    "addNew": "Add New Customer",
+    "filter": "Filter",
+    "customerList": "Customer List",
+    "moreVehicles": "More Vehicles",
+    "customerId": "Customer ID",
+    "customerName": "Customer Name",
+    "phone": "Phone",
+    "email": "Email",
+    "address": "Address",
+    "dob": "Date of Birth",
+    "createdAt": "Created Date",
+    "updatedAt": "Updated Date",
+    "vehicles": "Vehicles",
+    "vehicleModel": "Vehicle Model",
+    "licensePlate": "License Plate",
+    "status": "Status",
+    "customerDetails": "Customer Details",
+    "index": "Index",
+    "editCustomer": "Edit Customer",
+    "update": "Update",
+    "updating": "Updating",
+    "updateDetailsTitle": "Update Customer Successfully",
+    "updateSuccess": "Customer has been updated successfully",
+    "addVehicle": "Add Vehicle",
+    "addCustomer": "Add Customer",
+    "createDetailsTitle": "Create Customer Successfully",
+    "createSuccess": "Customer has been created successfully",
+    "searchByPhone": "Search by phone number"
   }
 }

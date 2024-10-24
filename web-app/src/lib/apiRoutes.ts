@@ -81,6 +81,12 @@ const apiRoutes = {
   socket: {
     staff: 'http://localhost:8080/sockjs/staff',
   },
+  customer: {
+    list: 'v1/api/customer/get-all',
+    create: 'v1/api/customer/save',
+    update: 'v1/api/customer/edit',
+    remove: (id: string) => `v1/api/customer/remove/${id}`,
+  },
 };
 
 export default apiRoutes;

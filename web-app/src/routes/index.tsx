@@ -5,6 +5,7 @@ import { AuthProvider } from 'src/modules/auth/AuthProvider';
 import ProtectedRoute from 'src/modules/auth/ProtectedRoute';
 import AccountPage from 'src/pages/AccountPage';
 import CategoryPage from 'src/pages/CategoryPage';
+import CustomerPage from 'src/pages/CustomerPage';
 import DashboardPage from 'src/pages/DashBoard';
 import InvoicePage from 'src/pages/Invoice';
 import PriceCatalogPage from 'src/pages/PriceCatalog';
@@ -61,6 +62,14 @@ const routes: RouteObject[] = [
         element: (
           <ProtectedRoute>
             <InvoicePage />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: `${publicUrl}/customer`,
+        element: (
+          <ProtectedRoute>
+            <CustomerPage />
           </ProtectedRoute>
         ),
       },

@@ -85,15 +85,11 @@ const AddPromotionLineModal: React.FC<AddPromotionLineModalProps> = ({
       onAdd(newLine);
       onClose();
       reset();
-      snackbarUtils.success('Promotion line created successfully!');
+      snackbarUtils.success('Thêm thành công!');
       queryClient.invalidateQueries(['promotionLines']);
     },
     onError: (error: any) => {
-      snackbarUtils.error(
-        `Failed to create promotion line: ${
-          error.response?.data?.message || error.message
-        }`
-      );
+      snackbarUtils.error(` ${error.response?.data?.message || error.message}`);
     },
   });
 
@@ -447,10 +443,10 @@ const AddPromotionLineModal: React.FC<AddPromotionLineModalProps> = ({
       </DialogContent>
       <DialogActions>
         <Button onClick={onClose} color="secondary">
-          {t('common.cancel')}
+          {t('dashboard.cancel')}
         </Button>
         <Button onClick={handleSubmit(onSubmit)} color="primary">
-          {t('common.save')}
+          {t('dashboard.save')}
         </Button>
       </DialogActions>
     </Dialog>
