@@ -15,7 +15,7 @@ import { LoadingButton } from '@mui/lab';
 import { useTranslation } from 'react-i18next';
 import { ReactComponent as CheckIcon } from '../../../assets/icons/CheckCircle.svg';
 import { useDeletePriceCatalog } from 'src/api/priceCatalog/useDeletPriceCatalog';
-import snackbarUtils from 'src/lib/snackbarUtils'; // Import snackbarUtils
+import snackbarUtils from 'src/lib/snackbarUtils';
 
 type DeletePriceCatalogProps = {
   _id: string;

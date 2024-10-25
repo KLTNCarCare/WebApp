@@ -15,6 +15,7 @@ import { LoadingButton } from '@mui/lab';
 import { useTranslation } from 'react-i18next';
 import { ReactComponent as CheckIcon } from '../../../assets/icons/CheckCircle.svg';
 import { useDeleteCategory } from 'src/api/category/useDeleteCategory';
+import snackbarUtils from 'src/lib/snackbarUtils';
 
 type DeleteCategoryProps = {
   _id: string;
@@ -30,6 +31,11 @@ const DeleteCategory = ({ _id, refetch }: DeleteCategoryProps) => {
     onSuccess: () => {
       setIsOpenDeleteDialog(false);
       setIsSuccessDialogOpen(true);
+    },
+    onError: (error) => {
+      snackbarUtils.error(
+        error.response?.data?.message || t('priceCatalog.deleteError')
+      );
     },
   });
 

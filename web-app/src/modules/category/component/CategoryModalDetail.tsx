@@ -98,6 +98,11 @@ const CategoryDetailModal: React.FC<CategoryDetailModalProps> = ({
       refetch();
       handleApiResponse({ message: t('category.serviceDeletedSuccessfully') });
     },
+    onError: (error) => {
+      snackbarUtils.error(
+        error.response?.data?.message || t('category.deleteError')
+      );
+    },
   });
 
   useEffect(() => {
@@ -193,7 +198,6 @@ const CategoryDetailModal: React.FC<CategoryDetailModalProps> = ({
     const rowToDelete = rows.find((row) => row.id === id);
     if (rowToDelete) {
       deleteService({ _id: rowToDelete._id });
-      setRows(rows.filter((row) => row.id !== id));
     }
   };
 
