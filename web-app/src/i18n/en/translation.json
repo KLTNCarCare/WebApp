@@ -235,6 +235,7 @@
     "title6": "Slot 6"
   },
   "invoice": {
+    "invoiceManagement": "Invoice",
     "invoiceId": "Invoice ID",
     "customerName": "Customer Name",
     "customerPhone": "Customer Phone",
@@ -277,7 +278,12 @@
     "promotionDescription": "Promotion Description",
     "promotion": "Promotion",
     "promotionDetails": "Promotion Details",
-    "noPromotions": "No promotions"
+    "noPromotions": "No promotions",
+    "paymentMethod": "Payment Method",
+    "back": "Back",
+    "filter": "Filter",
+    "custID": "Customer ID",
+    "searchByCustID": "Search by customer ID"
   },
   "customer": {
     "userCustomerManagement": "User Customer Management",
@@ -308,6 +314,8 @@
     "addCustomer": "Add Customer",
     "createDetailsTitle": "Create Customer Successfully",
     "createSuccess": "Customer has been created successfully",
-    "searchByPhone": "Search by phone number"
+    "searchByPhone": "Search by phone number",
+    "details": "Details",
+    "invoiceHistory": "Invoice History"
   }
 }

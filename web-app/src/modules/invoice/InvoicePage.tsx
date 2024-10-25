@@ -19,6 +19,7 @@ import AdminLayout from 'src/components/layouts/AdminLayout';
 import { useGetListInvoice } from 'src/api/invoice/useGetAllInvoice';
 import { Invoice } from 'src/api/invoice/types';
 import InvoiceDataTable from './component/InvoiceDataTable';
+import FilterFormInvoice from './component/filter/FilterFormInvoice';
 
 export function InvoicePage() {
   const { t } = useTranslation();
@@ -29,122 +30,116 @@ export function InvoicePage() {
   });
 
   const [isRegisterInvoice, setIsRegisterInvoice] = useState<boolean>(false);
-  const [inputEmailValue, setInputEmailValue] = useState<string>('');
-  const [inputPhoneValue, setInputPhoneValue] = useState<string>('');
-  const debounceEmailValue = useDebounce<string>(inputEmailValue, 500);
-  const debouncePhoneValue = useDebounce<string>(inputPhoneValue, 500);
+  const [inputCustIDValue, setInputCustIDValue] = useState<string>('');
+  const debounceCustIDValue = useDebounce<string>(inputCustIDValue, 500);
 
   const { data, isLoading, refetch } = useGetListInvoice({
     page: paginationModel.page + 1,
     limit: paginationModel.pageSize,
+    field: 'customer.custId',
+    word: debounceCustIDValue,
   });
 
   const totalPage = data?.totalPage || 0;
   const invoiceList: Invoice[] = data?.data ?? [];
 
   return (
-    <>
-      <AdminLayout isCollapse={isCollapse} setIsCollapse={setIsCollapse}>
-        <Box sx={{ height: '100%', width: '100%', background: '#f7f7f7' }}>
-          <Paper
-            sx={{
-              px: 3,
-              py: 4,
-              zIndex: 1,
-              height: '7vh',
-              boxShadow: 'none',
-            }}
-          >
-            <Typography variant="h5" sx={{ paddingBottom: 2 }}>
-              {t('invoice.userInvoiceManagement')}
-            </Typography>
-          </Paper>
-          {/* <Paper
-            sx={{
-              px: 3,
-              py: 4,
-              paddingTop: '15px',
-              m: '10px 20px',
-              borderRadius: 2,
-              boxShadow: 'none',
-              zIndex: 1,
-              display: 'flex',
-            }}
-          >
-            <Stack>
-              <Typography variant="h5">{t('invoice.filter')}</Typography>
-            </Stack>
-            <Button
-              sx={{
-                marginLeft: 'auto',
-                fontWeight: '400',
-                fontSize: '12pt',
-                minWidth: 'auto',
-                height: '40px',
-              }}
-              onClick={() => setIsRegisterInvoice(true)}
-            >
-              + {t('invoice.addNew')}
-            </Button>
-          </Paper> */}
-          <Paper
-            sx={{
-              px: 3,
-              py: 4,
-              m: '20px 20px',
-              borderRadius: 2,
-              zIndex: 1,
-              boxShadow: 'none',
-              height: '70vh',
-              paddingBottom: '0px',
-            }}
-          >
-            <Typography variant="h5" sx={{ paddingBottom: 2 }}>
-              {t('invoice.invoiceList')}
-            </Typography>
-
-            <InvoiceDataTable
-              dataInvoice={invoiceList}
-              isLoadingInvoice={isLoading}
-              refetch={refetch}
-              paginationModel={paginationModel}
-              setPaginationModel={setPaginationModel}
-              totalPage={totalPage}
-            />
-          </Paper>
-        </Box>
-        <Dialog
-          open={isRegisterInvoice}
-          fullWidth
-          maxWidth="xs"
-          onClose={() => setIsRegisterInvoice(false)}
+    <AdminLayout
+      title={t('invoice.invoiceManagement')}
+      isCollapse={isCollapse}
+      setIsCollapse={setIsCollapse}
+    >
+      <Box sx={{ height: '100%', width: '100%', background: '#f7f7f7' }}>
+        <Paper
+          sx={{
+            px: 3,
+            py: 4,
+            zIndex: 1,
+            height: '7vh',
+            boxShadow: 'none',
+          }}
         >
-          <DialogTitle p="0px !important" borderBottom="1px solid #F2F2F2">
-            <Toolbar>
-              <Stack direction="row" spacing={2} width="100%">
-                <Typography
-                  variant="h4"
-                  align="center"
-                  noWrap
-                  flexGrow={1}
-                  color="grey.900"
-                  ml={4.25}
-                >
-                  {t('invoice.registerInvoice')}
-                </Typography>
+          <Typography variant="h5" sx={{ paddingBottom: 2 }}>
+            {t('invoice.invoiceManagement')}
+          </Typography>
+        </Paper>
+        <Paper
+          sx={{
+            px: 3,
+            py: 4,
+            paddingTop: '15px',
+            m: '10px 20px',
+            borderRadius: 2,
+            boxShadow: 'none',
+            zIndex: 1,
+            display: 'flex',
+          }}
+        >
+          <Stack>
+            <Typography variant="h5">{t('invoice.filter')}</Typography>
+            <FilterFormInvoice
+              searchText={inputCustIDValue}
+              setSearchText={setInputCustIDValue}
+            />
+          </Stack>
+        </Paper>
+        <Paper
+          sx={{
+            px: 3,
+            py: 4,
+            m: '20px 20px',
+            borderRadius: 2,
+            zIndex: 1,
+            boxShadow: 'none',
+            height: '70vh',
+            paddingBottom: '0px',
+          }}
+        >
+          <Typography variant="h5" sx={{ paddingBottom: 2 }}>
+            {t('invoice.invoiceList')}
+          </Typography>
 
-                <ButtonBase
-                  sx={{ flex: 'none' }}
-                  disableRipple
-                  onClick={() => setIsRegisterInvoice(false)}
-                >
-                  <CloseIcon />
-                </ButtonBase>
-              </Stack>
-            </Toolbar>
-          </DialogTitle>
-        </Dialog>
-      </AdminLayout>
-    </>
+          <InvoiceDataTable
+            dataInvoice={invoiceList}
+            isLoadingInvoice={isLoading}
+            refetch={refetch}
+            paginationModel={paginationModel}
+            setPaginationModel={setPaginationModel}
+            totalPage={totalPage}
+          />
+        </Paper>
+      </Box>
+      <Dialog
+        open={isRegisterInvoice}
+        fullWidth
+        maxWidth="xs"
+        onClose={() => setIsRegisterInvoice(false)}
+      >
+        <DialogTitle p="0px !important" borderBottom="1px solid #F2F2F2">
+          <Toolbar>
+            <Stack direction="row" spacing={2} width="100%">
+              <Typography
+                variant="h4"
+                align="center"
+                noWrap
+                flexGrow={1}
+                color="grey.900"
+                ml={4.25}
+              >
+                {t('invoice.registerInvoice')}
+              </Typography>
+
+              <ButtonBase
+                sx={{ flex: 'none' }}
+                disableRipple
+                onClick={() => setIsRegisterInvoice(false)}
+              >
+                <CloseIcon />
+              </ButtonBase>
+            </Stack>
+          </Toolbar>
+        </DialogTitle>
+      </Dialog>
+    </AdminLayout>
   );
 }

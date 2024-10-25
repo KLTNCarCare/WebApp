@@ -239,6 +239,7 @@
     "title6": "Vị trí 6"
   },
   "invoice": {
+    "invoiceManagement": "Hóa đơn",
     "invoiceId": "Mã hóa đơn",
     "customerName": "Tên khách hàng",
     "customerPhone": "Số điện thoại khách hàng",
@@ -282,7 +283,12 @@
     "promotionDescription": "Mô tả khuyến mãi",
     "promotion": "Khuyến mãi áp dụng",
     "promotionDetails": "Chi tiết khuyến mãi",
-    "noPromotions": "Không có khuyến mãi"
+    "noPromotions": "Không có khuyến mãi",
+    "payment_method": "Phương thức thanh toán",
+    "back": "Quay lại",
+    "filter": "Bộ lọc",
+    "custID": "Mã khách hàng",
+    "searchByCustID": "Tìm kiếm theo mã khách hàng"
   },
   "customer": {
     "userCustomerManagement": "Quản lý khách hàng",
@@ -302,7 +308,7 @@
     "vehicleModel": "Mẫu xe",
     "licensePlate": "Biển số xe",
     "status": "Trạng thái",
-    "customerDetails": "Chi tiết khách hàng",
+    "customerDetails": "Thông tin khách hàng",
     "index": "STT",
     "editCustomer": "Chỉnh sửa khách hàng",
     "update": "Cập nhật",
@@ -315,6 +321,8 @@
     "creating": "Đang thêm",
     "createDetailsTitle": "Thêm khách hàng thành công",
     "createSuccess": "Khách hàng đã được thêm thành công",
-    "searchByPhone": "Tìm kiếm theo số điện thoại"
+    "searchByPhone": "Tìm kiếm theo số điện thoại",
+    "details": "Thông tin",
+    "invoiceHistory": "Lịch sử hóa đơn"
   }
 }

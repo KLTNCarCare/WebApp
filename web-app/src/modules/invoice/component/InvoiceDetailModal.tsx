@@ -30,6 +30,7 @@ interface InvoiceDetailModalProps {
   setPaginationModel: React.Dispatch<
     React.SetStateAction<{ pageSize: number; page: number }>
   >;
+  onBack: () => void;
 }
 
 const createItemColumns = (t: (key: string) => string): GridColDef[] => [
@@ -80,6 +81,7 @@ const InvoiceDetailModal: React.FC<InvoiceDetailModalProps> = ({
   isLoadingInvoice,
   paginationModel,
   setPaginationModel,
+  onBack,
 }) => {
   const { t } = useTranslation();
   const [printModalOpen, setPrintModalOpen] = useState(false);
@@ -111,7 +113,7 @@ const InvoiceDetailModal: React.FC<InvoiceDetailModalProps> = ({
     }
   }, [shouldReopen, onClose, refetch]);
 
-  if (!invoiceData) return null; // Kiểm tra nếu không có dữ liệu hóa đơn
+  if (!invoiceData) return null;
 
   const invoiceArray = Array.isArray(invoiceData) ? invoiceData : [invoiceData];
 
@@ -138,6 +140,21 @@ const InvoiceDetailModal: React.FC<InvoiceDetailModalProps> = ({
                         color="grey.600"
                       >
                         {invoice.invoiceId}
+                      </Typography>
+                    </ListItem>
+                    <Divider variant="middle" />
+                  </>
+                )}
+                {invoice.customer.custId && (
+                  <>
+                    <ListItem>
+                      <ListItemText primary={t('invoice.custID')} />
+                      <Typography
+                        variant="body2"
+                        textAlign="right"
+                        color="grey.600"
+                      >
+                        {invoice.customer.custId}
                       </Typography>
                     </ListItem>
                     <Divider variant="middle" />
@@ -205,25 +222,6 @@ const InvoiceDetailModal: React.FC<InvoiceDetailModalProps> = ({
                     <Divider variant="middle" />
                   </>
                 )}
-                {/* {invoice.status && (
-                  <>
-                    <ListItem>
-                      <ListItemText primary={t('invoice.status')} />
-                      <Chip
-                        label={
-                          invoice.status === 'unpaid'
-                            ? t('invoice.unpaid')
-                            : t('invoice.paid')
-                        }
-                        color={
-                          invoice.status === 'unpaid' ? 'error' : 'success'
-                        }
-                        sx={{ ml: 1 }}
-                      />
-                    </ListItem>
-                    <Divider variant="middle" />
-                  </>
-                )} */}
                 {invoice.createdAt && (
                   <>
                     <ListItem>
@@ -416,6 +414,9 @@ const InvoiceDetailModal: React.FC<InvoiceDetailModalProps> = ({
 
         {/* Dialog Actions */}
         <DialogActions sx={{ p: 3, justifyContent: 'space-between' }}>
+          <Button onClick={onBack} color="primary" variant="contained">
+            {t('invoice.back')}
+          </Button>
           <Button onClick={handlePrint} color="primary" variant="contained">
             {t('invoice.print')}
           </Button>

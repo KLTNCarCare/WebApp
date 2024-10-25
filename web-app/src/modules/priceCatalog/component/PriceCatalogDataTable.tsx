@@ -55,8 +55,10 @@ const createPriceCatalogColumns = (
     maxWidth: 100,
     flex: 1,
     valueGetter: (params: GridValueGetterParams) => {
-      const allRowIds = params.api.getAllRowIds();
-      return allRowIds.indexOf(params.id) + 1;
+      const index =
+        paginationModel.page * paginationModel.pageSize +
+        params.api.getAllRowIds().indexOf(params.id);
+      return index + 1;
     },
   },
   {
@@ -174,15 +176,20 @@ const PriceCatalogDataTable: React.FC<PriceCatalogDataTableProps> = ({
   const handleEditClick = (priceCatalogData: any) => {
     setEditPriceCatalogData(priceCatalogData);
     setIsEditPriceCatalogOpen(true);
+    refetch();
   };
 
+  // useEffect(() => {
+  //   if (selectedPriceCatalog && selectedPriceCatalog._id) {
+  //     if (paginationModel.page !== previousPage) {
+  //       setPreviousPage(paginationModel.page);
+  //     }
+  //   }
+  // }, [selectedPriceCatalog, paginationModel.page]);
   useEffect(() => {
-    if (selectedPriceCatalog && selectedPriceCatalog._id) {
-      if (paginationModel.page !== previousPage) {
-        setPreviousPage(paginationModel.page);
-      }
-    }
-  }, [selectedPriceCatalog, paginationModel.page]);
+    console.log('Selected Category:', selectedPriceCatalog);
+    console.log('Current Pagination Model:', paginationModel);
+  }, [selectedPriceCatalog, paginationModel]);
 
   return (
     <>
@@ -198,7 +205,9 @@ const PriceCatalogDataTable: React.FC<PriceCatalogDataTableProps> = ({
               refetch
             )}
             localeText={viVN.components.MuiDataGrid.defaultProps.localeText}
-            getRowId={(row) => row._id}
+            getRowId={(row) =>
+              row._id || row.id || Math.random().toString(36).substr(2, 9)
+            }
             paginationMode="server"
             paginationModel={paginationModel}
             onPaginationModelChange={(model) => {

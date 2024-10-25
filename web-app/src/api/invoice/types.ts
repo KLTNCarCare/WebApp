@@ -48,10 +48,15 @@ export interface ConfirmPayInvoiceFn {
 export interface GetInvoiceParams {
   page: number;
   limit: number;
+  field?: string;
+  word?: string;
 }
 
 export interface InvoiceResponse {
   totalPage: number;
   totalCount: number;
   data: Invoice[];
+}
+export interface GetInvoiceByCustomerIDFn {
+  customerId: string;
 }
