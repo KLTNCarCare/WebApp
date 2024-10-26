@@ -21,6 +21,7 @@ import { CreateCustomerFn } from 'src/api/customer/types';
 import AddIcon from '@mui/icons-material/Add';
 import { ReactComponent as CheckIcon } from '../../../assets/icons/CheckCircle.svg';
 import DeleteIcon from '@mui/icons-material/Delete';
+import snackbarUtils from 'src/lib/snackbarUtils';
 
 const schemaCreateCustomer = yup.object({
   name: yup.string().required('Vui lòng nhập tên khách hàng'),
@@ -83,6 +84,11 @@ const CreateCustomerModal: React.FC<CreateCustomerProps> = ({
     createCustomer(data, {
       onSuccess() {
         setIsSuccessDialogOpen(true);
+      },
+      onError(error) {
+        const message =
+          error.response?.data?.message || t('priceCatalog.createError');
+        snackbarUtils.error(message);
       },
     });
   };

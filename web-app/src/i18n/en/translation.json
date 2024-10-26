@@ -121,7 +121,12 @@
     "itemGiftName": "Gift Service Name",
     "deleteTitle": "Delete Promotion",
     "deleteSuccessTitle": "Delete Promotion Successfully",
-    "deleteSuccess": "Promotion has been deleted successfully"
+    "deleteSuccess": "Promotion has been deleted successfully",
+    "details": {
+      "code": "Promotion Code"
+    },
+    "editLine:": "Edit Promotion Line",
+    "edit": "Edit"
   },
   "category": {
     "userCategoryManagement": "User Category Management",

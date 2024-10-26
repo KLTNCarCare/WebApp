@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { DataGrid, GridColDef, GridRenderCellParams } from '@mui/x-data-grid';
+import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import { PromotionLine } from 'src/api/promotionLine/useGetPromotionLine';
 import { useTranslation } from 'react-i18next';
 import {
@@ -16,6 +16,7 @@ import {
   Box,
   Chip,
 } from '@mui/material';
+import EditPromotionLineModal from './EditPromotionLineModal';
 
 interface PromotionLineDetailProps {
   open: boolean;
@@ -29,6 +30,20 @@ const PromotionLineDetail: React.FC<PromotionLineDetailProps> = ({
   promotionLine,
 }) => {
   const { t } = useTranslation();
+  const [openEditModal, setOpenEditModal] = React.useState(false);
+
+  const handleOpenEditModal = () => {
+    setOpenEditModal(true);
+  };
+
+  const handleCloseEditModal = () => {
+    setOpenEditModal(false);
+  };
+
+  const handleEditSuccess = () => {
+    handleCloseEditModal();
+    onClose();
+  };
 
   if (!promotionLine) {
     return null;
@@ -72,138 +87,155 @@ const PromotionLineDetail: React.FC<PromotionLineDetailProps> = ({
   }));
 
   return (
-    <Dialog open={open} onClose={onClose} fullWidth maxWidth="lg">
-      <DialogTitle>
-        <Typography variant="h2">{t('promotionLine.detail')}</Typography>
-      </DialogTitle>
-      <DialogContent>
-        <Box sx={{ mb: 2 }}>
-          <Typography variant="h4">{t('promotionLine.header')}</Typography>
-          <List>
-            {promotionLine.lineId && (
-              <>
-                <ListItem>
-                  <ListItemText primary={t('promotionLine.lineId')} />
-                  <Typography
-                    variant="body2"
-                    textAlign="right"
-                    color="grey.600"
-                  >
-                    {promotionLine.lineId}
-                  </Typography>
-                </ListItem>
-                <Divider variant="middle" />
-              </>
-            )}
-            {promotionLine.description && (
-              <>
-                <ListItem>
-                  <ListItemText primary={t('promotionLine.description')} />
-                  <Typography
-                    variant="body2"
-                    textAlign="right"
-                    color="grey.600"
-                  >
-                    {promotionLine.description}
-                  </Typography>
-                </ListItem>
-                <Divider variant="middle" />
-              </>
-            )}
-            {promotionLine.type && (
-              <>
-                <ListItem>
-                  <ListItemText primary={t('promotionLine.type')} />
-                  <Typography
-                    variant="body2"
-                    textAlign="right"
-                    color="grey.600"
-                  >
-                    {promotionLine.type === 'discount-service'
-                      ? t('promotionLine.discountService')
-                      : t('promotionLine.discountBill')}
-                  </Typography>
-                </ListItem>
-                <Divider variant="middle" />
-              </>
-            )}
-            {promotionLine.startDate && (
-              <>
-                <ListItem>
-                  <ListItemText primary={t('promotionLine.startDate')} />
-                  <Typography
-                    variant="body2"
-                    textAlign="right"
-                    color="grey.600"
-                  >
-                    {new Date(promotionLine.startDate).toLocaleDateString()}
-                  </Typography>
-                </ListItem>
-                <Divider variant="middle" />
-              </>
-            )}
-            {promotionLine.endDate && (
-              <>
-                <ListItem>
-                  <ListItemText primary={t('promotionLine.endDate')} />
-                  <Typography
-                    variant="body2"
-                    textAlign="right"
-                    color="grey.600"
-                  >
-                    {new Date(promotionLine.endDate).toLocaleDateString()}
-                  </Typography>
-                </ListItem>
-                <Divider variant="middle" />
-              </>
-            )}
-            {promotionLine.status && (
-              <>
-                <ListItem>
-                  <ListItemText primary={t('promotionLine.status')} />
-                  <Chip
-                    label={
-                      promotionLine.status === 'active'
-                        ? t('promotion.active')
-                        : t('promotion.inactive')
-                    }
-                    color={
-                      promotionLine.status === 'active' ? 'success' : 'default'
-                    }
-                    sx={{ ml: 1 }}
-                  />
-                </ListItem>
-                <Divider variant="middle" />
-              </>
-            )}
-          </List>
-          <Box
-            sx={{
-              display: 'flex',
-              flexDirection: 'column',
-              height: '100%',
-              width: '100%',
-              mt: 2,
-            }}
-          >
-            <Box sx={{ flexGrow: 1 }}>
-              <DataGrid
-                rows={rows}
-                columns={columns}
-                pageSizeOptions={[5]}
-                pagination
-                autoHeight
-              />
+    <>
+      <Dialog open={open} onClose={onClose} fullWidth maxWidth="lg">
+        <DialogTitle>
+          <Typography variant="h2">{t('promotionLine.detail')}</Typography>
+        </DialogTitle>
+        <DialogContent>
+          <Box sx={{ mb: 2 }}>
+            <Typography variant="h4">{t('promotionLine.header')}</Typography>
+            <List>
+              {promotionLine.code && (
+                <>
+                  <ListItem>
+                    <ListItemText primary={t('promotionLine.code')} />
+                    <Typography
+                      variant="body2"
+                      textAlign="right"
+                      color="grey.600"
+                    >
+                      {promotionLine.code}
+                    </Typography>
+                  </ListItem>
+                  <Divider variant="middle" />
+                </>
+              )}
+              {promotionLine.description && (
+                <>
+                  <ListItem>
+                    <ListItemText primary={t('promotionLine.description')} />
+                    <Typography
+                      variant="body2"
+                      textAlign="right"
+                      color="grey.600"
+                    >
+                      {promotionLine.description}
+                    </Typography>
+                  </ListItem>
+                  <Divider variant="middle" />
+                </>
+              )}
+              {promotionLine.type && (
+                <>
+                  <ListItem>
+                    <ListItemText primary={t('promotionLine.type')} />
+                    <Typography
+                      variant="body2"
+                      textAlign="right"
+                      color="grey.600"
+                    >
+                      {promotionLine.type === 'discount-service'
+                        ? t('promotionLine.discountService')
+                        : t('promotionLine.discountBill')}
+                    </Typography>
+                  </ListItem>
+                  <Divider variant="middle" />
+                </>
+              )}
+              {promotionLine.startDate && (
+                <>
+                  <ListItem>
+                    <ListItemText primary={t('promotionLine.startDate')} />
+                    <Typography
+                      variant="body2"
+                      textAlign="right"
+                      color="grey.600"
+                    >
+                      {new Date(promotionLine.startDate).toLocaleDateString()}
+                    </Typography>
+                  </ListItem>
+                  <Divider variant="middle" />
+                </>
+              )}
+              {promotionLine.endDate && (
+                <>
+                  <ListItem>
+                    <ListItemText primary={t('promotionLine.endDate')} />
+                    <Typography
+                      variant="body2"
+                      textAlign="right"
+                      color="grey.600"
+                    >
+                      {new Date(promotionLine.endDate).toLocaleDateString()}
+                    </Typography>
+                  </ListItem>
+                  <Divider variant="middle" />
+                </>
+              )}
+              {promotionLine.status && (
+                <>
+                  <ListItem>
+                    <ListItemText primary={t('promotionLine.status')} />
+                    <Chip
+                      label={
+                        promotionLine.status === 'active'
+                          ? t('promotion.active')
+                          : t('promotion.inactive')
+                      }
+                      color={
+                        promotionLine.status === 'active'
+                          ? 'success'
+                          : 'default'
+                      }
+                      sx={{ ml: 1 }}
+                    />
+                  </ListItem>
+                  <Divider variant="middle" />
+                </>
+              )}
+            </List>
+            <Box
+              sx={{
+                display: 'flex',
+                flexDirection: 'column',
+                height: '100%',
+                width: '100%',
+                mt: 2,
+              }}
+            >
+              <Box sx={{ flexGrow: 1 }}>
+                <DataGrid
+                  rows={rows}
+                  columns={columns}
+                  pageSizeOptions={[5]}
+                  pagination
+                  autoHeight
+                />
+              </Box>
             </Box>
           </Box>
-        </Box>
-      </DialogContent>
-      <DialogActions>
-        <Button onClick={onClose} color="primary">
-          {t('dashboard.close')}
-        </Button>
-      </DialogActions>
-    </Dialog>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={onClose} color="primary">
+            {t('dashboard.close')}
+          </Button>
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={handleOpenEditModal}
+          >
+            {t('promotionLine.edit')}
+          </Button>
+        </DialogActions>
+      </Dialog>
+      <EditPromotionLineModal
+        open={openEditModal}
+        onClose={handleCloseEditModal}
+        promotionLineData={promotionLine}
+        refetch={handleEditSuccess}
+      />
+    </>
   );
 };
 

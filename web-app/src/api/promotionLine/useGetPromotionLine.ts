@@ -18,6 +18,7 @@ export interface Detail {
 
 export interface PromotionLine {
   _id: string;
+  code: string;
   lineId: string;
   parentId: string;
   description: string;

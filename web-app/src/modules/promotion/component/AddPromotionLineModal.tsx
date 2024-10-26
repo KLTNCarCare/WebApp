@@ -49,7 +49,7 @@ const AddPromotionLineModal: React.FC<AddPromotionLineModalProps> = ({
   onClose,
   onAdd,
   promotionId,
-  promotionLine, // Nhận prop promotionLine
+  promotionLine,
 }) => {
   const { t } = useTranslation();
   const { control, handleSubmit, watch, reset, setValue } =
@@ -128,10 +128,23 @@ const AddPromotionLineModal: React.FC<AddPromotionLineModalProps> = ({
   };
 
   return (
-    <Dialog open={open} onClose={onClose} fullWidth maxWidth="sm">
+    <Dialog open={open} onClose={onClose} fullWidth maxWidth="lg">
       <DialogTitle>{t('promotionLine.addNewLine')}</DialogTitle>
       <DialogContent>
         <form onSubmit={handleSubmit(onSubmit)}>
+          <Controller
+            name="code"
+            control={control}
+            defaultValue=""
+            render={({ field }) => (
+              <TextField
+                {...field}
+                label={t('promotionLine.code')}
+                fullWidth
+                margin="normal"
+              />
+            )}
+          />
           <Controller
             name="description"
             control={control}
@@ -228,12 +241,29 @@ const AddPromotionLineModal: React.FC<AddPromotionLineModalProps> = ({
                     key={field.id}
                     sx={{ display: 'flex', alignItems: 'center', mb: 2 }}
                   >
+                    {' '}
+                    <Controller
+                      key={index}
+                      name={`detail.${index}.code`}
+                      control={control}
+                      defaultValue={field.code}
+                      render={({ field }) => (
+                        <TextField
+                          required
+                          {...field}
+                          label={t('promotionLine.details.code')}
+                          fullWidth
+                          margin="normal"
+                        />
+                      )}
+                    />
                     <Controller
                       name={`detail.${index}.itemName`}
                       control={control}
                       defaultValue={field.itemName}
                       render={({ field }) => (
                         <TextField
+                          required
                           {...field}
                           label={t('promotionLine.itemName')}
                           select
@@ -275,6 +305,7 @@ const AddPromotionLineModal: React.FC<AddPromotionLineModalProps> = ({
                       defaultValue={field.itemGiftName}
                       render={({ field }) => (
                         <TextField
+                          required
                           {...field}
                           label={t('promotionLine.itemGiftName')}
                           select
@@ -316,6 +347,7 @@ const AddPromotionLineModal: React.FC<AddPromotionLineModalProps> = ({
                       defaultValue={field.discount}
                       render={({ field }) => (
                         <TextField
+                          required
                           {...field}
                           label={t('promotionLine.discount')}
                           type="number"
@@ -334,6 +366,7 @@ const AddPromotionLineModal: React.FC<AddPromotionLineModalProps> = ({
                 color="primary"
                 onClick={() =>
                   append({
+                    code: '',
                     itemId: '',
                     itemName: '',
                     itemGiftId: '',
@@ -357,11 +390,27 @@ const AddPromotionLineModal: React.FC<AddPromotionLineModalProps> = ({
                     sx={{ display: 'flex', alignItems: 'center', mb: 2 }}
                   >
                     <Controller
+                      key={index}
+                      name={`detail.${index}.code`}
+                      control={control}
+                      defaultValue={field.code}
+                      render={({ field }) => (
+                        <TextField
+                          required
+                          {...field}
+                          label={t('promotionLine.details.code')}
+                          fullWidth
+                          margin="normal"
+                        />
+                      )}
+                    />
+                    <Controller
                       name={`detail.${index}.bill`}
                       control={control}
                       defaultValue={field.bill}
                       render={({ field }) => (
                         <TextField
+                          required
                           {...field}
                           label={t('promotionLine.bill')}
                           type="text"
@@ -386,6 +435,7 @@ const AddPromotionLineModal: React.FC<AddPromotionLineModalProps> = ({
                       defaultValue={field.limitDiscount}
                       render={({ field }) => (
                         <TextField
+                          required
                           {...field}
                           label={t('promotionLine.limitDiscount')}
                           type="text"
@@ -410,6 +460,7 @@ const AddPromotionLineModal: React.FC<AddPromotionLineModalProps> = ({
                       defaultValue={field.discount}
                       render={({ field }) => (
                         <TextField
+                          required
                           {...field}
                           label={t('promotionLine.discount')}
                           type="number"
@@ -428,6 +479,7 @@ const AddPromotionLineModal: React.FC<AddPromotionLineModalProps> = ({
                 color="primary"
                 onClick={() =>
                   append({
+                    code: '',
                     bill: 0,
                     discount: 0,
                     limitDiscount: 0,

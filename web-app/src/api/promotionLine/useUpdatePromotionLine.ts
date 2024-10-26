@@ -1,17 +1,17 @@
-import apiRoutes from 'src/lib/apiRoutes';
+import { useMutation, UseMutationOptions } from '@tanstack/react-query';
+import { PromotionLine, UpdatePromotionLineFn } from './types';
 import httpClient from 'src/lib/httpClient';
+import apiRoutes from 'src/lib/apiRoutes';
 import { DefaultQueryError } from '../type';
 import { getCookie } from 'src/lib/cookies';
-import { useMutation, UseMutationOptions } from '@tanstack/react-query';
-import { UpdatePromotionLineFn } from './types';
-import { PromotionLine } from './useGetPromotionLine';
 
 export const updatePromotionLineFn = async (
+  id: string,
   data: UpdatePromotionLineFn
-): Promise<PromotionLine> => {
+) => {
   const token = getCookie('accessToken');
   const response = await httpClient.put<PromotionLine>(
-    `${apiRoutes.promotionLine.update}/${data.id}`,
+    `${apiRoutes.promotionLine.update}/${id}`,
     data,
     {
       headers: {
@@ -26,10 +26,11 @@ export const useUpdatePromotionLine = (
   opts?: UseMutationOptions<
     PromotionLine,
     DefaultQueryError,
-    UpdatePromotionLineFn
+    { id: string; data: UpdatePromotionLineFn }
   >
 ) =>
-  useMutation<PromotionLine, DefaultQueryError, UpdatePromotionLineFn>(
-    (data) => updatePromotionLineFn(data),
-    opts
-  );
+  useMutation<
+    PromotionLine,
+    DefaultQueryError,
+    { id: string; data: UpdatePromotionLineFn }
+  >(({ id, data }) => updatePromotionLineFn(id, data), opts);

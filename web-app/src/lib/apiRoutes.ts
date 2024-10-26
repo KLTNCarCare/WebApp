@@ -53,6 +53,7 @@ const apiRoutes = {
     create: 'v1/api/promotion/create-line',
     update: 'v1/api/promotion/update-line',
     delete: (id: string) => `v1/api/promotion/delete-line/${id}`,
+    updateEndDate: 'v1/api/promotion/update-end-date',
   },
   appointment: {
     create: 'v1/api/appointment/create',

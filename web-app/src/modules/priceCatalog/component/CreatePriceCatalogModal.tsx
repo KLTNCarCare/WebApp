@@ -483,25 +483,6 @@ function CreatePriceCatalogModal({
                   errors.priceName ? String(errors.priceName.message) : ''
                 }
               />
-              <Box sx={{ width: '100%' }}>
-                <DataGrid
-                  rows={rows}
-                  columns={columns}
-                  editMode="row"
-                  rowModesModel={rowModesModel}
-                  onRowModesModelChange={handleRowModesModelChange}
-                  onRowEditStop={handleRowEditStop}
-                  processRowUpdate={processRowUpdate}
-                  autoHeight
-                  getRowId={(row) => row.id}
-                  components={{
-                    Toolbar: EditToolbar,
-                  }}
-                  componentsProps={{
-                    toolbar: { setRows, setRowModesModel },
-                  }}
-                />
-              </Box>
               <Controller
                 name="startDate"
                 control={control}
@@ -562,6 +543,25 @@ function CreatePriceCatalogModal({
                 )}
               />
 
+              <Box sx={{ width: '100%' }}>
+                <DataGrid
+                  rows={rows}
+                  columns={columns}
+                  editMode="row"
+                  rowModesModel={rowModesModel}
+                  onRowModesModelChange={handleRowModesModelChange}
+                  onRowEditStop={handleRowEditStop}
+                  processRowUpdate={processRowUpdate}
+                  autoHeight
+                  getRowId={(row) => row.id}
+                  components={{
+                    Toolbar: EditToolbar,
+                  }}
+                  componentsProps={{
+                    toolbar: { setRows, setRowModesModel },
+                  }}
+                />
+              </Box>
               <Button
                 variant="contained"
                 size="medium"

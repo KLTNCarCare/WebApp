@@ -123,7 +123,12 @@
     "deleteSuccessTitle": "Xóa  khuyến mãi thành công",
     "deleteSuccess": "Khuyến mãi đã được xóa thành công",
     "update": "Cập nhật",
-    "updating": "Đang cập nhật"
+    "updating": "Đang cập nhật",
+    "details": {
+      "code": "Mã chi tiết"
+    },
+    "editLine": "Chỉnh sửa khuyến mãi",
+    "edit": "Chỉnh sửa"
   },
   "category": {
     "userCategoryManagement": "Quản lý danh mục dịch vụ",

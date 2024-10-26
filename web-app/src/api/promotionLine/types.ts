@@ -1,4 +1,5 @@
 export interface Detail {
+  code: string;
   itemId?: string | null;
   itemName?: string;
   itemGiftId?: string | null;
@@ -9,6 +10,7 @@ export interface Detail {
 }
 
 export interface CreatePromotionLineFn {
+  code: string;
   parentId: string;
   description: string;
   type: 'discount-service' | 'discount-bill';
@@ -21,11 +23,12 @@ export interface DeletePromotionLineFn {
 }
 
 export interface UpdatePromotionLineFn {
-  id?: string;
-  description?: string;
-  startDate?: string;
-  endDate?: string;
-  detail?: Detail[];
+  code: string;
+  description: string;
+  type: 'discount-service' | 'discount-bill';
+  startDate: string | number;
+  endDate: string | number;
+  detail: Detail[];
 }
 export interface CreatePromotionDetailFn {
   _id: string;
@@ -50,4 +53,7 @@ export interface PromotionLine {
     bill?: number;
     limitDiscount?: number;
   }[];
+}
+export interface UpdateEndatePromotionLineFn {
+  endDate: string;
 }
