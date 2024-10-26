@@ -160,7 +160,7 @@ const CustomerDataTable: React.FC<CustomerDataTableProps> = ({
   const handleEditClick = (customerData: Customer) => {
     setEditCustomerData(customerData);
     setIsEditCustomerOpen(true);
-    refetch();
+    setIsDetailCustomerOpen(false);
   };
 
   const handleDetailClick = (customerData: Customer) => {
@@ -168,8 +168,18 @@ const CustomerDataTable: React.FC<CustomerDataTableProps> = ({
     setIsDetailCustomerOpen(true);
   };
 
-  const handleCloseEditCustomer = () => {
+  const handleCloseEditCustomerModal = () => {
     setIsEditCustomerOpen(false);
+  };
+
+  const handleCloseEditCustomer = async () => {
+    setIsEditCustomerOpen(false);
+    await refetch();
+    setIsDetailCustomerOpen(true);
+  };
+
+  const handleCloseDetailCustomer = () => {
+    setIsDetailCustomerOpen(false);
     refetch();
   };
 
@@ -221,7 +231,7 @@ const CustomerDataTable: React.FC<CustomerDataTableProps> = ({
       {detailCustomerData && (
         <CustomerDetailModal
           open={isDetailCustomerOpen}
-          onClose={() => setIsDetailCustomerOpen(false)}
+          onClose={handleCloseDetailCustomer}
           customerData={detailCustomerData}
           refetch={refetch}
         />
@@ -229,14 +239,14 @@ const CustomerDataTable: React.FC<CustomerDataTableProps> = ({
 
       <Dialog
         open={isEditCustomerOpen}
-        onClose={() => setIsEditCustomerOpen(false)}
+        onClose={handleCloseEditCustomerModal}
         maxWidth="md"
         fullWidth
       >
         {isEditCustomerOpen && editCustomerData && (
           <EditCustomerModal
             customerData={editCustomerData}
-            refetch={refetch}
+            refetch={handleCloseEditCustomer}
             setIsEditCustomer={setIsEditCustomerOpen}
           />
         )}

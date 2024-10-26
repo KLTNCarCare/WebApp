@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import {
   Dialog,
   DialogTitle,
@@ -8,8 +8,6 @@ import {
   TextField,
   Switch,
   FormControlLabel,
-  Snackbar,
-  Alert,
 } from '@mui/material';
 import { ServiceByCategory } from 'src/api/category/useGetServiceByCategory';
 import { useTranslation } from 'react-i18next';
@@ -42,18 +40,12 @@ const ServiceDetailModal: React.FC<ServiceDetailModalProps> = ({
   refetch,
 }) => {
   const { t } = useTranslation();
-  const [snackbarOpen, setSnackbarOpen] = useState(false);
-  const [snackbarMessage, setSnackbarMessage] = useState('');
-  const [snackbarSeverity, setSnackbarSeverity] = useState<'success' | 'error'>(
-    'success'
-  );
 
   const {
     control,
     register,
     handleSubmit,
     formState: { errors, isValid },
-    setValue,
     reset,
   } = useForm<ServiceByCategory>({
     defaultValues: serviceData || {
@@ -76,19 +68,7 @@ const ServiceDetailModal: React.FC<ServiceDetailModalProps> = ({
     try {
       const response = await onSave(data);
       refetch();
-      setSnackbarMessage(response.message);
-      setSnackbarSeverity(response.code === 200 ? 'success' : 'error');
-      setSnackbarOpen(true);
-    } catch (error) {
-      setSnackbarMessage('Có lỗi xảy ra');
-      setSnackbarSeverity('error');
-      setSnackbarOpen(true);
-    }
-  };
-
-  const handleSnackbarClose = () => {
-    setSnackbarOpen(false);
-    refetch();
+    } catch (error) {}
   };
 
   return (
@@ -162,19 +142,6 @@ const ServiceDetailModal: React.FC<ServiceDetailModalProps> = ({
           </DialogActions>
         </form>
       </Dialog>
-      <Snackbar
-        open={snackbarOpen}
-        autoHideDuration={6000}
-        onClose={handleSnackbarClose}
-      >
-        <Alert
-          onClose={handleSnackbarClose}
-          severity={snackbarSeverity}
-          sx={{ width: '100%' }}
-        >
-          {snackbarMessage}
-        </Alert>
-      </Snackbar>
     </>
   );
 };

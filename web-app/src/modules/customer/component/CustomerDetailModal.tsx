@@ -40,11 +40,13 @@ const CustomerDetailModal: React.FC<CustomerDetailModalProps> = ({
 
   const handleEditClick = () => {
     setIsEditCustomerOpen(true);
+    onClose();
   };
 
-  const handleCloseEditCustomer = () => {
+  const handleCloseEditCustomer = async () => {
     setIsEditCustomerOpen(false);
-    refetch();
+    await refetch();
+    onClose();
   };
 
   const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
