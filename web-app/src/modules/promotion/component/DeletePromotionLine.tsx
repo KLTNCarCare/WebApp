@@ -23,15 +23,13 @@ const DeletePromotionLine = ({ _id, refetch }: DeletePromotionLineProps) => {
   const [isOpenDeleteDialog, setIsOpenDeleteDialog] = useState(false);
 
   const { mutate: deletePromotionLine, isLoading } = useDeletePromotionLine({
-    onSuccess: (_, variables: { _id: string }) => {
+    onSuccess: (success) => {
       setIsOpenDeleteDialog(false);
-      snackbarUtils.success(t('promotionLine.deleteSuccess'));
       refetch();
+      snackbarUtils.success(success);
     },
-    onError: (error) => {
-      snackbarUtils.error(
-        error.response?.data?.message || t('promotionLine.deleteError')
-      );
+    onError(error) {
+      snackbarUtils.error(error);
     },
   });
 

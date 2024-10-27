@@ -33,7 +33,6 @@ export const SnackbarUtilsConfigurator = () => {
   );
 };
 
-// sets a default length for all Snack messages
 const defaultSnackMessageLength = 1000;
 
 const trimMessage = (
@@ -43,8 +42,30 @@ const trimMessage = (
   return msg.substring(0, length);
 };
 
+const getErrorMessage = (error: any): string => {
+  console.log(error.response);
+  if (error.response && error.response.data && error.response.data.message) {
+    return error.response.data.message;
+  }
+
+  if (error.message) {
+    return error.message;
+  }
+
+  return 'An unexpected error occurred';
+};
+
+const getSuccessMessage = (response: any): string => {
+  console.log(response);
+  if (response && response.message) {
+    return response.message;
+  }
+  return 'Operation successful';
+};
+
 const snackbarUtils = {
-  success(msg: string, options: OptionsObject = {}) {
+  success(response: any, options: OptionsObject = {}) {
+    const msg = getSuccessMessage(response);
     this.toast(trimMessage(msg), { ...options, variant: VariantType.success });
   },
   warning(msg: string, options: OptionsObject = {}) {
@@ -68,7 +89,8 @@ const snackbarUtils = {
       },
     });
   },
-  error(msg: string, options: OptionsObject = {}) {
+  error(error: any, options: OptionsObject = {}) {
+    const msg = getErrorMessage(error);
     this.toast(trimMessage(msg), { ...options, variant: VariantType.error });
   },
   toast(msg: string, options: OptionsObject = {}) {

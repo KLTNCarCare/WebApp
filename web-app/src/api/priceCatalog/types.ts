@@ -41,3 +41,6 @@ export type UpdatePriceCatalogFn = {
   endDate: string;
   items: Item[];
 };
+export interface ChangeStatusFn {
+  _id: string;
+}

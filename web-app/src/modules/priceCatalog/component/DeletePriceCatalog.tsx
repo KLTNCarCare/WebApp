@@ -22,26 +22,19 @@ type DeletePriceCatalogProps = {
   refetch: () => void;
 };
 
-interface ApiResponse {
-  message: string;
-  [key: string]: any;
-}
-
 const DeletePriceCatalog = ({ _id, refetch }: DeletePriceCatalogProps) => {
   const { t } = useTranslation();
   const [isOpenDeleteDialog, setIsOpenDeleteDialog] = useState(false);
   const [isSuccessDialogOpen, setIsSuccessDialogOpen] = useState(false);
 
   const { mutate: deletePriceCatalog, isLoading } = useDeletePriceCatalog({
-    onSuccess: (_, variables: { _id: string }) => {
+    onSuccess: (success) => {
       setIsOpenDeleteDialog(false);
       setIsSuccessDialogOpen(true);
-      snackbarUtils.success(t('priceCatalog.deleteSuccess'));
+      snackbarUtils.success(success);
     },
-    onError: (error) => {
-      snackbarUtils.error(
-        error.response?.data?.message || t('priceCatalog.deleteError')
-      );
+    onError(error) {
+      snackbarUtils.error(error);
     },
   });
 

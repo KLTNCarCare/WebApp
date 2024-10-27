@@ -17,6 +17,7 @@ import { CreatePromotionLineFn } from 'src/api/promotionLine/types';
 import snackbarUtils from 'src/lib/snackbarUtils';
 import EditIcon from '@mui/icons-material/Edit';
 import DeletePromotionLine from './DeletePromotionLine';
+import ToggleStatusButton from './ToggleStatusButton';
 
 interface PromotionLineDataGridProps {
   promotionLineData: PromotionLine[];
@@ -39,11 +40,11 @@ const PromotionLineDataGrid: React.FC<PromotionLineDataGridProps> = ({
   const [rows, setRows] = React.useState<PromotionLine[]>(promotionLineData);
 
   const createPromotionLineMutation = useCreatePromotionLine({
-    onSuccess: (newLine) => {
-      snackbarUtils.success('Thêm thành công!');
+    onSuccess: (newLine, success) => {
+      snackbarUtils.success(success);
     },
-    onError: (error: any) => {
-      snackbarUtils.error(`${error.message}`);
+    onError(error) {
+      snackbarUtils.error(error);
     },
   });
 
@@ -89,16 +90,12 @@ const PromotionLineDataGrid: React.FC<PromotionLineDataGridProps> = ({
         endDate: new Date(newLine.endDate).getTime(),
         detail: newLine.detail,
       };
-
-      createPromotionLineMutation.mutate(newLineData, {
-        onSuccess: () => {
-          snackbarUtils.success('Thêm thành công!');
-        },
-      });
     } else {
       console.error('Invalid detail data:', newLine.detail);
     }
   };
+
+  const handleStatusClick = (id: string, currentStatus: string) => {};
 
   React.useEffect(() => {
     setRows(promotionLineData);
@@ -157,6 +154,23 @@ const PromotionLineDataGrid: React.FC<PromotionLineDataGridProps> = ({
           color={params.value === 'active' ? 'success' : 'default'}
           sx={{ ml: 1 }}
         />
+      ),
+    },
+    {
+      field: 'actionStatus',
+      headerName: t('dashboard.changeStatus'),
+      minWidth: 150,
+      align: 'center',
+      sortable: false,
+      renderCell: (params: GridRenderCellParams) => (
+        <div onClick={(event) => event.stopPropagation()}>
+          <ToggleStatusButton
+            status={params.row.status}
+            onToggle={() => {}}
+            id={params.row._id}
+            refetch={refetch}
+          />
+        </div>
       ),
     },
     {

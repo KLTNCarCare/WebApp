@@ -4,14 +4,11 @@ import {
   Button,
   ButtonBase,
   Dialog,
-  DialogContent,
   DialogTitle,
   Paper,
   Stack,
   Toolbar,
   Typography,
-  Snackbar,
-  Alert,
 } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import CloseIcon from '@mui/icons-material/Close';
@@ -24,6 +21,7 @@ import {
 } from 'src/api/priceCatalog/useGetPriceCatalog';
 import PriceCatalogDataTable from './component/PriceCatalogDataTable';
 import CreatePriceCatalogModal from './component/CreatePriceCatalogModal';
+import FilterFormPriceCatalog from './component/filter/FilterFormPriceCatalog';
 
 export function PriceCatalogPage() {
   const { t } = useTranslation();
@@ -35,37 +33,19 @@ export function PriceCatalogPage() {
 
   const [isRegisterPriceCatalog, setIsRegisterPriceCatalog] =
     useState<boolean>(false);
-  const [inputEmailValue, setInputEmailValue] = useState<string>('');
-  const [inputPhoneValue, setInputPhoneValue] = useState<string>('');
-  const debounceEmailValue = useDebounce<string>(inputEmailValue, 500);
-  const debouncePhoneValue = useDebounce<string>(inputPhoneValue, 500);
+  const [inputValue, setInputValue] = useState<string>('');
+  const [selectedField, setSelectedField] = useState('priceName');
+  const debounceValue = useDebounce<string>(inputValue, 500);
 
   const { data, isLoading, refetch } = useGetListPriceCatalog({
     page: paginationModel.page + 1,
     limit: paginationModel.pageSize,
+    field: selectedField,
+    word: debounceValue,
   });
 
   const totalPage = data?.totalPage || 0;
   const priceCatalogList: PriceCatalogManagement[] = data?.data ?? [];
-
-  const [snackbarOpen, setSnackbarOpen] = useState<boolean>(false);
-  const [snackbarMessage, setSnackbarMessage] = useState<string>('');
-  const [snackbarSeverity, setSnackbarSeverity] = useState<'success' | 'error'>(
-    'success'
-  );
-
-  const handleSnackbarClose = () => {
-    setSnackbarOpen(false);
-  };
-
-  const handleApiResponse = (
-    message: string,
-    severity: 'success' | 'error'
-  ) => {
-    setSnackbarMessage(message);
-    setSnackbarSeverity(severity);
-    setSnackbarOpen(true);
-  };
 
   return (
     <>
@@ -102,6 +82,12 @@ export function PriceCatalogPage() {
           >
             <Stack>
               <Typography variant="h5">{t('priceCatalog.filter')}</Typography>
+              <FilterFormPriceCatalog
+                searchText={inputValue}
+                setSearchText={setInputValue}
+                selectedField={selectedField}
+                setSelectedField={setSelectedField}
+              />
             </Stack>
             <Button
               sx={{
@@ -175,24 +161,9 @@ export function PriceCatalogPage() {
           <CreatePriceCatalogModal
             refetch={refetch}
             setIsAddPriceCatalog={setIsRegisterPriceCatalog}
-            handleApiResponse={handleApiResponse}
           />
         </Dialog>
       </AdminLayout>
-
-      {/* <Snackbar
-        open={snackbarOpen}
-        autoHideDuration={0}
-        onClose={handleSnackbarClose}
-      >
-        <Alert
-          onClose={handleSnackbarClose}
-          severity={snackbarSeverity}
-          sx={{ width: '100%' }}
-        >
-          {snackbarMessage}
-        </Alert>
-      </Snackbar> */}
     </>
   );
 }

@@ -20,7 +20,7 @@ interface PaymentModalProps {
   onClose: () => void;
   onSubmit: (paymentMethod: string, invoiceDetails: any) => void;
   invoiceAmount: number;
-  appointmentId: string; // Use appointmentId instead of invoiceId
+  appointmentId: string;
   customerName: string;
   customerPhone: string;
   refetch: () => void;
@@ -50,8 +50,8 @@ const PaymentModal: React.FC<PaymentModalProps> = ({
           customerPhone,
         })
       );
-      setInvoiceDetails(data); // Store invoice details in state
-      onSubmit(paymentMethod, data); // Pass invoice details to parent
+      setInvoiceDetails(data);
+      onSubmit(paymentMethod, data);
       refetch();
       onClose();
     },

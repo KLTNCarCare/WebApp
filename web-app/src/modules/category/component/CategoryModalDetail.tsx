@@ -13,8 +13,6 @@ import {
   LinearProgress,
   Button,
   Chip,
-  Snackbar,
-  Alert,
 } from '@mui/material';
 import {
   DataGrid,
@@ -90,18 +88,14 @@ const CategoryDetailModal: React.FC<CategoryDetailModalProps> = ({
     useState<ServiceByCategory | null>(null);
   const [isServiceDetailModalOpen, setServiceDetailModalOpen] = useState(false);
   const [modalMode, setModalMode] = useState<'edit' | 'add'>('edit');
-  const [snackbarOpen, setSnackbarOpen] = useState(false);
-  const [snackbarMessage, setSnackbarMessage] = useState('');
 
   const { mutate: deleteService } = useDeleteService({
-    onSuccess: () => {
+    onSuccess: (success) => {
       refetch();
-      handleApiResponse({ message: t('category.serviceDeletedSuccessfully') });
+      snackbarUtils.success(success);
     },
-    onError: (error) => {
-      snackbarUtils.error(
-        error.response?.data?.message || t('category.deleteError')
-      );
+    onError(error) {
+      snackbarUtils.error(error);
     },
   });
 
@@ -115,13 +109,6 @@ const CategoryDetailModal: React.FC<CategoryDetailModalProps> = ({
       );
     }
   }, [serviceByCategorytData]);
-
-  const handleApiResponse = (response: { message?: string }) => {
-    if (response.message) {
-      setSnackbarMessage(response.message);
-      setSnackbarOpen(true);
-    }
-  };
 
   const handleEditClick = (id: GridRowId) => () => {
     const service = rows.find((row) => row.id === id);
@@ -204,10 +191,6 @@ const CategoryDetailModal: React.FC<CategoryDetailModalProps> = ({
   const handleCloseServiceDetailModal = () => {
     setServiceDetailModalOpen(false);
     refetch();
-  };
-
-  const handleCloseSnackbar = () => {
-    setSnackbarOpen(false);
   };
 
   const columns: GridColDef[] = [
@@ -527,15 +510,6 @@ const CategoryDetailModal: React.FC<CategoryDetailModalProps> = ({
           refetch={refetch}
         />
       )}
-      <Snackbar
-        open={snackbarOpen}
-        autoHideDuration={6000}
-        onClose={handleCloseSnackbar}
-      >
-        <Alert onClose={handleCloseSnackbar} severity="success">
-          {snackbarMessage}
-        </Alert>
-      </Snackbar>
     </Dialog>
   );
 };

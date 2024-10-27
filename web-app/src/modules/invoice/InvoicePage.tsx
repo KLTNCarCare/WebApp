@@ -30,14 +30,15 @@ export function InvoicePage() {
   });
 
   const [isRegisterInvoice, setIsRegisterInvoice] = useState<boolean>(false);
-  const [inputCustIDValue, setInputCustIDValue] = useState<string>('');
-  const debounceCustIDValue = useDebounce<string>(inputCustIDValue, 500);
+  const [inputValue, setInputValue] = useState<string>('');
+  const [selectedField, setSelectedField] = useState('invoiceId');
+  const debounceValue = useDebounce<string>(inputValue, 500);
 
   const { data, isLoading, refetch } = useGetListInvoice({
     page: paginationModel.page + 1,
     limit: paginationModel.pageSize,
-    field: 'customer.custId',
-    word: debounceCustIDValue,
+    field: selectedField,
+    word: debounceValue,
   });
 
   const totalPage = data?.totalPage || 0;
@@ -78,8 +79,10 @@ export function InvoicePage() {
           <Stack>
             <Typography variant="h5">{t('invoice.filter')}</Typography>
             <FilterFormInvoice
-              searchText={inputCustIDValue}
-              setSearchText={setInputCustIDValue}
+              searchText={inputValue}
+              setSearchText={setInputValue}
+              selectedField={selectedField}
+              setSelectedField={setSelectedField}
             />
           </Stack>
         </Paper>

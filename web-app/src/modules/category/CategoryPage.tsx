@@ -21,6 +21,7 @@ import {
 } from 'src/api/category/useGetCategory';
 import CategoryDataTable from './component/CategoryDataTable';
 import CreateCategoryModal from './component/CreateCategoryModal';
+import FilterFormCategory from './component/filter/FilterFormCategory';
 
 export function CategoryPage() {
   const { t } = useTranslation();
@@ -31,14 +32,15 @@ export function CategoryPage() {
   });
 
   const [isRegisterCategory, setIsRegisterCategory] = useState<boolean>(false);
-  const [inputEmailValue, setInputEmailValue] = useState<string>('');
-  const [inputPhoneValue, setInputPhoneValue] = useState<string>('');
-  const debounceEmailValue = useDebounce<string>(inputEmailValue, 500);
-  const debouncePhoneValue = useDebounce<string>(inputPhoneValue, 500);
+  const [inputValue, setInputValue] = useState<string>('');
+  const [selectedField, setSelectedField] = useState('categoryName');
+  const debounceValue = useDebounce<string>(inputValue, 500);
 
   const { data, isLoading, refetch } = useGetListCategory({
     page: paginationModel.page + 1,
     limit: paginationModel.pageSize,
+    field: selectedField,
+    word: debounceValue,
   });
 
   const totalPage = data?.totalPage || 0;
@@ -79,6 +81,12 @@ export function CategoryPage() {
           >
             <Stack>
               <Typography variant="h5">{t('category.filter')}</Typography>
+              <FilterFormCategory
+                searchText={inputValue}
+                setSearchText={setInputValue}
+                selectedField={selectedField}
+                setSelectedField={setSelectedField}
+              />
             </Stack>
             <Button
               sx={{

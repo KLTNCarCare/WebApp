@@ -14,19 +14,19 @@ import React from 'react';
 import { ReactComponent as SearchIcon } from '../../../../assets/icons/Search.svg';
 import { useTranslation } from 'react-i18next';
 
-interface FilterFormInvoiceProps {
+interface FilterFormCategoryProps {
   searchText: string;
   setSearchText: (value: string) => void;
   selectedField: string;
   setSelectedField: (value: string) => void;
 }
 
-const FilterFormInvoice = ({
+const FilterFormCategory = ({
   searchText,
   setSearchText,
   selectedField,
   setSelectedField,
-}: FilterFormInvoiceProps) => {
+}: FilterFormCategoryProps) => {
   const { t } = useTranslation();
   const inputRef = React.useRef<HTMLInputElement>(null);
 
@@ -53,13 +53,9 @@ const FilterFormInvoice = ({
             onChange={handleFieldChange}
             label={t('dashboard.selectField')}
           >
-            <MenuItem value="invoiceId">{t('invoice.invoiceId')}</MenuItem>
-            <MenuItem value="customer.customerName">
-              {t('customer.customerName')}
-            </MenuItem>
-            <MenuItem value="customer.phone">{t('customer.phone')}</MenuItem>
-            <MenuItem value="customer.custId">
-              {t('customer.customerId')}
+            <MenuItem value="categoryId">{t('category.categoryId')}</MenuItem>
+            <MenuItem value="categoryName">
+              {t('category.categoryName')}
             </MenuItem>
           </Select>
         </FormControl>
@@ -95,4 +91,4 @@ const FilterFormInvoice = ({
   );
 };
 
-export default FilterFormInvoice;
+export default FilterFormCategory;

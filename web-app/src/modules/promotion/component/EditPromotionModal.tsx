@@ -96,16 +96,14 @@ const EditPromotionModal = ({
   });
 
   const { mutate: updatePromotion } = useUpdatePromotion({
-    onSuccess: () => {
+    onSuccess: (success) => {
       refetch();
-      snackbarUtils.success(t('promotion.updateSuccess'));
       setIsLoading(false);
       setIsEditPromotion(false);
+      snackbarUtils.success(success);
     },
-    onError: (error) => {
-      const message =
-        error.response?.data?.message || t('promotion.updateError');
-      snackbarUtils.error(message);
+    onError(error) {
+      snackbarUtils.error(error);
       setIsLoading(false);
     },
   });

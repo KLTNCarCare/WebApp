@@ -7,6 +7,8 @@ import { getCookie } from 'src/lib/cookies';
 export interface GetCategoryParams {
   page: number;
   limit: number;
+  field?: string;
+  word?: string;
 }
 
 export interface CategoryResponse {

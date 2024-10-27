@@ -1,10 +1,9 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import {
   Box,
   Button,
   ButtonBase,
   Dialog,
-  DialogContent,
   DialogTitle,
   Paper,
   Stack,
@@ -22,6 +21,7 @@ import {
   PromotionManagement,
 } from 'src/api/promotion/useGetPromotion';
 import CreatePromotionModal from './component/CreatePromotionModal';
+import FilterFormPromotion from './component/filter/FilterFormPromotion';
 
 export function PromotionPage() {
   const { t } = useTranslation();
@@ -33,14 +33,15 @@ export function PromotionPage() {
 
   const [isRegisterPromotion, setIsRegisterPromotion] =
     useState<boolean>(false);
-  const [inputEmailValue, setInputEmailValue] = useState<string>('');
-  const [inputPhoneValue, setInputPhoneValue] = useState<string>('');
-  const debounceEmailValue = useDebounce<string>(inputEmailValue, 500);
-  const debouncePhoneValue = useDebounce<string>(inputPhoneValue, 500);
+  const [inputValue, setInputValue] = useState<string>('');
+  const [selectedField, setSelectedField] = useState('promotionId');
+  const debounceValue = useDebounce<string>(inputValue, 500);
 
   const { data, isLoading, refetch } = useGetListPromotion({
     page: paginationModel.page + 1,
     limit: paginationModel.pageSize,
+    field: selectedField,
+    word: debounceValue,
   });
 
   const totalPage = data?.totalPage || 0;
@@ -81,6 +82,12 @@ export function PromotionPage() {
           >
             <Stack>
               <Typography variant="h5">{t('promotion.filter')}</Typography>
+              <FilterFormPromotion
+                searchText={inputValue}
+                setSearchText={setInputValue}
+                selectedField={selectedField}
+                setSelectedField={setSelectedField}
+              />
             </Stack>
             <Button
               sx={{

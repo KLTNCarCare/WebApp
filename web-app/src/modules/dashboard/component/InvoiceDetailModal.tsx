@@ -94,7 +94,7 @@ const InvoiceDetailModal: React.FC<InvoiceDetailModalProps> = ({
     paymentMethod: string,
     invoiceDetails: Invoice
   ) => {
-    setInvoiceDetails(invoiceDetails); // Store invoice details
+    setInvoiceDetails(invoiceDetails);
     refetch();
     setShouldReopen(true);
   };

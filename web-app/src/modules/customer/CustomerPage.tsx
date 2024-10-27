@@ -31,12 +31,13 @@ export function CustomerPage() {
 
   const [isRegisterCustomer, setIsRegisterCustomer] = useState<boolean>(false);
   const [inputPhoneValue, setInputPhoneValue] = useState<string>('');
+  const [selectedField, setSelectedField] = useState('phone');
   const debouncePhoneValue = useDebounce<string>(inputPhoneValue, 500);
 
   const { data, isLoading, refetch } = useGetAllCustomer(
     paginationModel.page + 1,
     paginationModel.pageSize,
-    'phone',
+    selectedField,
     debouncePhoneValue
   );
 
@@ -85,6 +86,8 @@ export function CustomerPage() {
               <FilterFormCustomer
                 searchText={inputPhoneValue}
                 setSearchText={setInputPhoneValue}
+                selectedField={selectedField}
+                setSelectedField={setSelectedField}
               />
             </Stack>
             <Button

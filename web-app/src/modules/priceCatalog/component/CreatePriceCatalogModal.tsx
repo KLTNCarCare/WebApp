@@ -25,7 +25,6 @@ import {
   Select,
   MenuItem,
   Box,
-  IconButton,
 } from '@mui/material';
 import {
   DataGrid,
@@ -96,7 +95,6 @@ const schemaCreatePriceCatalog = yup.object({
 type CreatePriceCatalogProps = {
   refetch?: () => void;
   setIsAddPriceCatalog?: (value: boolean) => void;
-  handleApiResponse: (message: string, severity: 'success' | 'error') => void;
 };
 
 interface Item extends FieldArrayWithId<CreatePriceCatalogFn, 'items', 'id'> {
@@ -135,7 +133,6 @@ function EditToolbar({ setRows, setRowModesModel }: EditToolbarProps) {
 function CreatePriceCatalogModal({
   refetch,
   setIsAddPriceCatalog,
-  handleApiResponse,
 }: CreatePriceCatalogProps) {
   const { t } = useTranslation();
   const {
@@ -145,7 +142,6 @@ function CreatePriceCatalogModal({
     handleSubmit,
     reset,
     setValue,
-    watch,
   } = useForm<CreatePriceCatalogFn>({
     defaultValues: {
       priceName: '',
@@ -204,14 +200,12 @@ function CreatePriceCatalogModal({
     };
 
     createPriceCatalog(transformedData, {
-      onSuccess() {
+      onSuccess(success) {
         setIsRegisterSuccess(true);
-        handleApiResponse(t('priceCatalog.createSuccess'), 'success');
+        snackbarUtils.success(success);
       },
       onError(error) {
-        const message =
-          error.response?.data?.message || t('priceCatalog.createError');
-        snackbarUtils.error(message);
+        snackbarUtils.error(error);
       },
     });
   };

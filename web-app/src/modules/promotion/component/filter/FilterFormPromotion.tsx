@@ -14,19 +14,19 @@ import React from 'react';
 import { ReactComponent as SearchIcon } from '../../../../assets/icons/Search.svg';
 import { useTranslation } from 'react-i18next';
 
-interface FilterFormInvoiceProps {
+interface FilterFormPromotionProps {
   searchText: string;
   setSearchText: (value: string) => void;
   selectedField: string;
   setSelectedField: (value: string) => void;
 }
 
-const FilterFormInvoice = ({
+const FilterFormPromotion = ({
   searchText,
   setSearchText,
   selectedField,
   setSelectedField,
-}: FilterFormInvoiceProps) => {
+}: FilterFormPromotionProps) => {
   const { t } = useTranslation();
   const inputRef = React.useRef<HTMLInputElement>(null);
 
@@ -53,13 +53,11 @@ const FilterFormInvoice = ({
             onChange={handleFieldChange}
             label={t('dashboard.selectField')}
           >
-            <MenuItem value="invoiceId">{t('invoice.invoiceId')}</MenuItem>
-            <MenuItem value="customer.customerName">
-              {t('customer.customerName')}
+            <MenuItem value="promotionId">
+              {t('promotion.promotionId')}
             </MenuItem>
-            <MenuItem value="customer.phone">{t('customer.phone')}</MenuItem>
-            <MenuItem value="customer.custId">
-              {t('customer.customerId')}
+            <MenuItem value="promotionName">
+              {t('promotion.promotionName')}
             </MenuItem>
           </Select>
         </FormControl>
@@ -95,4 +93,4 @@ const FilterFormInvoice = ({
   );
 };
 
-export default FilterFormInvoice;
+export default FilterFormPromotion;

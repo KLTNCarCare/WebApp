@@ -26,6 +26,7 @@ import { useUpdateCustomer } from 'src/api/customer/useUpdateCustomer';
 import { UpdateCustomerFn } from 'src/api/customer/types';
 import DeleteIcon from '@mui/icons-material/Delete';
 import AddIcon from '@mui/icons-material/Add';
+import snackbarUtils from 'src/lib/snackbarUtils';
 
 const schemaUpdateCustomer = yup.object({
   name: yup.string().required('Vui lòng nhập tên khách hàng'),
@@ -100,12 +101,14 @@ const EditCustomerModal = ({
   }, [watchedFields, customerData]);
 
   const { mutate: updateCustomer } = useUpdateCustomer({
-    onSuccess: () => {
+    onSuccess: (success) => {
       refetch();
       setIsSuccessDialogOpen(true);
       setIsLoading(false);
+      snackbarUtils.success(success);
     },
-    onError: (error) => {
+    onError(error) {
+      snackbarUtils.error(error);
       setIsLoading(false);
     },
   });

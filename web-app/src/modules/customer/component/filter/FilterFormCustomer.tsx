@@ -3,20 +3,28 @@ import {
   InputAdornment,
   Stack,
   TextField,
-  Typography,
+  MenuItem,
+  Select,
+  FormControl,
+  InputLabel,
+  SelectChangeEvent,
 } from '@mui/material';
-import React, { useEffect } from 'react';
+import React from 'react';
 import { ReactComponent as SearchIcon } from '../../../../assets/icons/Search.svg';
 import { useTranslation } from 'react-i18next';
 
 interface FilterFormCustomerProps {
   searchText: string;
   setSearchText: (value: string) => void;
+  selectedField: string;
+  setSelectedField: (value: string) => void;
 }
 
 const FilterFormCustomer = ({
   searchText,
   setSearchText,
+  selectedField,
+  setSelectedField,
 }: FilterFormCustomerProps) => {
   const { t } = useTranslation();
   const inputRef = React.useRef<HTMLInputElement>(null);
@@ -25,8 +33,12 @@ const FilterFormCustomer = ({
     setSearchText(event.target.value);
   };
 
+  const handleFieldChange = (event: SelectChangeEvent<string>): void => {
+    setSelectedField(event.target.value as string);
+  };
+
   return (
-    <Box sx={{ p: '5px 10px 0px 0px' }}>
+    <Box sx={{ p: '5px 10px 0px 10vh' }}>
       <Stack
         sx={{
           alignItems: 'center',
@@ -34,24 +46,25 @@ const FilterFormCustomer = ({
         direction="row"
         spacing={2}
       >
-        <Typography
-          variant="h5"
-          sx={{
-            fontSize: '12pt',
-            fontWeight: '500',
-            width: '17vw',
-          }}
-          gutterBottom
-        >
-          {t('customer.phone')}
-        </Typography>
+        <FormControl variant="outlined" sx={{ minWidth: 200 }}>
+          <InputLabel>{t('dashboard.selectField')}</InputLabel>
+          <Select
+            value={selectedField}
+            onChange={handleFieldChange}
+            label={t('dashboard.selectField')}
+          >
+            <MenuItem value="name">{t('customer.customerName')}</MenuItem>
+            <MenuItem value="phone">{t('customer.phone')}</MenuItem>
+            <MenuItem value="custId">{t('customer.customerId')}</MenuItem>
+          </Select>
+        </FormControl>
         <TextField
           inputRef={inputRef}
-          size="small"
+          size="medium"
           onChange={handleChange}
           value={searchText}
           type="search"
-          placeholder={t('customer.searchByPhone')}
+          placeholder={t('dashboard.search')}
           autoFocus
           InputProps={{
             startAdornment: (
@@ -68,7 +81,7 @@ const FilterFormCustomer = ({
             color: theme.palette.grey[300],
             borderRadius: 1,
             '.MuiInputBase-input': {
-              minWidth: '12vw',
+              minWidth: '20vw',
             },
           })}
         />

@@ -28,14 +28,13 @@ const DeleteCategory = ({ _id, refetch }: DeleteCategoryProps) => {
   const [isSuccessDialogOpen, setIsSuccessDialogOpen] = useState(false);
 
   const { mutate: deleteCategory, isLoading } = useDeleteCategory({
-    onSuccess: () => {
+    onSuccess: (success) => {
       setIsOpenDeleteDialog(false);
       setIsSuccessDialogOpen(true);
+      snackbarUtils.success(success);
     },
-    onError: (error) => {
-      snackbarUtils.error(
-        error.response?.data?.message || t('priceCatalog.deleteError')
-      );
+    onError(error) {
+      snackbarUtils.error(error);
     },
   });
 

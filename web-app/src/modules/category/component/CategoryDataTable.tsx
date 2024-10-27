@@ -18,7 +18,6 @@ import CategoryDetailModal from './CategoryModalDetail';
 import DeleteCategory from './DeleteCategory';
 import EditCategoryModal from './EditCategoryModal';
 import { useGetServiceByCategory } from 'src/api/category/useGetServiceByCategory';
-import StatusToggle from './StatusToggle';
 
 interface CategoryDataTableProps {
   dataCategory: any[];
@@ -33,7 +32,6 @@ interface CategoryDataTableProps {
 
 const createCategoryColumns = (
   t: (key: string) => string,
-  handleStatusClick: (id: string, currentStatus: string) => void,
   handleEditClick: (categoryData: any) => void,
   paginationModel: { page: number; pageSize: number },
   refetch: () => void
@@ -119,8 +117,6 @@ const CategoryDataTable: React.FC<CategoryDataTableProps> = ({
     setSelectedCategory(params.row as CategoryManagement);
   };
 
-  const handleStatusClick = (id: string, currentStatus: string) => {};
-
   const handleEditClick = (categoryData: any) => {
     setEditCategoryData(categoryData);
     setIsEditCategoryOpen(true);
@@ -143,7 +139,6 @@ const CategoryDataTable: React.FC<CategoryDataTableProps> = ({
             rows={dataCategory}
             columns={createCategoryColumns(
               t,
-              handleStatusClick,
               handleEditClick,
               paginationModel,
               refetch

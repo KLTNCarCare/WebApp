@@ -48,7 +48,12 @@
     "na": "N/A",
     "receiveAppointment": "Receive Appointment",
     "payAndCreateInvoice": "Pay",
-    "customer": "Customer"
+    "customer": "Customer",
+    "selectField": "Select Field",
+    "search": "Type to search",
+    "loadingData": "Loading data",
+    "errorOccurred": "An error occurred",
+    "changeStatus": "Change Status"
   },
   "status": {
     "confirmed": "Confirmed",
@@ -319,8 +324,9 @@
     "addCustomer": "Add Customer",
     "createDetailsTitle": "Create Customer Successfully",
     "createSuccess": "Customer has been created successfully",
-    "searchByPhone": "Search by phone number",
+    "search": "Search",
     "details": "Details",
-    "invoiceHistory": "Invoice History"
+    "invoiceHistory": "Invoice History",
+    "selectField": "Select Field"
   }
 }

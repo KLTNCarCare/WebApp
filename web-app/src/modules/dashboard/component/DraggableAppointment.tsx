@@ -16,6 +16,7 @@ import AppointmentDetailModal from './detailModal/AppointmentDetailModal';
 import PaymentModal from './PaymentModal';
 import { Appointment } from 'src/api/appointment/types';
 import { Invoice } from 'src/api/invoice/types';
+import snackbarUtils from 'src/lib/snackbarUtils';
 
 const ItemTypes = {
   APPOINTMENT: 'appointment',
@@ -68,7 +69,10 @@ const DraggableAppointment: React.FC<DraggableAppointmentProps> = ({
           setIsLoadingInvoice(false);
         }
       },
-      onError: () => {
+      onError: (error) => {
+        snackbarUtils.error(
+          error.response?.data?.message || t('priceCatalog.deleteError')
+        );
         setIsLoadingInvoice(false);
       },
     }

@@ -28,14 +28,13 @@ const DeletePromotion = ({ _id, refetch }: DeletePromotionProps) => {
   const [isSuccessDialogOpen, setIsSuccessDialogOpen] = useState(false);
 
   const { mutate: deletePromotion, isLoading } = useDeletePromotion({
-    onSuccess: () => {
+    onSuccess: (success) => {
       setIsOpenDeleteDialog(false);
       setIsSuccessDialogOpen(true);
+      snackbarUtils.success(success);
     },
-    onError: (error) => {
-      snackbarUtils.error(
-        error.response?.data?.message || t('priceCatalog.deleteError')
-      );
+    onError(error) {
+      snackbarUtils.error(error);
     },
   });
 

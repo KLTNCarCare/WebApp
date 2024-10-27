@@ -82,13 +82,12 @@ const CreateCustomerModal: React.FC<CreateCustomerProps> = ({
 
   const handleCreateCustomer: SubmitHandler<CreateCustomerFn> = (data) => {
     createCustomer(data, {
-      onSuccess() {
+      onSuccess(success) {
         setIsSuccessDialogOpen(true);
+        snackbarUtils.success(success);
       },
       onError(error) {
-        const message =
-          error.response?.data?.message || t('priceCatalog.createError');
-        snackbarUtils.error(message);
+        snackbarUtils.error(error);
       },
     });
   };

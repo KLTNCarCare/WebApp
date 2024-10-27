@@ -30,7 +30,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import DeletePriceCatalog from './DeletePriceCatalog';
 import PriceCatalogDetailModal from './PriceCatalogDetailModal';
 import EditPriceCatalogModal from './EditPriceCatalogModal';
-import StatusToggle from './StatusToggle';
+import ToggleStatusButton from './ToggleStatusButton';
 interface PriceCatalogDataTableProps {
   dataPriceCatalog: any[];
   isLoadingPriceCatalog: boolean;
@@ -124,6 +124,23 @@ const createPriceCatalogColumns = (
       const date = new Date(params.row.endDate);
       return date.toLocaleDateString('vi-VN');
     },
+  },
+  {
+    field: 'actionStatus',
+    headerName: t('dashboard.changeStatus'),
+    minWidth: 150,
+    align: 'center',
+    sortable: false,
+    renderCell: (params: GridRenderCellParams) => (
+      <div onClick={(event) => event.stopPropagation()}>
+        <ToggleStatusButton
+          status={params.row.status}
+          onToggle={() => handleStatusClick(params.row._id, params.row.status)}
+          id={params.row._id}
+          refetch={refetch}
+        />
+      </div>
+    ),
   },
   {
     field: 'action',

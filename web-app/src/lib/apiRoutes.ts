@@ -26,6 +26,7 @@ const apiRoutes = {
     update: 'v1/api/promotion/update-promotion',
     delete: (id: string) => `v1/api/promotion/delete-promotion/${id}`,
     getLineByParentId: '/v1/api/promotion/get-line-by-parentId',
+    changeSTTLine: (id: string) => `v1/api/promotion/change-status-line/${id}`,
   },
   category: {
     list: 'v1/api/category/get-all',
@@ -43,6 +44,7 @@ const apiRoutes = {
     updateEndDate: 'v1/api/price-catalog/update-end-date',
     delete: (id: string) => `v1/api/price-catalog/delete-price-catalog/${id}`,
     getCurrent: 'v1/api/price-catalog/get-all-price-current',
+    changeSTT: (id: string) => `v1/api/price-catalog/change-status/${id}`,
   },
   service: {
     create: 'v1/api/service/create',

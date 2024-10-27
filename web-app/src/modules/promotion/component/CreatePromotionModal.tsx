@@ -88,14 +88,12 @@ function CreatePromotionModal({
     };
 
     createPromotion(transformedData, {
-      onSuccess() {
+      onSuccess(success) {
         setIsRegisterSuccess(true);
-        snackbarUtils.success(t('promotion.createSuccess'));
+        snackbarUtils.success(success);
       },
       onError(error) {
-        const message =
-          error.response?.data?.message || t('promotion.createError');
-        snackbarUtils.error(message);
+        snackbarUtils.error(error);
       },
     });
   };

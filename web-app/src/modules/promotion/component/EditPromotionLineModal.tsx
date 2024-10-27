@@ -77,15 +77,15 @@ const EditPromotionLineModal: React.FC<EditPromotionLineModalProps> = ({
   const queryClient = useQueryClient();
 
   const updatePromotionLineMutation = useUpdatePromotionLine({
-    onSuccess: () => {
+    onSuccess: (success) => {
       onClose();
       reset();
-      snackbarUtils.success('Cập nhật thành công!');
       queryClient.invalidateQueries(['promotionLines']);
       refetch();
+      snackbarUtils.success(success);
     },
-    onError: (error: any) => {
-      snackbarUtils.error(`${error.response?.data?.message || error.message}`);
+    onError(error) {
+      snackbarUtils.error(error);
     },
   });
 

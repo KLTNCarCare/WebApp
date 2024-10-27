@@ -23,3 +23,6 @@ export interface DeletePromotionFn {
 export interface UpdatePromotionFn extends CreatePromotionFn {
   id: string;
 }
+export interface ChangeStatusFn {
+  _id: string;
+}

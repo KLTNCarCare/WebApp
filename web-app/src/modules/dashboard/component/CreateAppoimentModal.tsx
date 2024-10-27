@@ -29,8 +29,6 @@ import {
   TableHead,
   TableRow,
   Grid,
-  Snackbar,
-  Alert,
 } from '@mui/material';
 import { Add, Delete } from '@mui/icons-material';
 import { v4 as uuidv4 } from 'uuid';
@@ -40,6 +38,7 @@ import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import timezone from 'dayjs/plugin/timezone';
 import useDebounce from 'src/lib/hooks/useDebounce';
+import snackbarUtils from 'src/lib/snackbarUtils';
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
@@ -116,8 +115,6 @@ function CreateAppointmentModal({
   const [searchText, setSearchText] = useState('');
   const debouncedSearchText = useDebounce(searchText, 500);
   const [selectedServices, setSelectedServices] = useState<Item[]>([]);
-  const [snackbarOpen, setSnackbarOpen] = useState(false);
-  const [snackbarMessage, setSnackbarMessage] = useState('');
 
   const { data: services = [], isLoading: loadingServices } =
     useGetCurrentServiceActive(
@@ -167,16 +164,14 @@ function CreateAppointmentModal({
   };
 
   const { mutate: createAppointment } = useCreateAppointment({
-    onSuccess: () => {
+    onSuccess: (success) => {
       if (refetch) refetch();
       if (setIsAddAppointment) setIsAddAppointment(false);
       onClose();
+      snackbarUtils.success(success);
     },
-    onError: (error) => {
-      const errorMessage =
-        error.response?.data?.message || 'Request failed with status code 400';
-      setSnackbarMessage(errorMessage);
-      setSnackbarOpen(true);
+    onError(error) {
+      snackbarUtils.error(error);
     },
   });
 
@@ -560,15 +555,6 @@ function CreateAppointmentModal({
           </form>
         </Paper>
       </DialogContent>
-      <Snackbar
-        open={snackbarOpen}
-        autoHideDuration={6000}
-        onClose={() => setSnackbarOpen(false)}
-      >
-        <Alert onClose={() => setSnackbarOpen(false)} severity="error">
-          {snackbarMessage}
-        </Alert>
-      </Snackbar>
     </Dialog>
   );
 }

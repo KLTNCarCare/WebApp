@@ -8,6 +8,8 @@ import { PromotionLine } from '../promotionLine/useGetPromotionLine';
 export interface GetPromotionParams {
   page: number;
   limit: number;
+  field?: string;
+  word?: string;
 }
 export interface PromotionResponse {
   data: PromotionManagement[];

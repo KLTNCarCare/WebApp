@@ -7,6 +7,8 @@ import { getCookie } from 'src/lib/cookies';
 export interface GetPriceCatalogParams {
   page: number;
   limit: number;
+  field?: string;
+  word?: string;
 }
 export interface PriceCatalogResponse {
   data: PriceCatalogManagement[];

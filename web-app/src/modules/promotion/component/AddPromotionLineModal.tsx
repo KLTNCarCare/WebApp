@@ -81,15 +81,15 @@ const AddPromotionLineModal: React.FC<AddPromotionLineModalProps> = ({
   const queryClient = useQueryClient();
 
   const createPromotionLineMutation = useCreatePromotionLine({
-    onSuccess: (newLine, variables, context) => {
+    onSuccess: (newLine, success) => {
       onAdd(newLine);
       onClose();
       reset();
-      snackbarUtils.success('Thêm thành công!');
       queryClient.invalidateQueries(['promotionLines']);
+      snackbarUtils.success(success);
     },
-    onError: (error: any) => {
-      snackbarUtils.error(` ${error.response?.data?.message || error.message}`);
+    onError(error) {
+      snackbarUtils.error(error);
     },
   });
 

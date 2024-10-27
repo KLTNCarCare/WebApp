@@ -131,7 +131,7 @@ const EditPriceCatalogModal = ({
       refetch();
       setIsSuccessDialogOpen(true);
       setIsLoading(false);
-      snackbarUtils.success('Update successful');
+      snackbarUtils.success('Cập nhật thành công!');
       onClose();
     },
     onError: (error) => {
@@ -143,18 +143,16 @@ const EditPriceCatalogModal = ({
   });
 
   const { mutate: updatePriceCatalog } = useUpdatePriceCatalog({
-    onSuccess: (data) => {
+    onSuccess: (success) => {
       refetch();
       setIsSuccessDialogOpen(true);
       setIsLoading(false);
-      snackbarUtils.success('Update successful');
       onClose();
+      snackbarUtils.success(success);
     },
-    onError: (error) => {
+    onError(error) {
+      snackbarUtils.error(error);
       setIsLoading(false);
-      snackbarUtils.error(
-        error.response?.data?.message || t('priceCatalog.updateError')
-      );
     },
   });
 

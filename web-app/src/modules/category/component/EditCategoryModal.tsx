@@ -17,6 +17,7 @@ import { useTranslation } from 'react-i18next';
 import { ReactComponent as CheckIcon } from '../../../assets/icons/CheckCircle.svg';
 import { useForm, SubmitHandler, useWatch } from 'react-hook-form';
 import { useUpdateCategory } from 'src/api/category/useUpdateCategory';
+import snackbarUtils from 'src/lib/snackbarUtils';
 
 const schemaUpdateCategory = yup.object({
   categoryName: yup.string().required('Vui lòng nhập tên khuyến mãi'),
@@ -70,12 +71,14 @@ const EditCategoryModal = ({
   }, [watchedCategoryName, categoryData.categoryName]);
 
   const { mutate: updateCategory } = useUpdateCategory({
-    onSuccess: () => {
+    onSuccess: (success) => {
       refetch();
       setIsSuccessDialogOpen(true);
       setIsLoading(false);
+      snackbarUtils.success(success);
     },
-    onError: (error) => {
+    onError(error) {
+      snackbarUtils.error(error);
       setIsLoading(false);
     },
   });
