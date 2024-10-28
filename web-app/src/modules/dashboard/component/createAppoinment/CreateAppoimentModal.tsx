@@ -46,8 +46,7 @@ dayjs.extend(utc);
 dayjs.extend(timezone);
 
 const schemaCreateAppointment = yup.object({
-  startTime: yup.date().required('Vui lòng nhập thời gian bắt đầu'),
-  // .min(new Date(), 'Thời gian bắt đầu phải lớn hơn thời gian hiện tại'),
+  // startTime: yup.date().required('Vui lòng nhập thời gian bắt đầu'),
 });
 
 type CreateAppointmentProps = {
@@ -89,7 +88,7 @@ function CreateAppointmentModal({
   } = useForm<{
     customer: { phone: string; name: string };
     vehicle: { licensePlate: string; model: string };
-    startTime: Date | undefined;
+    // startTime: Date | undefined;
     total_duration: number | undefined;
     notes: string;
     items: Item[];
@@ -97,7 +96,7 @@ function CreateAppointmentModal({
     defaultValues: {
       customer: { phone: '', name: '' },
       vehicle: { licensePlate: '', model: '' },
-      startTime: undefined,
+      // startTime: undefined,
       total_duration: 0,
       notes: '',
       items: [],
@@ -125,7 +124,6 @@ function CreateAppointmentModal({
       open && debouncedSearchText ? debouncedSearchText : ''
     );
 
-  const startTime = watch('startTime');
   const totalDuration = watch('total_duration');
 
   useEffect(() => {
@@ -192,7 +190,7 @@ function CreateAppointmentModal({
           customerVehicleData?.vehicle?.licensePlate ||
           data.vehicle.licensePlate,
       },
-      startTime: data.startTime,
+      startTime: new Date().getTime(),
       total_duration: data.total_duration,
       notes: data.notes,
       items: data.items.map((item: Item) => ({
@@ -210,8 +208,8 @@ function CreateAppointmentModal({
   };
 
   const totalPrice = fields.reduce((acc, field) => acc + (field.price ?? 0), 0);
-  const estimatedCompletionTime = startTime
-    ? dayjs(startTime)
+  const estimatedCompletionTime = new Date()
+    ? dayjs(new Date())
         .add(totalDuration ?? 0, 'hour')
         .format('YYYY-MM-DD HH:mm')
     : '';
@@ -411,42 +409,6 @@ function CreateAppointmentModal({
               {/* Additional Details Section */}
               <Box>
                 <Grid container spacing={2}>
-                  <Grid item xs={12} sm={6}>
-                    <Controller
-                      name="startTime"
-                      control={control}
-                      defaultValue={undefined}
-                      render={({ field }) => (
-                        <TextField
-                          {...field}
-                          label={t('priceCatalog.startDate')}
-                          type="datetime-local"
-                          InputLabelProps={{ shrink: true }}
-                          error={!!errors.startTime}
-                          helperText={errors.startTime?.message}
-                          fullWidth
-                          variant="filled"
-                          value={
-                            field.value
-                              ? dayjs(field.value).format('YYYY-MM-DDTHH:mm')
-                              : ''
-                          }
-                          onChange={(e) => {
-                            const date = new Date(e.target.value);
-                            if (
-                              date instanceof Date &&
-                              !isNaN(date.getTime())
-                            ) {
-                              field.onChange(date.getTime());
-                              setValue('startTime', date, {
-                                shouldValidate: true,
-                              });
-                            }
-                          }}
-                        />
-                      )}
-                    />
-                  </Grid>
                   <Grid item xs={12}>
                     <TextField
                       variant="filled"
