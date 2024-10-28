@@ -7,7 +7,7 @@ import LoadingState from './component/LoadingState';
 import SlotArea from './component/SlotArea';
 import AppointmentList from './component/AppointmentList';
 import CompletedAppointments from './component/CompletedAppointments';
-import CreateAppointmentModal from './component/CreateAppoimentModal';
+import CreateAppointmentModal from './component/createAppoinment/CreateAppoimentModal';
 import InvoiceDetailModal from './component/InvoiceDetailModal';
 import AppointmentsModal from './component/AppointmentsModal';
 import { useGetAppointmentInDay } from 'src/api/appointment/useGetAppointmentInDay';

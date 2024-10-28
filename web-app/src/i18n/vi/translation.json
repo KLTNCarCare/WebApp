@@ -334,6 +334,11 @@
     "createSuccess": "Khách hàng đã được thêm thành công",
     "search": "Nhập từ khóa",
     "details": "Thông tin",
-    "invoiceHistory": "Lịch sử hóa đơn"
+    "invoiceHistory": "Lịch sử hóa đơn",
+    "newCustomer": "Khách cũ",
+    "existingCustomer": "Khách mới",
+    "searchByPhone": "Tìm kiếm theo số điện thoại",
+    "selectCustomer": "Chọn khách hàng",
+    "selectVehicle": "Chọn xe"
   }
 }

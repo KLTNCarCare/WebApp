@@ -4,7 +4,7 @@ import { useDrop } from 'react-dnd';
 import { useTranslation } from 'react-i18next';
 import { useInProgressAppointment } from 'src/api/appointment/useInProgressAppoinment';
 import DraggableAppointment from './DraggableAppointment';
-import CreateAppointmentModal from './CreateAppoimentModal';
+import CreateAppointmentModal from './createAppoinment/CreateAppoimentModal';
 
 const ItemTypes = {
   APPOINTMENT: 'appointment',

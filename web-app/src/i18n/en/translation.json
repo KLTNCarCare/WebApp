@@ -327,6 +327,11 @@
     "search": "Search",
     "details": "Details",
     "invoiceHistory": "Invoice History",
-    "selectField": "Select Field"
+    "selectField": "Select Field",
+    "newCustomer": "New Customer",
+    "existingCustomer": "Existing Customer",
+    "searchByPhone": "Search by phone",
+    "selectCustomer": "Select Customer",
+    "selectVehicle": "Select Vehicle"
   }
 }

@@ -5,6 +5,7 @@ import {
   SubmitHandler,
   useFieldArray,
   Controller,
+  FormProvider,
 } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
@@ -39,15 +40,12 @@ import utc from 'dayjs/plugin/utc';
 import timezone from 'dayjs/plugin/timezone';
 import useDebounce from 'src/lib/hooks/useDebounce';
 import snackbarUtils from 'src/lib/snackbarUtils';
+import CustomerVehicleInfo from './CustomerVehicleInfo';
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
 
 const schemaCreateAppointment = yup.object({
-  customer: yup.object({
-    phone: yup.string().required('Vui lòng nhập số điện thoại'),
-    name: yup.string().required('Vui lòng nhập tên khách hàng'),
-  }),
   startTime: yup.date().required('Vui lòng nhập thời gian bắt đầu'),
   // .min(new Date(), 'Thời gian bắt đầu phải lớn hơn thời gian hiện tại'),
 });
@@ -87,6 +85,7 @@ function CreateAppointmentModal({
     handleSubmit,
     setValue,
     watch,
+    reset,
   } = useForm<{
     customer: { phone: string; name: string };
     vehicle: { licensePlate: string; model: string };
@@ -115,6 +114,11 @@ function CreateAppointmentModal({
   const [searchText, setSearchText] = useState('');
   const debouncedSearchText = useDebounce(searchText, 500);
   const [selectedServices, setSelectedServices] = useState<Item[]>([]);
+  const [customerVehicleData, setCustomerVehicleData] = useState<{
+    customer: { phone: string; name: string };
+    vehicle: { licensePlate: string; model: string };
+  } | null>(null);
+  const methods = useForm();
 
   const { data: services = [], isLoading: loadingServices } =
     useGetCurrentServiceActive(
@@ -169,6 +173,7 @@ function CreateAppointmentModal({
       if (setIsAddAppointment) setIsAddAppointment(false);
       onClose();
       snackbarUtils.success(success);
+      reset();
     },
     onError(error) {
       snackbarUtils.error(error);
@@ -177,8 +182,16 @@ function CreateAppointmentModal({
 
   const handleCreateAppointment: SubmitHandler<any> = (data) => {
     const appointmentData = {
-      customer: data.customer,
-      vehicle: data.vehicle,
+      customer: {
+        phone: customerVehicleData?.customer?.phone || data.customer.phone,
+        name: customerVehicleData?.customer?.name || data.customer.name,
+      },
+      vehicle: {
+        model: customerVehicleData?.vehicle?.model || data.vehicle.model,
+        licensePlate:
+          customerVehicleData?.vehicle?.licensePlate ||
+          data.vehicle.licensePlate,
+      },
       startTime: data.startTime,
       total_duration: data.total_duration,
       notes: data.notes,
@@ -218,92 +231,13 @@ function CreateAppointmentModal({
           >
             <Stack spacing={3} sx={{ paddingTop: '10px' }}>
               {/* Customer Info Section */}
-              <Box>
-                <Typography variant="h5" gutterBottom>
-                  {t('priceCatalog.customerInfo')}
-                </Typography>
-                <Grid container spacing={2}>
-                  <Grid item xs={12} sm={6}>
-                    <TextField
-                      required
-                      variant="filled"
-                      label={t('priceCatalog.customerName')}
-                      type="text"
-                      {...register('customer.name')}
-                      inputProps={{ inputMode: 'text' }}
-                      error={!!errors.customer?.name}
-                      helperText={
-                        errors.customer?.name
-                          ? String(errors.customer.name.message)
-                          : ''
-                      }
-                      fullWidth
-                    />
-                  </Grid>
-                  <Grid item xs={12} sm={6}>
-                    <TextField
-                      required
-                      variant="filled"
-                      label={t('priceCatalog.customerPhone')}
-                      type="text"
-                      {...register('customer.phone')}
-                      inputProps={{ inputMode: 'text' }}
-                      error={!!errors.customer?.phone}
-                      helperText={
-                        errors.customer?.phone
-                          ? String(errors.customer.phone.message)
-                          : ''
-                      }
-                      fullWidth
-                    />
-                  </Grid>
-                </Grid>
-              </Box>
-              <Divider sx={{ my: 2 }} />
-
-              {/* Vehicle Info Section */}
-              <Box>
-                <Typography variant="h5" gutterBottom>
-                  {t('priceCatalog.vehicleInfo')}
-                </Typography>
-                <Grid container spacing={2}>
-                  <Grid item xs={12} sm={6}>
-                    <TextField
-                      required
-                      variant="filled"
-                      label={t('priceCatalog.vehicleModel')}
-                      type="text"
-                      {...register('vehicle.model')}
-                      inputProps={{ inputMode: 'text' }}
-                      error={!!errors.vehicle?.model}
-                      helperText={
-                        errors.vehicle?.model
-                          ? String(errors.vehicle.model.message)
-                          : ''
-                      }
-                      fullWidth
-                    />
-                  </Grid>
-                  <Grid item xs={12} sm={6}>
-                    <TextField
-                      required
-                      variant="filled"
-                      label={t('priceCatalog.vehicleLicensePlate')}
-                      type="text"
-                      {...register('vehicle.licensePlate')}
-                      inputProps={{ inputMode: 'text' }}
-                      error={!!errors.vehicle?.licensePlate}
-                      helperText={
-                        errors.vehicle?.licensePlate
-                          ? String(errors.vehicle.licensePlate.message)
-                          : ''
-                      }
-                      fullWidth
-                    />
-                  </Grid>
-                </Grid>
-              </Box>
-              <Divider sx={{ my: 2 }} />
+              <FormProvider {...methods}>
+                <CustomerVehicleInfo
+                  onCustomerVehicleChange={(data) => {
+                    setCustomerVehicleData(data);
+                  }}
+                />
+              </FormProvider>
 
               {/* Service Selection Section */}
               <Box>

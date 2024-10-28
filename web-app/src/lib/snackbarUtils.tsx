@@ -43,7 +43,6 @@ const trimMessage = (
 };
 
 const getErrorMessage = (error: any): string => {
-  console.log(error.response);
   if (error.response && error.response.data && error.response.data.message) {
     return error.response.data.message;
   }
@@ -56,7 +55,6 @@ const getErrorMessage = (error: any): string => {
 };
 
 const getSuccessMessage = (response: any): string => {
-  console.log(response);
   if (response && response.message) {
     return response.message;
   }
