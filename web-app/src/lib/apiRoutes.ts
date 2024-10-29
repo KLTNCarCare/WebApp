@@ -84,6 +84,9 @@ const apiRoutes = {
     getRefundInvoice: 'v1/api/invoice/get-all-invoice-refund',
     createRefund: 'v1/api/invoice/create-invoice-refund',
   },
+  payment: {
+    payZaloPay: (id: string) => `v1/api/payment/create-payment-url/${id}`,
+  },
   socket: {
     staff: 'http://localhost:8080/sockjs/staff',
   },

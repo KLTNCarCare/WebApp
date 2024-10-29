@@ -14,6 +14,7 @@ import { useTranslation } from 'react-i18next';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useConfirmPayInvoice } from 'src/api/invoice/usePayInvoice';
+import { usePayZaloPay } from 'src/api/payment/usePaymentZaloPay';
 
 interface PaymentModalProps {
   open: boolean;
@@ -40,23 +41,32 @@ const PaymentModal: React.FC<PaymentModalProps> = ({
   const [paymentMethod, setPaymentMethod] = useState('cash');
   const [invoiceDetails, setInvoiceDetails] = useState<any>(null);
 
-  const { mutate: confirmPayInvoice, isLoading } = useConfirmPayInvoice({
-    onSuccess: (data) => {
-      console.log('Payment successful', data);
-      toast.success(
-        t('invoice.paymentConfirmation', {
-          invoiceAmount,
-          customerName,
-          customerPhone,
-        })
-      );
-      setInvoiceDetails(data);
-      onSubmit(paymentMethod, data);
-      refetch();
+  const { mutate: confirmPayInvoice, isLoading: isConfirming } =
+    useConfirmPayInvoice({
+      onSuccess: (data) => {
+        toast.success(
+          t('invoice.paymentConfirmation', {
+            invoiceAmount,
+            customerName,
+            customerPhone,
+          })
+        );
+        setInvoiceDetails(data);
+        onSubmit(paymentMethod, data);
+        refetch();
+        onClose();
+      },
+      onError: (error) => {
+        toast.error(t('invoice.paymentFailed'));
+      },
+    });
+
+  const { mutate: payZaloPay, isLoading: isPayingZaloPay } = usePayZaloPay({
+    onSuccess: (url) => {
+      window.open(url, '_blank');
       onClose();
     },
     onError: (error) => {
-      console.error('Payment failed', error);
       toast.error(t('invoice.paymentFailed'));
     },
   });
@@ -69,10 +79,14 @@ const PaymentModal: React.FC<PaymentModalProps> = ({
 
   const handlePaymentSubmit = () => {
     console.log('Submitting payment', { appointmentId, paymentMethod });
-    confirmPayInvoice({
-      appointmentId,
-      paymentMethod,
-    });
+    if (paymentMethod === 'zalopay') {
+      payZaloPay({ appointmentId });
+    } else {
+      confirmPayInvoice({
+        appointmentId,
+        paymentMethod,
+      });
+    }
   };
 
   return (
@@ -86,9 +100,9 @@ const PaymentModal: React.FC<PaymentModalProps> = ({
             label={t('invoice.cash')}
           />
           <FormControlLabel
-            value="credit_card"
+            value="zalopay"
             control={<Radio />}
-            label={t('invoice.credit')}
+            label={t('invoice.zaloPay')}
           />
           <FormControlLabel
             value="bank_transfer"
@@ -120,9 +134,11 @@ const PaymentModal: React.FC<PaymentModalProps> = ({
           onClick={handlePaymentSubmit}
           color="primary"
           variant="contained"
-          disabled={isLoading}
+          disabled={isConfirming || isPayingZaloPay}
         >
-          {isLoading ? t('invoice.submiting') : t('invoice.submitPayment')}
+          {isConfirming || isPayingZaloPay
+            ? t('invoice.submiting')
+            : t('invoice.submitPayment')}
         </Button>
       </DialogActions>
     </Dialog>

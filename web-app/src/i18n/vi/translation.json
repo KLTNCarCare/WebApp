@@ -307,7 +307,8 @@
     "reason": "Lý do",
     "refund": "Yêu cầu hoàn tiền",
     "refundInvoice": "Tạo hóa đơn trả",
-    "refundReason": "Lý do hoàn tiền"
+    "refundReason": "Lý do hoàn tiền",
+    "zaloPay": "ZaloPay"
   },
   "customer": {
     "userCustomerManagement": "Quản lý khách hàng",

@@ -114,6 +114,7 @@ const DashboardPage: React.FC = () => {
       'CONFIRMED-APPOINTMENT',
       'IN-PROGRESS-APPOINTMENT',
       'COMPLETED-APPOINTMENT',
+      'SAVE-INVOICE',
     ];
 
     if (
