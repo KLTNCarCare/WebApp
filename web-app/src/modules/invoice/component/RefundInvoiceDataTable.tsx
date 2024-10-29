@@ -41,7 +41,7 @@ const createRefundInvoiceColumns = (
   {
     field: 'id',
     headerName: t('invoice.index'),
-    maxWidth: 100,
+    maxWidth: 50,
     flex: 1,
     valueGetter: (params: GridValueGetterParams) => {
       const allRowIds = params.api.getAllRowIds();
@@ -51,10 +51,10 @@ const createRefundInvoiceColumns = (
   {
     field: 'invoiceId',
     headerName: t('invoice.invoiceId'),
-    maxWidth: 150,
+    maxWidth: 200,
     flex: 1,
     valueGetter: (params: GridValueGetterParams) =>
-      params.row.invoice.invoiceId || '',
+      params.row.invoiceRefundId || '',
   },
   {
     field: 'custId',

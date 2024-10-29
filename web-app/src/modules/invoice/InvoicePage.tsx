@@ -127,6 +127,7 @@ export function InvoicePage() {
               setSearchText={setInputValue}
               selectedField={selectedField}
               setSelectedField={setSelectedField}
+              isReturnInvoice={selectedTab === 1}
             />
           </Stack>
         </Paper>

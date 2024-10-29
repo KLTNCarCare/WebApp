@@ -8,7 +8,6 @@ import {
   SelectChangeEvent,
   Stack,
   TextField,
-  Typography,
 } from '@mui/material';
 import React from 'react';
 import { ReactComponent as SearchIcon } from '../../../../assets/icons/Search.svg';
@@ -19,6 +18,7 @@ interface FilterFormInvoiceProps {
   setSearchText: (value: string) => void;
   selectedField: string;
   setSelectedField: (value: string) => void;
+  isReturnInvoice: boolean;
 }
 
 const FilterFormInvoice = ({
@@ -26,6 +26,7 @@ const FilterFormInvoice = ({
   setSearchText,
   selectedField,
   setSelectedField,
+  isReturnInvoice,
 }: FilterFormInvoiceProps) => {
   const { t } = useTranslation();
   const inputRef = React.useRef<HTMLInputElement>(null);
@@ -33,9 +34,48 @@ const FilterFormInvoice = ({
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
     setSearchText(event.target.value);
   };
+
   const handleFieldChange = (event: SelectChangeEvent<string>): void => {
     setSelectedField(event.target.value as string);
   };
+
+  React.useEffect(() => {
+    console.log('isReturnInvoice:', isReturnInvoice);
+  }, [isReturnInvoice]);
+
+  React.useEffect(() => {
+    console.log('selectedField:', selectedField);
+  }, [selectedField]);
+
+  const invoiceFields = [
+    <MenuItem key="invoiceId" value="invoiceId">
+      {t('invoice.invoiceId')}
+    </MenuItem>,
+    <MenuItem key="customer.name" value="customer.name">
+      {t('customer.customerName')}
+    </MenuItem>,
+    <MenuItem key="customer.phone" value="customer.phone">
+      {t('customer.phone')}
+    </MenuItem>,
+    <MenuItem key="customer.custId" value="customer.custId">
+      {t('customer.customerId')}
+    </MenuItem>,
+  ];
+
+  const returnInvoiceFields = [
+    <MenuItem key="invoice.invoiceId" value="invoice.invoiceId">
+      {t('invoice.invoiceId')}
+    </MenuItem>,
+    <MenuItem key="invoice.customer.name" value="invoice.customer.name">
+      {t('customer.customerName')}
+    </MenuItem>,
+    <MenuItem key="invoice.customer.phone" value="invoice.customer.phone">
+      {t('customer.phone')}
+    </MenuItem>,
+    <MenuItem key="invoice.customer.custId" value="invoice.customer.custId">
+      {t('customer.customerId')}
+    </MenuItem>,
+  ];
 
   return (
     <Box sx={{ p: '5px 10px 0px 10vh' }}>
@@ -53,14 +93,7 @@ const FilterFormInvoice = ({
             onChange={handleFieldChange}
             label={t('dashboard.selectField')}
           >
-            <MenuItem value="invoiceId">{t('invoice.invoiceId')}</MenuItem>
-            <MenuItem value="customer.name">
-              {t('customer.customerName')}
-            </MenuItem>
-            <MenuItem value="customer.phone">{t('customer.phone')}</MenuItem>
-            <MenuItem value="customer.custId">
-              {t('customer.customerId')}
-            </MenuItem>
+            {isReturnInvoice ? returnInvoiceFields : invoiceFields}
           </Select>
         </FormControl>
         <TextField
