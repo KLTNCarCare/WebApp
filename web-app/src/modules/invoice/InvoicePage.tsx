@@ -1,10 +1,8 @@
 import { useEffect, useState } from 'react';
 import {
   Box,
-  Button,
   ButtonBase,
   Dialog,
-  DialogContent,
   DialogTitle,
   Paper,
   Stack,
@@ -28,6 +26,7 @@ import {
 import InvoiceDataTable from './component/InvoiceDataTable';
 import RefundInvoiceDataTable from './component/RefundInvoiceDataTable';
 import FilterFormInvoice from './component/filter/FilterFormInvoice';
+import useSocket from 'src/lib/socket';
 
 export function InvoicePage() {
   const { t } = useTranslation();
@@ -74,6 +73,20 @@ export function InvoicePage() {
   const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
     setSelectedTab(newValue);
   };
+
+  const { messages } = useSocket('user-id');
+
+  useEffect(() => {
+    const messageTypesToRefetch = ['SAVE-INVOICE-REFUND'];
+
+    if (
+      messages.some((message: any) =>
+        messageTypesToRefetch.includes(message.mess_type)
+      )
+    ) {
+      refetchRefund();
+    }
+  }, [messages, refetchRefund]);
 
   return (
     <AdminLayout
@@ -160,7 +173,7 @@ export function InvoicePage() {
               <RefundInvoiceDataTable
                 dataInvoice={refundInvoiceList}
                 isLoadingInvoice={isRefundLoading}
-                refetch={refetch}
+                refetch={refetchRefund}
                 paginationModel={paginationModelRefund}
                 setPaginationModel={setPaginationModelRefund}
                 totalPage={totalPageRefund}
