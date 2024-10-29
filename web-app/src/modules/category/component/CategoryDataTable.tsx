@@ -131,6 +131,8 @@ const CategoryDataTable: React.FC<CategoryDataTableProps> = ({
     }
   }, [selectedCategory, paginationModel.page]);
 
+  // useEffect(() => {}, [selectedCategory, paginationModel]);
+
   return (
     <>
       <Paper>

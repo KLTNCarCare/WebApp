@@ -203,10 +203,7 @@ const PriceCatalogDataTable: React.FC<PriceCatalogDataTableProps> = ({
   //     }
   //   }
   // }, [selectedPriceCatalog, paginationModel.page]);
-  useEffect(() => {
-    console.log('Selected Category:', selectedPriceCatalog);
-    console.log('Current Pagination Model:', paginationModel);
-  }, [selectedPriceCatalog, paginationModel]);
+  useEffect(() => {}, [selectedPriceCatalog, paginationModel]);
 
   return (
     <>

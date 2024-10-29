@@ -10,6 +10,8 @@ import {
   Stack,
   Toolbar,
   Typography,
+  Tabs,
+  Tab,
 } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import CloseIcon from '@mui/icons-material/Close';
@@ -17,14 +19,24 @@ import { TEN_ITEMS_PAGE } from 'src/lib/constants';
 import useDebounce from 'src/lib/hooks/useDebounce';
 import AdminLayout from 'src/components/layouts/AdminLayout';
 import { useGetListInvoice } from 'src/api/invoice/useGetAllInvoice';
+import { useGetRefundInvoice } from 'src/api/refundInvoice/useGetRefundInvoice';
 import { Invoice } from 'src/api/invoice/types';
+import {
+  RefundInvoiceResponse,
+  InvoiceData as RefundInvoiceData,
+} from 'src/api/refundInvoice/types';
 import InvoiceDataTable from './component/InvoiceDataTable';
+import RefundInvoiceDataTable from './component/RefundInvoiceDataTable';
 import FilterFormInvoice from './component/filter/FilterFormInvoice';
 
 export function InvoicePage() {
   const { t } = useTranslation();
   const [isCollapse, setIsCollapse] = useState<boolean>(false);
   const [paginationModel, setPaginationModel] = useState({
+    page: 0,
+    pageSize: TEN_ITEMS_PAGE,
+  });
+  const [paginationModelRefund, setPaginationModelRefund] = useState({
     page: 0,
     pageSize: TEN_ITEMS_PAGE,
   });
@@ -41,8 +53,27 @@ export function InvoicePage() {
     word: debounceValue,
   });
 
-  const totalPage = data?.totalPage || 0;
+  const {
+    data: refundData,
+    isLoading: isRefundLoading,
+    refetch: refetchRefund,
+  } = useGetRefundInvoice({
+    page: paginationModelRefund.page + 1,
+    limit: paginationModelRefund.pageSize,
+    field: selectedField,
+    word: debounceValue,
+  });
+
+  const totalPageInvoice = data?.totalPage || 0;
   const invoiceList: Invoice[] = data?.data ?? [];
+  const totalPageRefund = refundData?.totalPage || 0;
+  const refundInvoiceList: RefundInvoiceData[] = refundData?.data ?? [];
+
+  const [selectedTab, setSelectedTab] = useState(0);
+
+  const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
+    setSelectedTab(newValue);
+  };
 
   return (
     <AdminLayout
@@ -94,22 +125,48 @@ export function InvoicePage() {
             borderRadius: 2,
             zIndex: 1,
             boxShadow: 'none',
-            height: '70vh',
-            paddingBottom: '0px',
+            height: 'calc(100vh - 200px)',
+            overflowY: 'auto',
           }}
         >
-          <Typography variant="h5" sx={{ paddingBottom: 2 }}>
-            {t('invoice.invoiceList')}
-          </Typography>
-
-          <InvoiceDataTable
-            dataInvoice={invoiceList}
-            isLoadingInvoice={isLoading}
-            refetch={refetch}
-            paginationModel={paginationModel}
-            setPaginationModel={setPaginationModel}
-            totalPage={totalPage}
-          />
+          <Tabs
+            value={selectedTab}
+            onChange={handleTabChange}
+            aria-label="invoice tabs"
+          >
+            <Tab label={t('invoice.invoice')} />
+            <Tab label={t('invoice.returnInvoice')} />
+          </Tabs>
+          {selectedTab === 0 && (
+            <div>
+              <Typography variant="h5" sx={{ paddingBottom: 2 }}>
+                {t('invoice.invoiceList')}
+              </Typography>
+              <InvoiceDataTable
+                dataInvoice={invoiceList}
+                isLoadingInvoice={isLoading}
+                refetch={refetch}
+                paginationModel={paginationModel}
+                setPaginationModel={setPaginationModel}
+                totalPage={totalPageInvoice}
+              />
+            </div>
+          )}
+          {selectedTab === 1 && (
+            <div>
+              <Typography variant="h5" sx={{ paddingBottom: 2 }}>
+                {t('invoice.refundInvoiceList')}
+              </Typography>
+              <RefundInvoiceDataTable
+                dataInvoice={refundInvoiceList}
+                isLoadingInvoice={isRefundLoading}
+                refetch={refetch}
+                paginationModel={paginationModelRefund}
+                setPaginationModel={setPaginationModelRefund}
+                totalPage={totalPageRefund}
+              />
+            </div>
+          )}
         </Paper>
       </Box>
       <Dialog
@@ -146,3 +203,5 @@ export function InvoicePage() {
     </AdminLayout>
   );
 }
+
+export default InvoicePage;

@@ -16,13 +16,12 @@ import {
 import { DataGrid, GridColDef, GridValueGetterParams } from '@mui/x-data-grid';
 import { useTranslation } from 'react-i18next';
 import EmptyScreen from 'src/components/layouts/EmtyScreen';
-import { Invoice } from 'src/api/invoice/types';
-import CreateRefundInvoice from './CreateRefundInvoice';
+import { InvoiceData } from 'src/api/refundInvoice/types';
 
-interface InvoiceDetailModalProps {
+interface RefundInvoiceDetailModalProps {
   open: boolean;
   onClose: () => void;
-  invoiceData: Invoice | null;
+  invoiceData: InvoiceData | null;
   refetch: () => void;
   isLoadingInvoice: boolean;
   paginationModel: { pageSize: number; page: number };
@@ -72,7 +71,7 @@ const createItemColumns = (t: (key: string) => string): GridColDef[] => [
   },
 ];
 
-const InvoiceDetailModal: React.FC<InvoiceDetailModalProps> = ({
+const RefundInvoiceDetailModal: React.FC<RefundInvoiceDetailModalProps> = ({
   open,
   onClose,
   invoiceData,
@@ -84,21 +83,11 @@ const InvoiceDetailModal: React.FC<InvoiceDetailModalProps> = ({
 }) => {
   const { t } = useTranslation();
   const [printModalOpen, setPrintModalOpen] = useState(false);
-  const [refundModalOpen, setRefundModalOpen] = useState(false);
+
   const itemColumns = createItemColumns(t);
 
   const handlePrint = () => {
     setPrintModalOpen(true);
-  };
-
-  const handleRefundClose = () => {
-    setRefundModalOpen(false);
-    refetch();
-  };
-
-  const handleRefundSuccess = () => {
-    handleRefundClose();
-    onClose();
   };
 
   useEffect(() => {
@@ -120,7 +109,7 @@ const InvoiceDetailModal: React.FC<InvoiceDetailModalProps> = ({
       <Dialog open={open} onClose={onClose} fullWidth maxWidth="md">
         <DialogTitle>
           <Typography variant="h2" align="center">
-            {t('invoice.invoiceDetails')}
+            {t('invoice.refundInvoiceDetails')}
           </Typography>
         </DialogTitle>
         <DialogContent>
@@ -128,7 +117,7 @@ const InvoiceDetailModal: React.FC<InvoiceDetailModalProps> = ({
             <Box key={invoice._id} sx={{ mb: 2, textAlign: 'center' }}>
               <Typography variant="h4">{t('invoice.header')}</Typography>
               <List>
-                {invoice.invoiceId && (
+                {invoice.invoice.invoiceId && (
                   <>
                     <ListItem>
                       <ListItemText primary={t('invoice.invoiceId')} />
@@ -137,13 +126,13 @@ const InvoiceDetailModal: React.FC<InvoiceDetailModalProps> = ({
                         textAlign="right"
                         color="grey.600"
                       >
-                        {invoice.invoiceId}
+                        {invoice.invoice.invoiceId}
                       </Typography>
                     </ListItem>
                     <Divider variant="middle" />
                   </>
                 )}
-                {invoice.customer.custId && (
+                {invoice.invoice.customer.custId && (
                   <>
                     <ListItem>
                       <ListItemText primary={t('invoice.custID')} />
@@ -152,13 +141,13 @@ const InvoiceDetailModal: React.FC<InvoiceDetailModalProps> = ({
                         textAlign="right"
                         color="grey.600"
                       >
-                        {invoice.customer.custId}
+                        {invoice.invoice.customer.custId}
                       </Typography>
                     </ListItem>
                     <Divider variant="middle" />
                   </>
                 )}
-                {invoice.customer.name && (
+                {invoice.invoice.customer.name && (
                   <>
                     <ListItem>
                       <ListItemText primary={t('invoice.customerName')} />
@@ -167,13 +156,13 @@ const InvoiceDetailModal: React.FC<InvoiceDetailModalProps> = ({
                         textAlign="right"
                         color="grey.600"
                       >
-                        {invoice.customer.name}
+                        {invoice.invoice.customer.name}
                       </Typography>
                     </ListItem>
                     <Divider variant="middle" />
                   </>
                 )}
-                {invoice.customer.phone && (
+                {invoice.invoice.customer.phone && (
                   <>
                     <ListItem>
                       <ListItemText primary={t('invoice.customerPhone')} />
@@ -182,13 +171,13 @@ const InvoiceDetailModal: React.FC<InvoiceDetailModalProps> = ({
                         textAlign="right"
                         color="grey.600"
                       >
-                        {invoice.customer.phone}
+                        {invoice.invoice.customer.phone}
                       </Typography>
                     </ListItem>
                     <Divider variant="middle" />
                   </>
                 )}
-                {invoice.vehicle.licensePlate && (
+                {invoice.invoice.vehicle.licensePlate && (
                   <>
                     <ListItem>
                       <ListItemText
@@ -199,13 +188,13 @@ const InvoiceDetailModal: React.FC<InvoiceDetailModalProps> = ({
                         textAlign="right"
                         color="grey.600"
                       >
-                        {invoice.vehicle.licensePlate}
+                        {invoice.invoice.vehicle.licensePlate}
                       </Typography>
                     </ListItem>
                     <Divider variant="middle" />
                   </>
                 )}
-                {invoice.vehicle.model && (
+                {invoice.invoice.vehicle.model && (
                   <>
                     <ListItem>
                       <ListItemText primary={t('invoice.vehicleModel')} />
@@ -214,7 +203,7 @@ const InvoiceDetailModal: React.FC<InvoiceDetailModalProps> = ({
                         textAlign="right"
                         color="grey.600"
                       >
-                        {invoice.vehicle.model}
+                        {invoice.invoice.vehicle.model}
                       </Typography>
                     </ListItem>
                     <Divider variant="middle" />
@@ -235,16 +224,16 @@ const InvoiceDetailModal: React.FC<InvoiceDetailModalProps> = ({
                     <Divider variant="middle" />
                   </>
                 )}
-                {invoice.updatedAt && (
+                {invoice.reason && (
                   <>
                     <ListItem>
-                      <ListItemText primary={t('invoice.updatedAt')} />
+                      <ListItemText primary={t('invoice.reason')} />
                       <Typography
                         variant="body2"
                         textAlign="right"
                         color="grey.600"
                       >
-                        {new Date(invoice.updatedAt).toLocaleDateString()}
+                        {invoice.reason}
                       </Typography>
                     </ListItem>
                     <Divider variant="middle" />
@@ -263,12 +252,12 @@ const InvoiceDetailModal: React.FC<InvoiceDetailModalProps> = ({
                 <Typography variant="h4">{t('invoice.items')}</Typography>
                 <Paper sx={{ flex: 1, p: 2 }}>
                   <DataGrid
-                    rows={invoice.items || []}
+                    rows={invoice.invoice.items || []}
                     columns={itemColumns}
                     pagination
                     paginationModel={{
-                      pageSize: invoiceData.items?.length || 0,
-                      page: 0,
+                      pageSize: paginationModel.pageSize,
+                      page: paginationModel.page,
                     }}
                     onPaginationModelChange={(model) =>
                       setPaginationModel(model)
@@ -303,9 +292,10 @@ const InvoiceDetailModal: React.FC<InvoiceDetailModalProps> = ({
               >
                 <Typography variant="h4">{t('invoice.promotion')}</Typography>
                 <Paper sx={{ flex: 1, p: 2 }}>
-                  {invoice.promotion && invoice.promotion.length > 0 ? (
+                  {invoice.invoice.promotion &&
+                  invoice.invoice.promotion.length > 0 ? (
                     <DataGrid
-                      rows={invoice.promotion || []}
+                      rows={invoice.invoice.promotion || []}
                       columns={[
                         {
                           field: 'code',
@@ -322,8 +312,8 @@ const InvoiceDetailModal: React.FC<InvoiceDetailModalProps> = ({
                       ]}
                       pagination
                       paginationModel={{
-                        pageSize: invoiceData.items?.length || 0,
-                        page: 0,
+                        pageSize: paginationModel.pageSize,
+                        page: paginationModel.page,
                       }}
                       onPaginationModelChange={(model) =>
                         setPaginationModel(model)
@@ -371,7 +361,7 @@ const InvoiceDetailModal: React.FC<InvoiceDetailModalProps> = ({
                       {new Intl.NumberFormat('vi-VN', {
                         style: 'currency',
                         currency: 'VND',
-                      }).format(invoice.sub_total)}
+                      }).format(invoice.invoice.sub_total)}
                     </Typography>
                   </ListItem>
                   <Divider variant="middle" />
@@ -382,11 +372,11 @@ const InvoiceDetailModal: React.FC<InvoiceDetailModalProps> = ({
                       textAlign="right"
                       color="grey.600"
                     >
-                      {invoice.discount.per}% (
+                      {invoice.invoice.discount.per}% (
                       {new Intl.NumberFormat('vi-VN', {
                         style: 'currency',
                         currency: 'VND',
-                      }).format(invoice.discount.value_max)}
+                      }).format(invoice.invoice.discount.value_max)}
                       )
                     </Typography>
                   </ListItem>
@@ -401,7 +391,7 @@ const InvoiceDetailModal: React.FC<InvoiceDetailModalProps> = ({
                       {new Intl.NumberFormat('vi-VN', {
                         style: 'currency',
                         currency: 'VND',
-                      }).format(invoice.final_total)}
+                      }).format(invoice.invoice.final_total)}
                     </Typography>
                   </ListItem>
                 </List>
@@ -418,28 +408,10 @@ const InvoiceDetailModal: React.FC<InvoiceDetailModalProps> = ({
           <Button onClick={handlePrint} color="primary" variant="contained">
             {t('invoice.print')}
           </Button>
-          {!invoiceData.isRefund && (
-            <Button
-              onClick={() => setRefundModalOpen(true)}
-              color="primary"
-              variant="contained"
-            >
-              {t('invoice.refund')}
-            </Button>
-          )}
         </DialogActions>
       </Dialog>
-
-      {/* Refund Invoice Modal */}
-      <CreateRefundInvoice
-        open={refundModalOpen}
-        onClose={handleRefundClose}
-        invoiceId={invoiceData._id}
-        refetch={refetch}
-        onSuccess={handleRefundSuccess}
-      />
     </>
   );
 };
 
-export default InvoiceDetailModal;
+export default RefundInvoiceDetailModal;

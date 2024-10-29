@@ -11,8 +11,8 @@ import { useTranslation } from 'react-i18next';
 import { TEN_ITEMS_PAGE } from 'src/lib/constants';
 import CustomPagination from 'src/components/CustomPagination';
 import EmptyScreen from 'src/components/layouts/EmtyScreen';
-import { Invoice } from 'src/api/invoice/types';
-import InvoiceDetailModal from './InvoiceDetailModal';
+import { InvoiceData } from 'src/api/refundInvoice/types';
+import RefundInvoiceDetailModal from './RefundInvoiceDetailModal';
 import { makeStyles } from '@mui/styles';
 
 const useStyles = makeStyles({
@@ -21,8 +21,8 @@ const useStyles = makeStyles({
   },
 });
 
-interface InvoiceDataTableProps {
-  dataInvoice: any[];
+interface RefundInvoiceDataTableProps {
+  dataInvoice: InvoiceData[];
   isLoadingInvoice: boolean;
   refetch: () => void;
   paginationModel: { page: number; pageSize: number };
@@ -32,7 +32,7 @@ interface InvoiceDataTableProps {
   totalPage: number;
 }
 
-const createInvoiceColumns = (
+const createRefundInvoiceColumns = (
   t: (key: string) => string,
   handleStatusClick: (id: string, currentStatus: string) => void,
   paginationModel: { page: number; pageSize: number },
@@ -44,10 +44,8 @@ const createInvoiceColumns = (
     maxWidth: 100,
     flex: 1,
     valueGetter: (params: GridValueGetterParams) => {
-      const index =
-        paginationModel.page * paginationModel.pageSize +
-        params.api.getAllRowIds().indexOf(params.id);
-      return index + 1;
+      const allRowIds = params.api.getAllRowIds();
+      return allRowIds.indexOf(params.id) + 1;
     },
   },
   {
@@ -55,7 +53,8 @@ const createInvoiceColumns = (
     headerName: t('invoice.invoiceId'),
     maxWidth: 150,
     flex: 1,
-    valueGetter: (params: GridValueGetterParams) => params.row.invoiceId || '',
+    valueGetter: (params: GridValueGetterParams) =>
+      params.row.invoice.invoiceId || '',
   },
   {
     field: 'custId',
@@ -63,15 +62,15 @@ const createInvoiceColumns = (
     maxWidth: 150,
     flex: 1,
     valueGetter: (params: GridValueGetterParams) =>
-      params.row.customer.custId || '',
+      params.row.invoice.customer.custId || '',
   },
   {
-    field: 'customerName',
+    field: 'name',
     headerName: t('invoice.customerName'),
     maxWidth: 150,
     flex: 1,
     valueGetter: (params: GridValueGetterParams) =>
-      params.row.customer.name || '',
+      params.row.invoice.customer.name || '',
   },
   {
     field: 'customerPhone',
@@ -79,7 +78,7 @@ const createInvoiceColumns = (
     maxWidth: 150,
     flex: 1,
     valueGetter: (params: GridValueGetterParams) =>
-      params.row.customer.phone || '',
+      params.row.invoice.customer.phone || '',
   },
   {
     field: 'vehicleLicensePlate',
@@ -87,7 +86,7 @@ const createInvoiceColumns = (
     maxWidth: 150,
     flex: 1,
     valueGetter: (params: GridValueGetterParams) =>
-      params.row.vehicle.licensePlate || '',
+      params.row.invoice.vehicle.licensePlate || '',
   },
   {
     field: 'vehicleModel',
@@ -95,7 +94,7 @@ const createInvoiceColumns = (
     maxWidth: 150,
     flex: 1,
     valueGetter: (params: GridValueGetterParams) =>
-      params.row.vehicle.model || '',
+      params.row.invoice.vehicle.model || '',
   },
   {
     field: 'createdAt',
@@ -107,19 +106,9 @@ const createInvoiceColumns = (
       return date.toLocaleDateString('vi-VN');
     },
   },
-  {
-    field: 'updatedAt',
-    headerName: t('invoice.updatedAt'),
-    maxWidth: 150,
-    flex: 1,
-    valueGetter: (params: GridValueGetterParams) => {
-      const date = new Date(params.row.updatedAt);
-      return date.toLocaleDateString('vi-VN');
-    },
-  },
 ];
 
-const InvoiceDataTable: React.FC<InvoiceDataTableProps> = ({
+const RefundInvoiceDataTable: React.FC<RefundInvoiceDataTableProps> = ({
   dataInvoice,
   isLoadingInvoice,
   refetch,
@@ -129,11 +118,13 @@ const InvoiceDataTable: React.FC<InvoiceDataTableProps> = ({
 }) => {
   const { t } = useTranslation();
   const classes = useStyles();
-  const [selectedInvoice, setSelectedInvoice] = useState<Invoice | null>(null);
+  const [selectedInvoice, setSelectedInvoice] = useState<InvoiceData | null>(
+    null
+  );
   const [isDetailModalOpen, setIsDetailModalOpen] = useState(false);
 
   const handleRowClick = (params: GridRowParams) => {
-    setSelectedInvoice(params.row as Invoice);
+    setSelectedInvoice(params.row as InvoiceData);
     setIsDetailModalOpen(true);
   };
 
@@ -151,7 +142,7 @@ const InvoiceDataTable: React.FC<InvoiceDataTableProps> = ({
         <div style={{ height: '60vh', width: '100%' }}>
           <DataGrid
             rows={dataInvoice}
-            columns={createInvoiceColumns(
+            columns={createRefundInvoiceColumns(
               t,
               handleStatusClick,
               paginationModel,
@@ -174,7 +165,10 @@ const InvoiceDataTable: React.FC<InvoiceDataTableProps> = ({
                 <CustomPagination
                   paginationModel={paginationModel}
                   onPageChange={(page) =>
-                    setPaginationModel((prev) => ({ ...prev, page: page - 1 }))
+                    setPaginationModel((prev) => ({
+                      ...prev,
+                      page: page - 1,
+                    }))
                   }
                   totalPage={totalPage}
                 />
@@ -189,7 +183,7 @@ const InvoiceDataTable: React.FC<InvoiceDataTableProps> = ({
         </div>
       </Paper>
       {selectedInvoice && (
-        <InvoiceDetailModal
+        <RefundInvoiceDetailModal
           open={isDetailModalOpen}
           onClose={() => setIsDetailModalOpen(false)}
           onBack={() => setIsDetailModalOpen(false)}
@@ -204,4 +198,4 @@ const InvoiceDataTable: React.FC<InvoiceDataTableProps> = ({
   );
 };
 
-export default InvoiceDataTable;
+export default RefundInvoiceDataTable;

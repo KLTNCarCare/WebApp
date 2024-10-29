@@ -54,7 +54,7 @@ const FilterFormInvoice = ({
             label={t('dashboard.selectField')}
           >
             <MenuItem value="invoiceId">{t('invoice.invoiceId')}</MenuItem>
-            <MenuItem value="customer.customerName">
+            <MenuItem value="customer.name">
               {t('customer.customerName')}
             </MenuItem>
             <MenuItem value="customer.phone">{t('customer.phone')}</MenuItem>

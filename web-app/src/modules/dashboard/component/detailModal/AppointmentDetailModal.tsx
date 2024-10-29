@@ -29,12 +29,12 @@ const AppointmentDetailModal: React.FC<AppointmentDetailModalProps> = ({
   const { t } = useTranslation();
   const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
 
-  // Calculate total price
-  const totalPrice = item.items.reduce(
-    (total: number, service: any) => total + service.price,
-    0
-  );
-  const discountAmount = (totalPrice * item.discount.per) / 100;
+  const totalPrice =
+    item?.items?.reduce(
+      (total: number, service: any) => total + service.price,
+      0
+    ) || 0;
+  const discountAmount = (totalPrice * (item?.discount?.per || 0)) / 100;
   const finalPrice = totalPrice - discountAmount;
 
   const handleOpenPaymentModal = () => {
@@ -46,7 +46,6 @@ const AppointmentDetailModal: React.FC<AppointmentDetailModalProps> = ({
   };
 
   const handlePaymentSubmit = (paymentMethod: string) => {
-    // Logic to handle payment submission
     refetch();
     setIsPaymentModalOpen(false);
     onClose();
@@ -86,30 +85,32 @@ const AppointmentDetailModal: React.FC<AppointmentDetailModalProps> = ({
           <Grid container spacing={2}>
             <Grid item xs={6}>
               <Typography sx={{ color: 'text.primary', fontWeight: 'medium' }}>
-                {t('priceCatalog.customerName')}: {item.customer.name}
+                {t('priceCatalog.customerName')}:{' '}
+                {item?.customer?.name || t('dashboard.na')}
               </Typography>
               <Typography sx={{ color: 'text.primary', fontWeight: 'medium' }}>
-                {t('dashboard.phone')}: {item.customer.phone}
+                {t('dashboard.phone')}:{' '}
+                {item?.customer?.phone || t('dashboard.na')}
               </Typography>
               <Typography sx={{ color: 'text.primary', fontWeight: 'medium' }}>
                 {t('dashboard.licensePlate')}:{' '}
-                {item.vehicle.licensePlate ?? t('dashboard.na')}
+                {item?.vehicle?.licensePlate || t('dashboard.na')}
               </Typography>
               <Typography sx={{ color: 'text.primary', fontWeight: 'medium' }}>
                 {t('dashboard.vehicleModel')}:{' '}
-                {item.vehicle.model ?? t('dashboard.na')}
+                {item?.vehicle?.model || t('dashboard.na')}
               </Typography>
             </Grid>
             <Grid item xs={6}>
               <Typography sx={{ color: 'text.primary', fontWeight: 'medium' }}>
-                {t('dashboard.totalDuration')}: {item.total_duration}{' '}
+                {t('dashboard.totalDuration')}: {item?.total_duration || 0}{' '}
                 {t('dashboard.hours')}
               </Typography>
               <Typography sx={{ color: 'text.primary', fontWeight: 'medium' }}>
-                {t('dashboard.status')}: {t(`status.${item.status}`)}
+                {t('dashboard.status')}: {t(`status.${item?.status}`)}
               </Typography>
               <Typography sx={{ color: 'text.primary', fontWeight: 'medium' }}>
-                {t('dashboard.createdAt')}: {formatDateTime(item.createdAt)}
+                {t('dashboard.createdAt')}: {formatDateTime(item?.createdAt)}
               </Typography>
             </Grid>
           </Grid>
@@ -131,13 +132,13 @@ const AppointmentDetailModal: React.FC<AppointmentDetailModalProps> = ({
             <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
               <DirectionsCar sx={{ color: 'primary.main', mr: 1 }} />
               <Typography sx={{ color: 'text.primary', fontWeight: 'medium' }}>
-                {t('dashboard.startTime')}: {formatDateTime(item.startTime)}
+                {t('dashboard.startTime')}: {formatDateTime(item?.startTime)}
               </Typography>
             </Box>
             <Box sx={{ display: 'flex', alignItems: 'center' }}>
               <ArrowForward sx={{ color: 'primary.main', mx: 1 }} />
               <Typography sx={{ color: 'text.primary', fontWeight: 'medium' }}>
-                {t('dashboard.endTime')}: {formatDateTime(item.endTime)}
+                {t('dashboard.endTime')}: {formatDateTime(item?.endTime)}
               </Typography>
             </Box>
           </Box>
@@ -147,7 +148,7 @@ const AppointmentDetailModal: React.FC<AppointmentDetailModalProps> = ({
             {t('dashboard.services')}
           </Typography>
           <Paper elevation={1} sx={{ p: 2, mb: 2 }}>
-            {item.items.map((service: any, index: number) => (
+            {item?.items?.map((service: any, index: number) => (
               <Box
                 key={index}
                 sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}
@@ -156,7 +157,7 @@ const AppointmentDetailModal: React.FC<AppointmentDetailModalProps> = ({
                   {service.serviceName}
                 </Typography>
                 <Typography sx={{ color: 'text.primary' }}>
-                  {service.price.toLocaleString()} VND
+                  {service.price?.toLocaleString() || 'N/A'} VND
                 </Typography>
               </Box>
             ))}
@@ -187,7 +188,7 @@ const AppointmentDetailModal: React.FC<AppointmentDetailModalProps> = ({
               {finalPrice.toLocaleString()} VND
             </Typography>
           </Box>
-          {item.status === 'completed' && !item.invoiceCreated && (
+          {item?.status === 'completed' && !item?.invoiceCreated && (
             <Button
               variant="contained"
               color="primary"
@@ -204,9 +205,9 @@ const AppointmentDetailModal: React.FC<AppointmentDetailModalProps> = ({
           onClose={handleClosePaymentModal}
           onSubmit={handlePaymentSubmit}
           invoiceAmount={finalPrice}
-          appointmentId={item._id}
-          customerName={item.customer.name}
-          customerPhone={item.customer.phone}
+          appointmentId={item?._id}
+          customerName={item?.customer?.name}
+          customerPhone={item?.customer?.phone}
           refetch={refetch}
         />
       </Box>

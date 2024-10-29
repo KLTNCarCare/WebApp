@@ -32,6 +32,7 @@ export interface Invoice {
   sub_total: number;
   final_total: number;
   id: string;
+  isRefund?: boolean;
 }
 
 export interface CreateInvoiceFn {

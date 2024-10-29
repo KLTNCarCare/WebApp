@@ -53,7 +53,8 @@
     "search": "Type to search",
     "loadingData": "Loading data",
     "errorOccurred": "An error occurred",
-    "changeStatus": "Change Status"
+    "changeStatus": "Change Status",
+    "submit": "Submit"
   },
   "status": {
     "confirmed": "Confirmed",
@@ -293,7 +294,14 @@
     "back": "Back",
     "filter": "Filter",
     "custID": "Customer ID",
-    "searchByCustID": "Search by customer ID"
+    "searchByCustID": "Search by customer ID",
+    "invoice": "Invoice",
+    "returnInvoice": "Return Invoice",
+    "refundInvoiceList": "Refund Invoice List",
+    "reason": "Reason",
+    "refund": "Refund Request",
+    "refundInvoice": "Create Refund Invoice",
+    "refundReason": "Refund Reason"
   },
   "customer": {
     "userCustomerManagement": "User Customer Management",

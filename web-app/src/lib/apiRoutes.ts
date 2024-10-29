@@ -81,6 +81,8 @@ const apiRoutes = {
     payInvoice: (id: string) => `v1/api/invoice/create/${id}`,
     getAllInvoice: 'v1/api/invoice/get-all',
     getInvoiceByCustomerID: 'v1/api/invoice/get-by-custId',
+    getRefundInvoice: 'v1/api/invoice/get-all-invoice-refund',
+    createRefund: 'v1/api/invoice/create-invoice-refund',
   },
   socket: {
     staff: 'http://localhost:8080/sockjs/staff',

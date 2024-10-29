@@ -53,7 +53,8 @@
     "search": "Nhập để tìm kiếm",
     "loadingData": "Đang tải dữ liệu",
     "errorOccurred": "Đã xảy ra lỗi",
-    "changeStatus": "Chuyển đổi trạng thái"
+    "changeStatus": "Chuyển đổi trạng thái",
+    "submit": "Xác nhận"
   },
   "status": {
     "confirmed": "Đã xác nhận",
@@ -299,7 +300,14 @@
     "back": "Quay lại",
     "filter": "Bộ lọc",
     "custID": "Mã khách hàng",
-    "searchByCustID": "Tìm kiếm theo mã khách hàng"
+    "searchByCustID": "Tìm kiếm theo mã khách hàng",
+    "invoice": "Hóa đơn",
+    "returnInvoice": "Hóa đơn trả",
+    "refundInvoiceList": "Danh sách hóa đơn trả",
+    "reason": "Lý do",
+    "refund": "Yêu cầu hoàn tiền",
+    "refundInvoice": "Tạo hóa đơn trả",
+    "refundReason": "Lý do hoàn tiền"
   },
   "customer": {
     "userCustomerManagement": "Quản lý khách hàng",
