@@ -9,14 +9,11 @@ export interface GetAppointmentInDayParams {
   date: string;
 }
 
-export const getAppointmentInDayFn = async (
-  params: GetAppointmentInDayParams
-): Promise<Appointment[]> => {
+export const getAppointmentInDayFn = async (): Promise<Appointment[]> => {
   const token = getCookie('accessToken');
   const response = await httpClient.get<Appointment[]>(
     apiRoutes.appointment.getAppointmentInDay,
     {
-      params,
       headers: {
         Authorization: `Bearer ${token}`,
         'Content-Type': 'application/x-www-form-urlencoded',
@@ -32,7 +29,7 @@ export const useGetAppointmentInDay = (
 ) => {
   return useQuery<Appointment[], DefaultQueryError>(
     ['appointments', params],
-    () => getAppointmentInDayFn(params),
+    () => getAppointmentInDayFn(),
     options
   );
 };

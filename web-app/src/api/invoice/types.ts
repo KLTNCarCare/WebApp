@@ -29,9 +29,9 @@ export interface Invoice {
   createdAt: string;
   updatedAt: string;
   __v: number;
-  sub_total: number;
-  final_total: number;
-  id: string;
+  sub_total?: number;
+  final_total?: number;
+  id?: string;
   isRefund?: boolean;
 }
 

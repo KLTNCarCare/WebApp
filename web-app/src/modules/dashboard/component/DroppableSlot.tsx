@@ -31,13 +31,8 @@ const DroppableSlot: React.FC<DroppableSlotProps> = ({
   const { mutate: inProgressAppointment } = useInProgressAppointment();
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const handleOpenModal = () => {
-    setIsModalOpen(true);
-  };
-
-  const handleCloseModal = () => {
-    setIsModalOpen(false);
-  };
+  const handleOpenModal = () => setIsModalOpen(true);
+  const handleCloseModal = () => setIsModalOpen(false);
 
   const [{ isOver }, drop] = useDrop({
     accept: ItemTypes.APPOINTMENT,
@@ -46,9 +41,7 @@ const DroppableSlot: React.FC<DroppableSlotProps> = ({
       inProgressAppointment(
         { _id: draggedItem.id },
         {
-          onSuccess: () => {
-            refetch();
-          },
+          onSuccess: refetch,
         }
       );
     },
@@ -65,7 +58,7 @@ const DroppableSlot: React.FC<DroppableSlotProps> = ({
         minHeight: 200,
         padding: 2,
         marginBottom: 2,
-        backgroundColor: '#f5f5f5',
+        backgroundColor: isOver ? '#e0f7fa' : '#f5f5f5',
         borderRadius: 2,
         boxShadow: '0px 1px 5px rgba(0, 0, 0, 0.1)',
         display: 'flex',
@@ -76,6 +69,7 @@ const DroppableSlot: React.FC<DroppableSlotProps> = ({
       <Typography variant="h6" sx={{ marginBottom: 0 }}>
         {slot.title}
       </Typography>
+
       <Box
         sx={{
           flexGrow: 1,
@@ -90,7 +84,6 @@ const DroppableSlot: React.FC<DroppableSlotProps> = ({
               key={item._id}
               item={item}
               refetch={refetch}
-              onInvoiceCreated={(invoice: any) => {}}
             />
           ))
         ) : (
@@ -109,7 +102,7 @@ const DroppableSlot: React.FC<DroppableSlotProps> = ({
                 width: '100%',
                 height: '100%',
                 '&:hover': {
-                  backgroundColor: '#e6f8fa',
+                  backgroundColor: '#d6eff0',
                 },
               }}
             >
@@ -118,6 +111,7 @@ const DroppableSlot: React.FC<DroppableSlotProps> = ({
           </>
         )}
       </Box>
+
       <CreateAppointmentModal
         open={isModalOpen}
         onClose={handleCloseModal}

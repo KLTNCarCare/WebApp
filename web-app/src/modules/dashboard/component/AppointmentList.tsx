@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Box, Typography, IconButton, TextField, Divider } from '@mui/material';
 import { Add as AddIcon } from '@mui/icons-material';
 import { DatePicker, PickersDayProps } from '@mui/x-date-pickers';
@@ -6,6 +6,7 @@ import DraggableAppointment from './DraggableAppointment';
 import { useTranslation } from 'react-i18next';
 import dayjs, { Dayjs } from 'dayjs';
 import CustomDay from './datePicker/CustomDay';
+import CreateAppointmentFutureModal from './createAppointmentFuture/CreateAppoimentFutureModal';
 
 interface Appointment {
   _id: string;
@@ -49,7 +50,6 @@ interface AppointmentListProps {
   handleDateChange: (date: Dayjs | null) => void;
   handleAddAppointment: () => void;
   refetch: () => void;
-  handleInvoiceCreated: (invoice: any) => void;
 }
 
 const AppointmentList: React.FC<AppointmentListProps> = ({
@@ -58,9 +58,9 @@ const AppointmentList: React.FC<AppointmentListProps> = ({
   handleDateChange,
   handleAddAppointment,
   refetch,
-  handleInvoiceCreated,
 }) => {
   const { t } = useTranslation();
+  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
 
   const renderDay = (
     day: Dayjs,
@@ -75,6 +75,14 @@ const AppointmentList: React.FC<AppointmentListProps> = ({
         appointments={appointments}
       />
     );
+  };
+
+  const handleOpenCreateModal = () => {
+    setIsCreateModalOpen(true);
+  };
+
+  const handleCloseCreateModal = () => {
+    setIsCreateModalOpen(false);
   };
 
   return (
@@ -135,7 +143,7 @@ const AppointmentList: React.FC<AppointmentListProps> = ({
         /> */}
         <IconButton
           color="primary"
-          onClick={handleAddAppointment}
+          onClick={handleOpenCreateModal}
           sx={{ flex: '0 0 auto' }}
         >
           <AddIcon />
@@ -158,15 +166,17 @@ const AppointmentList: React.FC<AppointmentListProps> = ({
           )
           .map((item, index) => (
             <React.Fragment key={item._id}>
-              <DraggableAppointment
-                item={item}
-                refetch={refetch}
-                onInvoiceCreated={handleInvoiceCreated}
-              />
+              <DraggableAppointment item={item} refetch={refetch} />
               {index < appointments.length - 1 && <Divider />}
             </React.Fragment>
           ))}
       </Box>
+
+      <CreateAppointmentFutureModal
+        open={isCreateModalOpen}
+        onClose={handleCloseCreateModal}
+        refetch={refetch}
+      />
     </Box>
   );
 };

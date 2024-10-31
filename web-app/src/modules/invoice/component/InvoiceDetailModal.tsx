@@ -18,6 +18,7 @@ import { useTranslation } from 'react-i18next';
 import EmptyScreen from 'src/components/layouts/EmtyScreen';
 import { Invoice } from 'src/api/invoice/types';
 import CreateRefundInvoice from './CreateRefundInvoice';
+import InvoicePrintModal from 'src/modules/dashboard/component/InvoicePrintModal';
 
 interface InvoiceDetailModalProps {
   open: boolean;
@@ -100,16 +101,6 @@ const InvoiceDetailModal: React.FC<InvoiceDetailModalProps> = ({
     handleRefundClose();
     onClose();
   };
-
-  useEffect(() => {
-    if (printModalOpen) {
-      setPrintModalOpen(false);
-      onClose();
-      setTimeout(() => {
-        refetch();
-      }, 500);
-    }
-  }, [printModalOpen, onClose, refetch]);
 
   if (!invoiceData) return null;
 
@@ -429,6 +420,11 @@ const InvoiceDetailModal: React.FC<InvoiceDetailModalProps> = ({
           )}
         </DialogActions>
       </Dialog>
+      <InvoicePrintModal
+        open={printModalOpen}
+        onClose={() => setPrintModalOpen(false)}
+        invoiceData={invoiceData}
+      />
 
       {/* Refund Invoice Modal */}
       <CreateRefundInvoice

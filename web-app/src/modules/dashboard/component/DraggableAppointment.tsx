@@ -1,21 +1,18 @@
 import React, { useState } from 'react';
 import { Paper, Box, Typography, Button } from '@mui/material';
-import { Check as CheckIcon, Done, Cancel } from '@mui/icons-material';
+import { Check as CheckIcon, Cancel } from '@mui/icons-material';
 import { useDrag } from 'react-dnd';
 import { useTranslation } from 'react-i18next';
 import { format } from 'date-fns';
-import { cyan, green, grey, lightGreen } from '@mui/material/colors';
+import { purple, amber, grey, green, cyan } from '@mui/material/colors';
 import { useConfirmAppointment } from 'src/api/appointment/useConfirmAppointment';
 import { useInProgressAppointment } from 'src/api/appointment/useInProgressAppoinment';
 import { useCompletedAppointment } from 'src/api/appointment/useCompletedAppointment';
 import { useCreateInvoice } from 'src/api/invoice/useCreateInvoice';
-import { useGetInvoiceByAppoinment } from 'src/api/invoice/useGetInvoiceByAppoinment';
 import { useCanceledAppointment } from 'src/api/appointment/useCancelAppoitment';
-import InvoiceDetailModal from './InvoiceDetailModal';
 import AppointmentDetailModal from './detailModal/AppointmentDetailModal';
 import PaymentModal from './PaymentModal';
 import { Appointment } from 'src/api/appointment/types';
-import { Invoice } from 'src/api/invoice/types';
 import snackbarUtils from 'src/lib/snackbarUtils';
 
 const ItemTypes = {
@@ -25,17 +22,12 @@ const ItemTypes = {
 interface DraggableAppointmentProps {
   item: Appointment;
   refetch: () => void;
-  onInvoiceCreated: (invoice: Invoice) => void;
 }
 
 const DraggableAppointment: React.FC<DraggableAppointmentProps> = ({
   item,
   refetch,
-  onInvoiceCreated,
 }) => {
-  const [invoiceModalOpen, setInvoiceModalOpen] = useState(false);
-  const [selectedInvoice, setSelectedInvoice] = useState<Invoice | null>(null);
-  const [isLoadingInvoice, setIsLoadingInvoice] = useState(false);
   const [isDetailModalOpen, setIsDetailModalOpen] = useState(false);
   const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
   const { mutate: confirmAppointment, isLoading } = useConfirmAppointment();
@@ -45,124 +37,46 @@ const DraggableAppointment: React.FC<DraggableAppointmentProps> = ({
     useCompletedAppointment();
   const { mutate: createInvoice, isLoading: isCreatingInvoice } =
     useCreateInvoice({
-      onSuccess: (data) => {
-        onInvoiceCreated(data);
-        setSelectedInvoice(data);
-        setInvoiceModalOpen(true);
-      },
+      onSuccess: (success) => snackbarUtils.success(success),
       onError: (error) => {
         console.error('Invoice creation failed', error);
+        snackbarUtils.error(error);
       },
     });
   const { mutate: cancelAppointment, isLoading: isCancelling } =
     useCanceledAppointment();
-
   const { t } = useTranslation();
-
-  const { data: invoiceData } = useGetInvoiceByAppoinment(
-    { appointmentId: item._id },
-    {
-      enabled: invoiceModalOpen,
-      onSuccess: (data) => {
-        if (data) {
-          setSelectedInvoice(data);
-          setIsLoadingInvoice(false);
-        }
-      },
-      onError: (error) => {
-        snackbarUtils.error(
-          error.response?.data?.message || t('priceCatalog.deleteError')
-        );
-        setIsLoadingInvoice(false);
-      },
-    }
-  );
 
   const handleConfirm = () => {
     confirmAppointment(
       { _id: item._id },
       {
-        onSuccess: () => {
-          inProgressAppointment(
-            { _id: item._id },
-            {
-              onSuccess: () => {
-                refetch();
-              },
-            }
-          );
-        },
+        onSuccess: () =>
+          inProgressAppointment({ _id: item._id }, { onSuccess: refetch }),
       }
     );
   };
 
-  const handleInProgress = () => {
-    inProgressAppointment(
-      { _id: item._id },
-      {
-        onSuccess: () => {
-          refetch();
-        },
-      }
-    );
-  };
-
-  const handleComplete = () => {
-    completedAppointment(
-      { _id: item._id },
-      {
-        onSuccess: () => {
-          refetch();
-        },
-      }
-    );
-  };
-
+  const handleInProgress = () =>
+    inProgressAppointment({ _id: item._id }, { onSuccess: refetch });
+  const handleComplete = () =>
+    completedAppointment({ _id: item._id }, { onSuccess: refetch });
   const handlePaymentAndInvoice = async (paymentMethod: string) => {
     try {
-      // Simulate payment process
       await new Promise((resolve) => setTimeout(resolve, 1000));
-      // After payment is successful, create the invoice
       createInvoice({ appointmentId: item._id });
       setIsPaymentModalOpen(false);
     } catch (error) {
       console.error('Payment failed', error);
-      // Handle payment failure (e.g., show an error message)
     }
   };
 
-  const handleViewInvoice = () => {
-    setIsLoadingInvoice(true);
-    setInvoiceModalOpen(true);
-  };
-
-  const handleCancel = () => {
-    cancelAppointment(
-      { _id: item._id },
-      {
-        onSuccess: () => {
-          refetch();
-        },
-      }
-    );
-  };
-
-  const handleOpenDetailModal = () => {
-    setIsDetailModalOpen(true);
-  };
-
-  const handleCloseDetailModal = () => {
-    setIsDetailModalOpen(false);
-  };
-
-  const handleOpenPaymentModal = () => {
-    setIsPaymentModalOpen(true);
-  };
-
-  const handleClosePaymentModal = () => {
-    setIsPaymentModalOpen(false);
-  };
-
+  const handleCancel = () =>
+    cancelAppointment({ _id: item._id }, { onSuccess: refetch });
+  const handleOpenDetailModal = () => setIsDetailModalOpen(true);
+  const handleCloseDetailModal = () => setIsDetailModalOpen(false);
+  const handleOpenPaymentModal = () => setIsPaymentModalOpen(true);
+  const handleClosePaymentModal = () => setIsPaymentModalOpen(false);
   const [, ref] = useDrag({
     type: ItemTypes.APPOINTMENT,
     item: { id: item._id },
@@ -179,17 +93,16 @@ const DraggableAppointment: React.FC<DraggableAppointmentProps> = ({
       case 'missed':
         return grey[300];
       case 'pending':
-        return cyan[300];
+        return purple[200];
       case 'in-progress':
-        return lightGreen[300];
+        return green[200];
       case 'completed':
-        return green[700];
+        return green[500];
       default:
         return '#fff';
     }
   };
 
-  // Tính tổng giá trị của các dịch vụ trong lịch hẹn
   const totalPrice = item.items.reduce(
     (total: number, service: any) => total + service.price,
     0
@@ -200,56 +113,112 @@ const DraggableAppointment: React.FC<DraggableAppointmentProps> = ({
       <Paper
         ref={ref}
         sx={{
-          marginBottom: 0,
+          marginBottom: 2,
           padding: 3,
           borderRadius: 3,
-          boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.1)',
-          transition: 'box-shadow 0.3s ease',
-          maxWidth: 400,
+          boxShadow: '0 4px 15px rgba(0, 0, 0, 0.15)',
+          transition: 'box-shadow 0.4s ease, transform 0.3s ease',
+          maxWidth: 450,
           backgroundColor: getBackgroundColor(item.status),
           '&:hover': {
-            boxShadow: '0px 6px 14px rgba(0, 0, 0, 0.15)',
+            boxShadow: '0 8px 20px rgba(0, 0, 0, 0.2)',
+            transform: 'scale(1.03) translateY(-2px)',
           },
-          flexShrink: 0,
-          minWidth: '200px',
+          minWidth: '250px',
           overflow: 'hidden',
+          cursor: 'pointer',
+          position: 'relative',
+          fontFamily: 'Roboto, sans-serif',
+          '&::before': {
+            content: '""',
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            borderRadius: 'inherit',
+            background:
+              'linear-gradient(45deg, transparent, rgba(0, 255, 255, 0.3))',
+            zIndex: -1,
+            opacity: 0,
+            transition: 'opacity 0.3s ease',
+          },
+          '&:hover::before': {
+            opacity: 1,
+          },
         }}
         onClick={handleOpenDetailModal}
       >
-        <Box>
-          <Typography
-            variant="h6"
+        <Box
+          sx={{
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '1rem',
+          }}
+        >
+          <Box
             sx={{
-              fontWeight: 'bold',
-              color: '#333',
-              fontSize: '1.2rem',
-              mb: 1,
-              backgroundColor: '#f0f0f0',
-              padding: '0.3rem',
-              borderRadius: '4px',
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              gap: '1rem',
             }}
           >
-            {item.customer.name}
-          </Typography>
+            <Box>
+              <Typography
+                variant="h6"
+                sx={{
+                  fontWeight: 600,
+                  color: cyan[900],
+                  fontSize: '1.3rem',
+                  mb: 1,
+                  textTransform: 'uppercase',
+                  letterSpacing: '0.05rem',
+                }}
+              >
+                {item.customer.name}
+              </Typography>
+              <Typography
+                sx={{
+                  color: grey[700],
+                  fontSize: '1rem',
+                  fontWeight: 500,
+                }}
+              >
+                {t('dashboard.phone')}: {item.customer.phone}
+              </Typography>
+            </Box>
+
+            <Box sx={{ textAlign: 'center' }}>
+              {' '}
+              <Typography
+                sx={{
+                  color: cyan[900],
+                  fontSize: '1rem',
+                  fontWeight: 600,
+                  mb: 0.5,
+                }}
+              >
+                {t('dashboard.licensePlate')}: {item.vehicle.licensePlate}
+              </Typography>
+              <Typography
+                sx={{
+                  color: grey[700],
+                  fontSize: '1rem',
+                  fontWeight: 500,
+                }}
+              >
+                {t('customer.vehicleModel')}: {item.vehicle.model}
+              </Typography>
+            </Box>
+          </Box>
+
           <Typography
             sx={{
-              color: '#555',
-              fontSize: '1rem',
-              mb: 0.5,
-              backgroundColor: '#f0f0f0',
-              padding: '0.3rem',
-              borderRadius: '4px',
-            }}
-          >
-            {t('dashboard.phone')}: {item.customer.phone}
-          </Typography>
-          <Typography
-            sx={{
-              color: '#777',
+              color: grey[900],
               fontSize: '0.95rem',
-              backgroundColor: '#f0f0f0',
-              padding: '0.3rem',
-              borderRadius: '4px',
+              fontWeight: 600,
+              lineHeight: 1.4,
             }}
           >
             {t('dashboard.services')}:{' '}
@@ -257,19 +226,31 @@ const DraggableAppointment: React.FC<DraggableAppointmentProps> = ({
           </Typography>
         </Box>
 
-        <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: 2 }}>
+        <Box
+          sx={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            mt: 2,
+            gap: '0.5rem',
+          }}
+        >
           {item.status === 'pending' && (
             <>
               <Button
                 variant="contained"
-                color="primary"
+                color="success"
                 startIcon={<CheckIcon />}
                 onClick={(e) => {
                   e.stopPropagation();
                   handleConfirm();
                 }}
                 disabled={isLoading}
-                sx={{ fontSize: '0.9rem', flex: 1, mr: 1.5 }}
+                sx={{
+                  fontSize: '1rem',
+                  flex: 1,
+                  transition: 'transform 0.3s ease',
+                  '&:hover': { transform: 'scale(1.05)' },
+                }}
               >
                 {isLoading ? t('dashboard.confirming') : t('dashboard.confirm')}
               </Button>
@@ -282,30 +263,18 @@ const DraggableAppointment: React.FC<DraggableAppointmentProps> = ({
                   handleCancel();
                 }}
                 disabled={isCancelling}
-                sx={{ fontSize: '0.9rem', flex: 1 }}
+                sx={{
+                  fontSize: '1rem',
+                  flex: 1,
+                  transition: 'transform 0.3s ease',
+                  '&:hover': { transform: 'scale(1.05)' },
+                }}
               >
                 {isCancelling
                   ? t('dashboard.cancelling')
                   : t('dashboard.cancel')}
               </Button>
             </>
-          )}
-          {item.status === 'in-progress' && (
-            <Button
-              variant="contained"
-              color="secondary"
-              startIcon={<Done />}
-              onClick={(e) => {
-                e.stopPropagation();
-                handleComplete();
-              }}
-              disabled={isCompleting}
-              sx={{ fontSize: '0.9rem', flex: 1, mr: 1.5 }}
-            >
-              {isCompleting
-                ? t('dashboard.completing')
-                : t('dashboard.complete')}
-            </Button>
           )}
           {item.status === 'completed' && !item.invoiceCreated && (
             <Button
@@ -316,7 +285,13 @@ const DraggableAppointment: React.FC<DraggableAppointmentProps> = ({
                 handleOpenPaymentModal();
               }}
               disabled={isCreatingInvoice}
-              sx={{ fontSize: '0.9rem', flex: 1 }}
+              sx={{
+                fontSize: '1.5rem',
+                flex: 1,
+                backgroundColor: '#007bb5',
+                '&:hover': { backgroundColor: '#005a87' },
+                transition: 'all 0.3s ease',
+              }}
             >
               {isCreatingInvoice
                 ? t('dashboard.creatingInvoice')
@@ -330,34 +305,18 @@ const DraggableAppointment: React.FC<DraggableAppointmentProps> = ({
         open={isDetailModalOpen}
         onClose={handleCloseDetailModal}
         item={item}
-        refetch={function (): void {
-          throw new Error('Function not implemented.');
-        }}
+        refetch={refetch}
       />
-
       <PaymentModal
         open={isPaymentModalOpen}
         onClose={handleClosePaymentModal}
         onSubmit={handlePaymentAndInvoice}
-        invoiceAmount={totalPrice} // Sử dụng tổng giá trị đã tính toán
+        invoiceAmount={totalPrice}
         appointmentId={item._id}
         customerName={item.customer.name}
         customerPhone={item.customer.phone}
         refetch={refetch}
       />
-
-      {selectedInvoice && (
-        <InvoiceDetailModal
-          open={invoiceModalOpen}
-          onClose={() => setInvoiceModalOpen(false)}
-          invoiceData={selectedInvoice}
-          refetch={refetch}
-          dataInvoice={selectedInvoice}
-          isLoadingInvoice={isLoadingInvoice}
-          paginationModel={{ pageSize: 5, page: 0 }}
-          setPaginationModel={() => {}}
-        />
-      )}
     </>
   );
 };

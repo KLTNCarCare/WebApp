@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Dialog,
   DialogTitle,
@@ -15,6 +15,8 @@ import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useConfirmPayInvoice } from 'src/api/invoice/usePayInvoice';
 import { usePayZaloPay } from 'src/api/payment/usePaymentZaloPay';
+import InvoiceDetailModal from 'src/modules/invoice/component/InvoiceDetailModal';
+import { Invoice } from 'src/api/invoice/types';
 
 interface PaymentModalProps {
   open: boolean;
@@ -39,11 +41,21 @@ const PaymentModal: React.FC<PaymentModalProps> = ({
 }) => {
   const { t } = useTranslation();
   const [paymentMethod, setPaymentMethod] = useState('cash');
-  const [invoiceDetails, setInvoiceDetails] = useState<any>(null);
+  const [isDetailModalOpen, setIsDetailModalOpen] = useState(false);
+  const [selectedInvoice, setSelectedInvoice] = useState<Invoice | null>(null);
+
+  useEffect(() => {
+    console.log('PaymentModal rendered');
+  });
+
+  useEffect(() => {
+    console.log('isDetailModalOpen:', isDetailModalOpen);
+  }, [isDetailModalOpen]);
 
   const { mutate: confirmPayInvoice, isLoading: isConfirming } =
     useConfirmPayInvoice({
-      onSuccess: (data) => {
+      onSuccess: (response: any) => {
+        const data: Invoice = response;
         toast.success(
           t('invoice.paymentConfirmation', {
             invoiceAmount,
@@ -51,12 +63,12 @@ const PaymentModal: React.FC<PaymentModalProps> = ({
             customerPhone,
           })
         );
-        setInvoiceDetails(data);
+        setSelectedInvoice(data);
+        setIsDetailModalOpen(true);
         onSubmit(paymentMethod, data);
-        refetch();
-        onClose();
+        refetch(); // Gọi hàm refetch để cập nhật dữ liệu trong bảng hóa đơn
       },
-      onError: (error) => {
+      onError: () => {
         toast.error(t('invoice.paymentFailed'));
       },
     });
@@ -66,7 +78,7 @@ const PaymentModal: React.FC<PaymentModalProps> = ({
       window.open(url, '_blank');
       onClose();
     },
-    onError: (error) => {
+    onError: () => {
       toast.error(t('invoice.paymentFailed'));
     },
   });
@@ -78,7 +90,6 @@ const PaymentModal: React.FC<PaymentModalProps> = ({
   };
 
   const handlePaymentSubmit = () => {
-    console.log('Submitting payment', { appointmentId, paymentMethod });
     if (paymentMethod === 'zalopay') {
       payZaloPay({ appointmentId });
     } else {
@@ -90,58 +101,79 @@ const PaymentModal: React.FC<PaymentModalProps> = ({
   };
 
   return (
-    <Dialog open={open} onClose={onClose}>
-      <DialogTitle>{t('invoice.selectPaymentMethod')}</DialogTitle>
-      <DialogContent>
-        <RadioGroup value={paymentMethod} onChange={handlePaymentMethodChange}>
-          <FormControlLabel
-            value="cash"
-            control={<Radio />}
-            label={t('invoice.cash')}
-          />
-          <FormControlLabel
-            value="zalopay"
-            control={<Radio />}
-            label={t('invoice.zaloPay')}
-          />
-          <FormControlLabel
-            value="bank_transfer"
-            control={<Radio />}
-            label={t('invoice.bankTransfer')}
-          />
-        </RadioGroup>
-        {invoiceDetails && (
-          <div>
-            <Typography variant="h6">{t('invoice.details')}</Typography>
-            <Typography>
-              {t('invoice.id')}: {invoiceDetails.id}
-            </Typography>
-            <Typography>
-              {t('invoice.amount')}: {invoiceDetails.amount}
-            </Typography>
-            <Typography>
-              {t('invoice.date')}: {invoiceDetails.date}
-            </Typography>
-            {/* Add more fields as necessary */}
-          </div>
-        )}
-      </DialogContent>
-      <DialogActions>
-        <Button onClick={onClose} color="primary">
-          {t('invoice.cancel')}
-        </Button>
-        <Button
-          onClick={handlePaymentSubmit}
-          color="primary"
-          variant="contained"
-          disabled={isConfirming || isPayingZaloPay}
-        >
-          {isConfirming || isPayingZaloPay
-            ? t('invoice.submiting')
-            : t('invoice.submitPayment')}
-        </Button>
-      </DialogActions>
-    </Dialog>
+    <>
+      <Dialog open={open} onClose={onClose}>
+        <DialogTitle>{t('invoice.selectPaymentMethod')}</DialogTitle>
+        <DialogContent>
+          <RadioGroup
+            value={paymentMethod}
+            onChange={handlePaymentMethodChange}
+          >
+            <FormControlLabel
+              value="cash"
+              control={<Radio />}
+              label={
+                <Typography
+                  variant="body1"
+                  style={{
+                    fontWeight: paymentMethod === 'cash' ? 'bold' : 'normal',
+                    display: 'flex',
+                    alignItems: 'center',
+                  }}
+                >
+                  <span style={{ marginRight: 8 }}>💵</span>
+                  {t('invoice.cash')}
+                </Typography>
+              }
+            />
+            <FormControlLabel
+              value="zalopay"
+              control={<Radio />}
+              label={
+                <Typography
+                  variant="body1"
+                  style={{
+                    fontWeight: paymentMethod === 'zalopay' ? 'bold' : 'normal',
+                    display: 'flex',
+                    alignItems: 'center',
+                  }}
+                >
+                  <span style={{ marginRight: 8 }}>💳</span>
+                  {t('invoice.zaloPay')}
+                </Typography>
+              }
+            />
+          </RadioGroup>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={onClose} color="primary">
+            {t('invoice.cancel')}
+          </Button>
+          <Button
+            onClick={handlePaymentSubmit}
+            color="primary"
+            variant="contained"
+            disabled={isConfirming || isPayingZaloPay}
+          >
+            {isConfirming || isPayingZaloPay
+              ? t('invoice.submiting')
+              : t('invoice.submitPayment')}
+          </Button>
+        </DialogActions>
+      </Dialog>
+      {selectedInvoice && (
+        <InvoiceDetailModal
+          open={isDetailModalOpen}
+          onClose={() => setIsDetailModalOpen(false)}
+          onBack={() => setIsDetailModalOpen(false)}
+          invoiceData={selectedInvoice}
+          refetch={refetch}
+          isLoadingInvoice={false}
+          paginationModel={{ pageSize: 5, page: 0 }}
+          setPaginationModel={() => {}}
+        />
+      )}
+    </>
   );
 };
 

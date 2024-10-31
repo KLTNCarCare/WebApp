@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { Box, Modal, Button } from '@mui/material';
+import { Box, Modal, Button, Typography } from '@mui/material';
 import { DataGrid, GridColDef, GridPaginationModel } from '@mui/x-data-grid';
 import dayjs from 'dayjs';
 import { useTranslation } from 'react-i18next';
-import { cyan, green, grey, lightGreen, red } from '@mui/material/colors';
+import { cyan, green, grey, lightGreen, red, blue } from '@mui/material/colors';
 
 interface AppointmentsModalProps {
   open: boolean;
@@ -102,11 +102,12 @@ const AppointmentsModal: React.FC<AppointmentsModalProps> = ({
           width: '80%',
           margin: 'auto',
           mt: 5,
+          boxShadow: 3,
         }}
       >
-        <h2>
+        <Typography variant="h4" sx={{ mb: 3, color: blue[700] }}>
           {t('dashboard.appointmentsFor')} {selectedDate.format('YYYY-MM-DD')}
-        </h2>
+        </Typography>
         <div style={{ height: 400, width: '100%' }}>
           <DataGrid
             rows={rows}
@@ -118,16 +119,37 @@ const AppointmentsModal: React.FC<AppointmentsModalProps> = ({
             getRowId={(row) => row.id}
             getRowClassName={(params) => `status-${params.row.status}`}
             sx={{
+              '& .MuiDataGrid-columnHeaders': {
+                backgroundColor: blue[700],
+                color: '#fff',
+                fontSize: '16px',
+              },
+              '& .MuiDataGrid-cell': {
+                fontSize: '14px',
+              },
               '& .status-missed': { backgroundColor: grey[300] },
               '& .status-pending': { backgroundColor: cyan[300] },
               '& .status-in-progress': { backgroundColor: lightGreen[300] },
               '& .status-completed': { backgroundColor: green[700] },
               '& .status-canceled': { backgroundColor: red[700] },
+              '& .MuiDataGrid-row:hover': {
+                backgroundColor: blue[50],
+              },
             }}
           />
         </div>
-        <Button onClick={onClose} sx={{ mt: 2 }}>
-          Close
+        <Button
+          onClick={onClose}
+          sx={{
+            mt: 2,
+            backgroundColor: blue[700],
+            color: '#fff',
+            '&:hover': {
+              backgroundColor: blue[900],
+            },
+          }}
+        >
+          {t('dashboard.close')}
         </Button>
       </Box>
     </Modal>

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useGetInvoiceByCustomerID } from 'src/api/invoice/useGetInvoiceByCustomerID';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import { useTranslation } from 'react-i18next';
@@ -6,6 +6,7 @@ import { Box, LinearProgress, Paper, Typography } from '@mui/material';
 import EmptyScreen from 'src/components/layouts/EmtyScreen';
 import InvoiceDetailModal from 'src/modules/invoice/component/InvoiceDetailModal';
 import { Invoice } from 'src/api/invoice/types';
+import useSocket from 'src/lib/socket';
 
 interface InvoiceHistoryTabProps {
   customerId: string;
@@ -23,6 +24,19 @@ const InvoiceHistoryTab: React.FC<InvoiceHistoryTabProps> = ({
     pageSize: 10,
     page: 0,
   });
+
+  const { messages } = useSocket('user-id');
+  useEffect(() => {
+    const messageTypesToRefetch = ['SAVE-INVOICE-REFUND', 'SAVE-INVOICE'];
+
+    if (
+      messages.some((message: any) =>
+        messageTypesToRefetch.includes(message.mess_type)
+      )
+    ) {
+      refetch();
+    }
+  }, [messages, refetch]);
 
   const columns: GridColDef[] = [
     { field: 'invoiceId', headerName: t('invoice.invoiceId'), flex: 1 },

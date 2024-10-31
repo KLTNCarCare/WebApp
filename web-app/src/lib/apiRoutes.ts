@@ -70,6 +70,11 @@ const apiRoutes = {
     completed: (id: string) => `v1/api/appointment/completed/${id}`,
     addServiceToAppointment: (id: string) =>
       `v1/api/appointment/add-service/${id}`,
+    changeServiceStatus: (appointmentId: string, serviceId: string) =>
+      `v1/api/appointment/update-process/${appointmentId}/${serviceId}`,
+    changePiorityService: (appointmentId: string) =>
+      `v1/api/appointment/in-progresse/${appointmentId}`,
+    createOnSiteFuture: 'v1/api/appointment/create-on-site-future',
   },
   promotionDetail: {
     create: (id: string) => `v1/api/promotion/add-promotion-detail/${id}`,

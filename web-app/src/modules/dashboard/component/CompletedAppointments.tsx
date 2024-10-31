@@ -6,13 +6,11 @@ import { useTranslation } from 'react-i18next';
 interface CompletedAppointmentsProps {
   appointments: any[];
   refetch: () => void;
-  handleInvoiceCreated: (invoice: any) => void;
 }
 
 const CompletedAppointments: React.FC<CompletedAppointmentsProps> = ({
   appointments,
   refetch,
-  handleInvoiceCreated,
 }) => {
   const { t } = useTranslation();
 
@@ -55,12 +53,15 @@ const CompletedAppointments: React.FC<CompletedAppointmentsProps> = ({
       >
         {appointments
           .filter((item) => item.status === 'completed')
+          .sort(
+            (a, b) =>
+              new Date(b.endActual).getTime() - new Date(a.endActual).getTime()
+          )
           .map((item) => (
             <DraggableAppointment
               key={item._id}
               item={item}
               refetch={refetch}
-              onInvoiceCreated={handleInvoiceCreated}
             />
           ))}
       </Box>

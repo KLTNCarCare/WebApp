@@ -265,7 +265,7 @@
     "items": "Chi tiết hóa đơn",
     "itemName": "Tên dịch vụ",
     "itemPrice": "Giá dịch vụ",
-    "itemTotal": "Tổng",
+    "itemTotal": "Tổng sau giảm giá",
     "itemDiscount": "Giảm giá",
     "summary": "Chi tiết thanh toán",
     "subTotal": "Tổng giá dịch vụ",
@@ -284,7 +284,7 @@
     "credit": "Thẻ tín dụng",
     "bankTransfer": "Chuyển khoản ngân hàng",
     "cancel": "Hủy",
-    "submitPayment": "Gửi thanh toán",
+    "submitPayment": "Thanh toán",
     "paymentConfirmation": "Nhân viên xác nhận thanh toán {{invoiceAmount}} VND bằng tiền mặt cho khách hàng {{customerName}} ({{customerPhone}})",
     "paymentFailed": "Thanh toán thất bại. Vui lòng thử lại.",
     "submiting": " Đang xử lý",
@@ -308,7 +308,8 @@
     "refund": "Yêu cầu hoàn tiền",
     "refundInvoice": "Tạo hóa đơn trả",
     "refundReason": "Lý do hoàn tiền",
-    "zaloPay": "ZaloPay"
+    "zaloPay": "ZaloPay",
+    "transfer": "Chuyển khoản"
   },
   "customer": {
     "userCustomerManagement": "Quản lý khách hàng",
@@ -349,5 +350,17 @@
     "searchByPhone": "Tìm kiếm theo số điện thoại",
     "selectCustomer": "Chọn khách hàng",
     "selectVehicle": "Chọn xe"
+  },
+  "appointment": {
+    "startTime": "Dự kiến bắt đầu",
+    "endTime": "Dự kiến bàn giao",
+    "actualStartTime": "Tiếp nhận",
+    "actualEndTime": "Kết thúc thực tế",
+    "start": "Hoàn tất",
+    "process": "TimeLine Quy trình",
+    "confirmRetry": "Bạn có chắc chắn muốn tạo lại không?",
+    "confirmRetryMessage": " Lịch hẹn hiện tại đã đầy, bạn có chắc chắn thêm mới hàng đợi không?",
+    "cancel": "Hủy",
+    "retry": "Xác nhận"
   }
 }

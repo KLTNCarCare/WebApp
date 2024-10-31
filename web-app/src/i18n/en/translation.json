@@ -301,7 +301,8 @@
     "reason": "Reason",
     "refund": "Refund Request",
     "refundInvoice": "Create Refund Invoice",
-    "refundReason": "Refund Reason"
+    "refundReason": "Refund Reason",
+    "transfer": "Transfer"
   },
   "customer": {
     "userCustomerManagement": "User Customer Management",
@@ -341,5 +342,17 @@
     "searchByPhone": "Search by phone",
     "selectCustomer": "Select Customer",
     "selectVehicle": "Select Vehicle"
+  },
+  "appointment": {
+    "startTime": "Start Time",
+    "endTime": "End Time",
+    "actualStartTime": "Actual Start Time",
+    "actualEndTime": "Actual End Time",
+    "start": "Start",
+    "process": "Process",
+    "confirmRetry": "Do you want to confirm?",
+    "confirmRetryMessage": "This action will change the status of the appointment to 'In Progress'.",
+    "cancel": "Cancel",
+    "retry": "Retry"
   }
 }

@@ -77,7 +77,7 @@ export function InvoicePage() {
   const { messages } = useSocket('user-id');
 
   useEffect(() => {
-    const messageTypesToRefetch = ['SAVE-INVOICE-REFUND'];
+    const messageTypesToRefetch = ['SAVE-INVOICE-REFUND', 'SAVE-INVOICE'];
 
     if (
       messages.some((message: any) =>
@@ -85,8 +85,9 @@ export function InvoicePage() {
       )
     ) {
       refetchRefund();
+      refetch();
     }
-  }, [messages, refetchRefund]);
+  }, [messages, refetchRefund, refetch]);
 
   return (
     <AdminLayout

@@ -8,7 +8,7 @@ import SlotArea from './component/SlotArea';
 import AppointmentList from './component/AppointmentList';
 import CompletedAppointments from './component/CompletedAppointments';
 import CreateAppointmentModal from './component/createAppoinment/CreateAppoimentModal';
-import InvoiceDetailModal from './component/InvoiceDetailModal';
+import InvoiceDetailModal from '../invoice/component/InvoiceDetailModal';
 import AppointmentsModal from './component/AppointmentsModal';
 import { useGetAppointmentInDay } from 'src/api/appointment/useGetAppointmentInDay';
 import { useTranslation } from 'react-i18next';
@@ -38,8 +38,6 @@ const DashboardPage: React.FC = () => {
   const [isAddAppointment, setIsAddAppointment] = useState(false);
   const [selectedDate, setSelectedDate] = useState(dayjs());
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [isInvoiceModalOpen, setIsInvoiceModalOpen] = useState(false);
-  const [selectedInvoice, setSelectedInvoice] = useState(null);
   const [state, setState] = useState<{ appointments: any[]; slots: Slot[] }>({
     appointments: [],
     slots: initialSlots,
@@ -115,6 +113,7 @@ const DashboardPage: React.FC = () => {
       'IN-PROGRESS-APPOINTMENT',
       'COMPLETED-APPOINTMENT',
       'SAVE-INVOICE',
+      'SAVE-INVOICE-REFUND',
     ];
 
     if (
@@ -198,16 +197,6 @@ const DashboardPage: React.FC = () => {
     refetch();
   };
 
-  const handleInvoiceCreated = (invoice: any) => {
-    setSelectedInvoice(invoice);
-    setIsInvoiceModalOpen(true);
-  };
-
-  const handleInvoiceModalClose = () => {
-    setIsInvoiceModalOpen(false);
-    setSelectedInvoice(null);
-  };
-
   const handleAppointmentsModalClose = () => {
     setIsModalOpen(false);
   };
@@ -245,7 +234,6 @@ const DashboardPage: React.FC = () => {
                   handleDateChange={handleDateChange}
                   handleAddAppointment={handleAddAppointment}
                   refetch={refetch}
-                  handleInvoiceCreated={handleInvoiceCreated}
                 />
               </Box>
             </Box>
@@ -253,7 +241,6 @@ const DashboardPage: React.FC = () => {
               <CompletedAppointments
                 appointments={state.appointments}
                 refetch={refetch}
-                handleInvoiceCreated={handleInvoiceCreated}
               />
             </Box>
           </Box>
@@ -264,19 +251,6 @@ const DashboardPage: React.FC = () => {
             refetch={refetch}
             setIsAddAppointment={setIsAddAppointment}
           />
-
-          {selectedInvoice && (
-            <InvoiceDetailModal
-              open={isInvoiceModalOpen}
-              onClose={handleInvoiceModalClose}
-              invoiceData={selectedInvoice}
-              refetch={refetch}
-              dataInvoice={null}
-              isLoadingInvoice={false}
-              paginationModel={{ pageSize: 10, page: 0 }}
-              setPaginationModel={() => {}}
-            />
-          )}
 
           <AppointmentsModal
             open={isModalOpen}

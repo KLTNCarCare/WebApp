@@ -29,6 +29,7 @@ const InvoicePrintModal: React.FC<InvoicePrintModalProps> = ({
   const contentRef = useRef<HTMLDivElement>(null);
 
   const handleSave = async () => {
+    console.log('invoiceData', invoiceData);
     if (contentRef.current) {
       const canvas = await html2canvas(contentRef.current, {
         scale: 2,
