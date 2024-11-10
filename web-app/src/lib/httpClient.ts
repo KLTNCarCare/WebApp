@@ -2,7 +2,6 @@ import { DefaultQueryError } from 'src/api/type';
 import axios from 'axios';
 import { getCookie } from './cookies';
 import { ACCESS_TOKEN_KEY, removeAccessToken } from './token';
-
 import { apiUrl, API_FETCH_TIMEOUT, epApiUrl, EP_API_KEY } from './constants';
 import apiRoutes from './apiRoutes';
 

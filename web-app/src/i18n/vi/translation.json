@@ -55,7 +55,8 @@
     "errorOccurred": "Đã xảy ra lỗi",
     "changeStatus": "Chuyển đổi trạng thái",
     "submit": "Xác nhận",
-    "staff": "Nhân viên"
+    "staff": "Nhân viên",
+    "logout": "Đăng xuất"
   },
   "status": {
     "confirmed": "Đã xác nhận",
@@ -406,6 +407,15 @@
     "grantAccountDescription": "Thông tin tài khoản",
     "password": "Mật khẩu",
     "revokeAccountTitle": "Thu hồi tài khoản",
-    "revokeAccountConfirmation": "Bạn có chắc chắn muốn thu hồi tài khoản không?"
+    "revokeAccountConfirmation": "Bạn có chắc chắn muốn thu hồi tài khoản không?",
+    "changePassword": "Đổi mật khẩu",
+    "oldPassword": "Mật khẩu cũ",
+    "newPassword": "Mật khẩu mới",
+    "confirmPassword": "Xác nhận mật khẩu",
+    "otp": "Mã OTP",
+    "sendOtp": "Gửi mã OTP",
+    "otpSentSuccessfully": "Mã OTP đã được gửi thành công",
+    "otpSendFailed": "Gửi mã OTP thất bại",
+    "currentStaff": "Nhân viên hiện tại"
   }
 }

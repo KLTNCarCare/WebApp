@@ -1,4 +1,4 @@
-import React, { ReactNode, useEffect } from 'react';
+import React, { ReactNode, useEffect, useState } from 'react';
 import { ChevronLeft } from '@mui/icons-material';
 import {
   Link,
@@ -22,60 +22,20 @@ import ReceiptLongIcon from '@mui/icons-material/ReceiptLong';
 import SupervisedUserCircleIcon from '@mui/icons-material/SupervisedUserCircle';
 import SelectLanguage from './SelectLanguage';
 import PersonPinIcon from '@mui/icons-material/PersonPin';
+import AccountCurrent from './AccountCurent';
 
 type SidebarDashboardProps = {
   isCollapse: boolean;
   setIsCollapse: (value: boolean) => void;
 };
 
-const sidebarDataDashboard = [
-  {
-    value: '',
-    label: 'selectLanguage',
-    icon: <SelectLanguage />,
-  },
-  {
-    value: '/dashboard',
-    label: 'dashboard',
-    icon: <DashboardIcon />,
-  },
-  {
-    value: '/staff',
-    label: 'staff',
-    icon: <PersonPinIcon />,
-  },
-  {
-    value: '/customer',
-    label: 'customer',
-    icon: <SupervisedUserCircleIcon />,
-  },
-  {
-    value: '/category',
-    label: 'category',
-    icon: <CategoryIcon />,
-  },
-  {
-    value: '/price-catalog',
-    label: 'priceCatalog',
-    icon: <PriceChangeIcon />,
-  },
-  {
-    value: '/promotion',
-    label: 'promotion',
-    icon: <DiscountIcon />,
-  },
-  {
-    value: '/invoice',
-    label: 'invoice',
-    icon: <ReceiptLongIcon />,
-  },
-
-  // {
-  //   value: '/account-management',
-  //   label: 'accountManagement',
-  //   icon: <ContactEmergencyIcon />,
-  // },
-];
+const getUserData = () => {
+  const userData = JSON.parse(localStorage.getItem('userData') || '{}');
+  return {
+    name: userData.name || 'Guest',
+    role: userData.role || 'User',
+  };
+};
 
 const SIDEBAR_WIDTH = 240;
 
@@ -126,6 +86,64 @@ const SidebarDashboard: React.FC<SidebarDashboardProps> = ({
 }) => {
   const { t } = useTranslation();
   const location = useLocation();
+  const [sidebarData, setSidebarData] = useState([
+    {
+      value: '',
+      labelForAccount: 'Guest (User)',
+      icon: <AccountCurrent />,
+    },
+    {
+      value: '',
+      label: 'selectLanguage',
+      icon: <SelectLanguage />,
+    },
+    {
+      value: '/dashboard',
+      label: 'dashboard',
+      icon: <DashboardIcon />,
+    },
+    {
+      value: '/staff',
+      label: 'staff',
+      icon: <PersonPinIcon />,
+    },
+    {
+      value: '/customer',
+      label: 'customer',
+      icon: <SupervisedUserCircleIcon />,
+    },
+    {
+      value: '/category',
+      label: 'category',
+      icon: <CategoryIcon />,
+    },
+    {
+      value: '/price-catalog',
+      label: 'priceCatalog',
+      icon: <PriceChangeIcon />,
+    },
+    {
+      value: '/promotion',
+      label: 'promotion',
+      icon: <DiscountIcon />,
+    },
+    {
+      value: '/invoice',
+      label: 'invoice',
+      icon: <ReceiptLongIcon />,
+    },
+  ]);
+
+  useEffect(() => {
+    const { name, role } = getUserData();
+    setSidebarData((prevData) =>
+      prevData.map((item) =>
+        item.labelForAccount
+          ? { ...item, labelForAccount: `${name} (${role})` }
+          : item
+      )
+    );
+  }, []);
 
   useEffect(() => {
     localStorage.setItem('sidebarCollapse', JSON.stringify(isCollapse));
@@ -191,7 +209,7 @@ const SidebarDashboard: React.FC<SidebarDashboardProps> = ({
         ></Link>
 
         <List sx={{ flexGrow: 1 }}>
-          {sidebarDataDashboard.map((item, idx) => (
+          {sidebarData.map((item, idx) => (
             <ListItem key={idx} sx={{ px: 1, py: 0.5 }}>
               <Tooltip
                 placement="right"
@@ -224,7 +242,11 @@ const SidebarDashboard: React.FC<SidebarDashboardProps> = ({
                     {item.icon}
                   </ListItemIcon>
                   <ListItemText
-                    primary={t(`dashboard.${item.label}`)}
+                    primary={
+                      item.labelForAccount
+                        ? item.labelForAccount
+                        : t(`dashboard.${item.label}`)
+                    }
                     primaryTypographyProps={{
                       fontWeight: '600 !important',
                       sx: {

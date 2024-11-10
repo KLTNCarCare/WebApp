@@ -31,3 +31,25 @@ export interface OtpFormValues {
   username: string;
   otp: string;
 }
+
+export interface ChangePasswordParams {
+  phoneNumber: string;
+  oldPass: string;
+  newPass: string;
+  otp: string;
+}
+
+export interface ChangePasswordResponse {
+  message: string;
+  statusCode: number;
+}
+
+export interface SendOtpParams {
+  recaptchaToken: string;
+  phoneNumber: string;
+}
+
+export interface SendOtpResponse {
+  message: string;
+  statusCode: number;
+}

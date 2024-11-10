@@ -9,6 +9,13 @@ export interface LoginResponse {
     refreshToken: string;
     username: string;
     role: string;
+    _id: string;
+    staffId: string;
+    phone: string;
+    name: string;
+    dob: string;
+    email: string;
+    address: string;
   };
   message: string;
   statusCode: number;
@@ -36,4 +43,4 @@ export const useLogin = (
     LoginResponse,
     DefaultQueryError,
     { username: string; password: string }
-  >([apiRoutes.admin.auth.login], loginFn, opts);
+  >((body) => loginFn(body), opts);

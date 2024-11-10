@@ -55,7 +55,8 @@
     "errorOccurred": "An error occurred",
     "changeStatus": "Change Status",
     "submit": "Submit",
-    "staff": "Staff"
+    "staff": "Staff",
+    "logout": "Logout"
   },
   "status": {
     "confirmed": "Confirmed",
@@ -398,6 +399,15 @@
     "grantAccountDescription": "Account Information",
     "password": "Password",
     "revokeAccountTitle": "Revoke Account",
-    "revokeAccountConfirmation": "Do you sure you want to revoke the account?"
+    "revokeAccountConfirmation": "Do you sure you want to revoke the account?",
+    "changePassword": "Change Password",
+    "oldPassword": "Old Password",
+    "newPassword": "New Password",
+    "confirmPassword": "Confirm Password",
+    "otp": "OTP Code",
+    "sendOtp": "Send OTP",
+    "otpSentSuccessfully": "OTP has been sent successfully",
+    "otpSendFailed": "Failed to send OTP",
+    "currentStaff": "Current Staff"
   }
 }

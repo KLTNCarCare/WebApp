@@ -43,11 +43,19 @@ export function SignInPage() {
       });
 
       if (response.data) {
-        const { accessToken, refreshToken } = response.data;
+        const { accessToken, refreshToken, ...userData } = response.data;
 
         if (accessToken && refreshToken) {
           setCookie('accessToken', accessToken);
           setCookie('refreshToken', refreshToken);
+
+          localStorage.setItem('userData', JSON.stringify(userData));
+
+          const expirationTime = 3600 * 1000;
+          setTimeout(() => {
+            localStorage.removeItem('userData');
+          }, expirationTime);
+
           navigate('/dashboard');
         } else {
           setErrorSignin('Access token or refresh token is missing');

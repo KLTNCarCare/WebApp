@@ -1,7 +1,6 @@
 import { Box, Paper } from '@mui/material';
 import { ReactNode } from 'react';
 import { isMobile } from 'react-device-detect';
-import NavigationBar from './NavigationBar';
 import SidebarDashboard from 'src/modules/dashboard/component/SidebarDashboard';
 
 type AdminLayoutProps = {
@@ -25,9 +24,7 @@ const MobileAdminLayout = ({ children }: { children: ReactNode }) => {
           zIndex: 500,
           boxShadow: '0px -4px 16px rgba(0, 0, 0, 0.12)',
         }}
-      >
-        <NavigationBar />
-      </Paper>
+      ></Paper>
     </Box>
   );
 };

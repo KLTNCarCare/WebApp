@@ -1,8 +1,3 @@
-import { get } from 'http';
-import { Appointment } from './../api/appointment/types';
-import { create } from 'domain';
-import { revokeAccountFn } from 'src/api/staff/useRevokeAccount';
-
 const apiRoutes = {
   user: {},
   admin: {
@@ -109,6 +104,10 @@ const apiRoutes = {
     updatePhone: 'v1/api/staff/edit-phone',
     grantAccount: 'v1/api/staff/grant-account',
     revokeAccount: 'v1/api/staff/revoke-account',
+  },
+  account: {
+    changePassword: 'v1/api/account/change-password',
+    sendOTP: 'v1/api/otp/send-otp',
   },
 };
 
