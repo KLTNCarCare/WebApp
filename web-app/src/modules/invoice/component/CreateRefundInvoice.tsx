@@ -47,8 +47,7 @@ const CreateRefundInvoice: React.FC<CreateRefundInvoiceModalProps> = ({
   };
 
   return (
-    <Dialog open={open} onClose={onClose} fullWidth maxWidth="sm">
-      <DialogTitle>{t('invoice.refundInvoice')}</DialogTitle>
+    <Dialog open={open} onClose={onClose} fullWidth maxWidth="md">
       <DialogContent>
         <TextField
           label={t('invoice.refundReason')}

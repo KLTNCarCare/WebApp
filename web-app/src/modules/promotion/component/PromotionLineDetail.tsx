@@ -49,37 +49,58 @@ const PromotionLineDetail: React.FC<PromotionLineDetailProps> = ({
     return null;
   }
 
-  const columns: GridColDef[] = [
-    { field: 'code', headerName: t('promotionLine.code'), width: 120 },
-    {
-      field: 'itemName',
-      headerName: t('promotionLine.itemName'),
-      width: 230,
-    },
-    {
-      field: 'description',
-      headerName: t('promotionLine.description'),
-      minWidth: 250,
-    },
-    {
-      field: 'discount',
-      headerName: t('promotionLine.discount'),
-      width: 100,
-      valueFormatter: (params) => `${params.value}%`,
-    },
-    {
-      field: 'limitDiscount',
-      headerName: t('promotionLine.limitDiscount'),
-      width: 200,
-      valueFormatter: (params) => {
-        const value = params.value || 0;
-        return new Intl.NumberFormat('vi-VN', {
-          style: 'currency',
-          currency: 'VND',
-        }).format(value);
-      },
-    },
-  ];
+  const columns: GridColDef[] =
+    promotionLine.type === 'discount-bill'
+      ? [
+          { field: 'code', headerName: t('promotionLine.code'), width: 150 },
+          {
+            field: 'description',
+            headerName: t('promotionLine.description'),
+            minWidth: 300,
+          },
+          {
+            field: 'bill',
+            headerName: t('promotionLine.bill'),
+            width: 200,
+          },
+          {
+            field: 'discount',
+            headerName: t('promotionLine.discount'),
+            width: 120,
+            valueFormatter: (params) => `${params.value}%`,
+          },
+          {
+            field: 'limitDiscount',
+            headerName: t('promotionLine.limitDiscount'),
+            width: 250,
+            valueFormatter: (params) => {
+              const value = params.value || 0;
+              return new Intl.NumberFormat('vi-VN', {
+                style: 'currency',
+                currency: 'VND',
+              }).format(value);
+            },
+          },
+        ]
+      : [
+          { field: 'code', headerName: t('promotionLine.code'), width: 150 },
+          {
+            field: 'itemName',
+            headerName: t('promotionLine.itemName'),
+            width: 250,
+          },
+          {
+            field: 'itemGiftName',
+            headerName: t('promotionLine.itemGiftName'),
+            width: 250,
+          },
+          {
+            field: 'discount',
+            headerName: t('promotionLine.discount'),
+            width: 120,
+            valueFormatter: (params) => `${params.value}%`,
+          },
+        ];
 
   const rows = promotionLine.detail.map((detail, index) => ({
     id: index,

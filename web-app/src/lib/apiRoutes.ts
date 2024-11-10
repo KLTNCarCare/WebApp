@@ -1,6 +1,7 @@
 import { get } from 'http';
 import { Appointment } from './../api/appointment/types';
 import { create } from 'domain';
+import { revokeAccountFn } from 'src/api/staff/useRevokeAccount';
 
 const apiRoutes = {
   user: {},
@@ -63,7 +64,7 @@ const apiRoutes = {
     getAvailavleTime: 'v1/api/appointment/get-available-time',
     slotInDay: 'v1/api/appointment/slot-in-day',
     getAppointmentInDay: 'v1/api/appointment/get-appointment-in-day',
-    confirm: (id: string) => `v1/api/appointment/confirmed/${id}`,
+    confirm: (id: string) => `v1/api/appointment/in-progress/${id}`,
     cancel: (id: string) => `v1/api/appointment/canceled/${id}`,
     delete: (id: string) => `v1/api/appointment/delete/${id}`,
     inprogress: (id: string) => `v1/api/appointment/in-progress/${id}`,
@@ -100,6 +101,14 @@ const apiRoutes = {
     create: 'v1/api/customer/save',
     update: 'v1/api/customer/edit',
     remove: (id: string) => `v1/api/customer/remove/${id}`,
+  },
+  staff: {
+    list: 'v1/api/staff/get-all',
+    create: 'v1/api/staff/save',
+    update: 'v1/api/staff/edit',
+    updatePhone: 'v1/api/staff/edit-phone',
+    grantAccount: 'v1/api/staff/grant-account',
+    revokeAccount: 'v1/api/staff/revoke-account',
   },
 };
 

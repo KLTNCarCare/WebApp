@@ -49,8 +49,8 @@ const createRefundInvoiceColumns = (
     },
   },
   {
-    field: 'invoiceId',
-    headerName: t('invoice.invoiceId'),
+    field: 'invoiceRefundId',
+    headerName: t('invoice.invoiceRefundId'),
     maxWidth: 200,
     flex: 1,
     valueGetter: (params: GridValueGetterParams) =>

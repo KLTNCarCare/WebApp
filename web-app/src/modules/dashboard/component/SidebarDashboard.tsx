@@ -21,6 +21,7 @@ import PriceChangeIcon from '@mui/icons-material/PriceChange';
 import ReceiptLongIcon from '@mui/icons-material/ReceiptLong';
 import SupervisedUserCircleIcon from '@mui/icons-material/SupervisedUserCircle';
 import SelectLanguage from './SelectLanguage';
+import PersonPinIcon from '@mui/icons-material/PersonPin';
 
 type SidebarDashboardProps = {
   isCollapse: boolean;
@@ -37,6 +38,11 @@ const sidebarDataDashboard = [
     value: '/dashboard',
     label: 'dashboard',
     icon: <DashboardIcon />,
+  },
+  {
+    value: '/staff',
+    label: 'staff',
+    icon: <PersonPinIcon />,
   },
   {
     value: '/customer',

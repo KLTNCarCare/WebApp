@@ -43,7 +43,6 @@ const PaymentModal: React.FC<PaymentModalProps> = ({
   const [paymentMethod, setPaymentMethod] = useState('cash');
   const [isDetailModalOpen, setIsDetailModalOpen] = useState(false);
   const [selectedInvoice, setSelectedInvoice] = useState<Invoice | null>(null);
-
   useEffect(() => {
     console.log('PaymentModal rendered');
   });
@@ -66,7 +65,7 @@ const PaymentModal: React.FC<PaymentModalProps> = ({
         setSelectedInvoice(data);
         setIsDetailModalOpen(true);
         onSubmit(paymentMethod, data);
-        refetch(); // Gọi hàm refetch để cập nhật dữ liệu trong bảng hóa đơn
+        refetch();
       },
       onError: () => {
         toast.error(t('invoice.paymentFailed'));

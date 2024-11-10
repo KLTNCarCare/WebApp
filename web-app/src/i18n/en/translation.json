@@ -54,7 +54,8 @@
     "loadingData": "Loading data",
     "errorOccurred": "An error occurred",
     "changeStatus": "Change Status",
-    "submit": "Submit"
+    "submit": "Submit",
+    "staff": "Staff"
   },
   "status": {
     "confirmed": "Confirmed",
@@ -302,7 +303,9 @@
     "refund": "Refund Request",
     "refundInvoice": "Create Refund Invoice",
     "refundReason": "Refund Reason",
-    "transfer": "Transfer"
+    "transfer": "Transfer",
+    "invoiceRefundId": "Invoice Refund ID",
+    "refundInvoiceDetails": "Refund Invoice Details"
   },
   "customer": {
     "userCustomerManagement": "User Customer Management",
@@ -354,5 +357,42 @@
     "confirmRetryMessage": "This action will change the status of the appointment to 'In Progress'.",
     "cancel": "Cancel",
     "retry": "Retry"
+  },
+  "staff": {
+    "userStaffManagement": "Staff Management",
+    "filter": "Filter",
+    "addNew": "Add New Staff",
+    "staffList": "Staff List",
+    "index": "Index",
+    "staffId": "Staff ID",
+    "name": "Staff Name",
+    "phone": "Phone",
+    "dob": "Date of Birth",
+    "email": "Email",
+    "address": "Address",
+    "role": "Role",
+    "isAccount": "Account",
+    "detail": "Detail",
+    "staffDetail": "Staff Information",
+    "grantAccount": "Grant Account",
+    "revokeAccount": "Revoke Account",
+    "createdAt": "Created Date",
+    "updatedAt": "Updated Date",
+    "editStaff": "Edit",
+    "editStaffTitle": "Edit Staff Information",
+    "updateInfo": "Update Information",
+    "updating": "Updating",
+    "updatePhone": "Update Phone",
+    "createStaffTitle": "Add Staff",
+    "createStaff": "Add",
+    "creating": "Creating",
+    "createSuccess": "Staff has been added successfully",
+    "roleStaff": "Staff",
+    "roleAdmin": "Admin",
+    "details": "Details",
+    "staffDetails": "Staff Details",
+    "updateStaff": "Update",
+    "hasAccount": "Has Account",
+    "noAccount": "No Account"
   }
 }

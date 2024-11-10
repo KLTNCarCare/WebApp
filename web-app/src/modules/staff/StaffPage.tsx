@@ -4,7 +4,6 @@ import {
   Button,
   ButtonBase,
   Dialog,
-  DialogContent,
   DialogTitle,
   Paper,
   Stack,
@@ -15,15 +14,14 @@ import { useTranslation } from 'react-i18next';
 import CloseIcon from '@mui/icons-material/Close';
 import { TEN_ITEMS_PAGE } from 'src/lib/constants';
 import useDebounce from 'src/lib/hooks/useDebounce';
-import {
-  GetAccountParams,
-  useGetListAccountByAdmin,
-} from 'src/api/account/useGetAccountsByAdmin';
 import AdminLayout from 'src/components/layouts/AdminLayout';
-import FilterFormAccount from './component/filter/FilterFormAccount';
-import AccountDataTable from './component/AccountDataTable';
+import { useGetAllStaff } from 'src/api/staff/getAllStaff';
+import { Staff } from 'src/api/staff/types';
+import FilterFormStaff from './component/filter/FilterFormStaff';
+import StaffDataTable from './component/StaffDataTable';
+import CreateStaffModal from './component/CreateStaffModal';
 
-export function AccountPage() {
+export function StaffPage() {
   const { t } = useTranslation();
   const [isCollapse, setIsCollapse] = useState<boolean>(false);
   const [paginationModel, setPaginationModel] = useState({
@@ -31,39 +29,29 @@ export function AccountPage() {
     pageSize: TEN_ITEMS_PAGE,
   });
 
-  const [isRegisterAccount, setIsRegisterAccount] = useState<boolean>(false);
-  const [inputEmailValue, setInputEmailValue] = useState<string>('');
+  const [isRegisterStaff, setIsRegisterStaff] = useState<boolean>(false);
   const [inputPhoneValue, setInputPhoneValue] = useState<string>('');
-  const debounceEmailValue = useDebounce<string>(inputEmailValue, 500);
+  const [selectedField, setSelectedField] = useState('phone');
   const debouncePhoneValue = useDebounce<string>(inputPhoneValue, 500);
-  const accountParams: GetAccountParams = {
-    page: paginationModel.page,
-    size: paginationModel.pageSize,
-    email: debounceEmailValue ? debounceEmailValue : undefined,
-    phone: debouncePhoneValue ? debouncePhoneValue : undefined,
-  };
-  const {
-    data: dataAccount,
-    isLoading,
-    refetch,
-  } = useGetListAccountByAdmin(accountParams, {
-    enabled: false,
-  });
+
+  const { data, isLoading, refetch } = useGetAllStaff(
+    paginationModel.page + 1,
+    paginationModel.pageSize,
+    selectedField,
+    debouncePhoneValue
+  );
+
+  const totalPage = data?.data.totalPage || 0;
+  const staffList: Staff[] = data?.data.data ?? [];
+
   useEffect(() => {
-    if (
-      debounceEmailValue ||
-      debouncePhoneValue ||
-      paginationModel ||
-      refetch
-    ) {
-      refetch();
-    }
-  }, [paginationModel, refetch, debounceEmailValue, debouncePhoneValue]);
+    refetch();
+  }, [debouncePhoneValue, refetch]);
 
   return (
     <>
       <AdminLayout
-        title="Bản đồ ngập"
+        title="Loại hàng"
         isCollapse={isCollapse}
         setIsCollapse={setIsCollapse}
       >
@@ -78,14 +66,14 @@ export function AccountPage() {
             }}
           >
             <Typography variant="h5" sx={{ paddingBottom: 2 }}>
-              {t('account.userAccountManagement')}
+              {t('staff.userStaffManagement')}
             </Typography>
           </Paper>
           <Paper
             sx={{
               px: 3,
               py: 4,
-              paddingTop: ' 15px',
+              paddingTop: '15px',
               m: '10px 20px',
               borderRadius: 2,
               boxShadow: 'none',
@@ -94,12 +82,12 @@ export function AccountPage() {
             }}
           >
             <Stack>
-              <Typography variant="h5">{t('account.filter')}</Typography>
-              <FilterFormAccount
-                inputEmailValue={inputEmailValue}
-                inputPhoneValue={inputPhoneValue}
-                setInputEmailValue={setInputEmailValue}
-                setInputPhoneValue={setInputPhoneValue}
+              <Typography variant="h5">{t('staff.filter')}</Typography>
+              <FilterFormStaff
+                searchText={inputPhoneValue}
+                setSearchText={setInputPhoneValue}
+                selectedField={selectedField}
+                setSelectedField={setSelectedField}
               />
             </Stack>
             <Button
@@ -110,9 +98,9 @@ export function AccountPage() {
                 minWidth: 'auto',
                 height: '40px',
               }}
-              onClick={() => setIsRegisterAccount(true)}
+              onClick={() => setIsRegisterStaff(true)}
             >
-              + {t('account.addNew')}
+              + {t('staff.addNew')}
             </Button>
           </Paper>
           <Paper
@@ -128,23 +116,24 @@ export function AccountPage() {
             }}
           >
             <Typography variant="h5" sx={{ paddingBottom: 2 }}>
-              {t('account.accountList')}
+              {t('staff.staffList')}
             </Typography>
 
-            <AccountDataTable
-              dataAccount={dataAccount ? dataAccount : null}
-              isLoadingAccount={isLoading}
+            <StaffDataTable
+              dataStaff={staffList}
+              isLoadingStaff={isLoading}
               refetch={refetch}
               paginationModel={paginationModel}
               setPaginationModel={setPaginationModel}
+              totalPage={totalPage}
             />
           </Paper>
         </Box>
         <Dialog
-          open={isRegisterAccount}
+          open={isRegisterStaff}
           fullWidth
           maxWidth="xs"
-          onClose={() => setIsRegisterAccount(false)}
+          onClose={() => setIsRegisterStaff(false)}
         >
           <DialogTitle p="0px !important" borderBottom="1px solid #F2F2F2">
             <Toolbar>
@@ -157,27 +146,25 @@ export function AccountPage() {
                   color="grey.900"
                   ml={4.25}
                 >
-                  {t('account.registerAccount')}
+                  {t('staff.registerStaff')}
                 </Typography>
 
                 <ButtonBase
                   sx={{ flex: 'none' }}
                   disableRipple
-                  onClick={() => setIsRegisterAccount(false)}
+                  onClick={() => setIsRegisterStaff(false)}
                 >
                   <CloseIcon />
                 </ButtonBase>
               </Stack>
             </Toolbar>
           </DialogTitle>
-
-          {/* <DialogContent>
-            <FormRegisterAccount
-              refetch={refetch}
-              setIsOpenRegisterOrEditAccount={setIsRegisterAccount}
-              dataRole={dataRole?.data ?? []}
-            />
-          </DialogContent> */}
+          <CreateStaffModal
+            refetch={refetch}
+            setIsAddStaff={setIsRegisterStaff}
+            open={isRegisterStaff}
+            onClose={() => setIsRegisterStaff(false)}
+          />
         </Dialog>
       </AdminLayout>
     </>

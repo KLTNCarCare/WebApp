@@ -54,7 +54,8 @@
     "loadingData": "Đang tải dữ liệu",
     "errorOccurred": "Đã xảy ra lỗi",
     "changeStatus": "Chuyển đổi trạng thái",
-    "submit": "Xác nhận"
+    "submit": "Xác nhận",
+    "staff": "Nhân viên"
   },
   "status": {
     "confirmed": "Đã xác nhận",
@@ -309,7 +310,9 @@
     "refundInvoice": "Tạo hóa đơn trả",
     "refundReason": "Lý do hoàn tiền",
     "zaloPay": "ZaloPay",
-    "transfer": "Chuyển khoản"
+    "transfer": "Chuyển khoản",
+    "invoiceRefundId": "Mã hóa đơn trả",
+    "refundInvoiceDetails": "Chi tiết hóa đơn trả"
   },
   "customer": {
     "userCustomerManagement": "Quản lý khách hàng",
@@ -362,5 +365,42 @@
     "confirmRetryMessage": " Lịch hẹn hiện tại đã đầy, bạn có chắc chắn thêm mới hàng đợi không?",
     "cancel": "Hủy",
     "retry": "Xác nhận"
+  },
+  "staff": {
+    "userStaffManagement": "Quản lý nhân viên",
+    "filter": "Bộ lọc",
+    "addNew": "Thêm nhân viên mới",
+    "staffList": "Danh sách nhân viên",
+    "index": "STT",
+    "staffId": "Mã nhân viên",
+    "name": "Tên nhân viên",
+    "phone": "Số điện thoại",
+    "dob": "Ngày sinh",
+    "email": "Email",
+    "address": "Địa chỉ",
+    "role": "Chức vụ",
+    "isAccount": "Tài khoản",
+    "detail": "Chi tiết",
+    "staffDetail": "Thông tin nhân viên",
+    "grantAccount": "Cấp tài khoản",
+    "revokeAccount": "Thu hồi tài khoản",
+    "createdAt": "Ngày tạo",
+    "updatedAt": "Ngày cập nhật",
+    "editStaff": "Chỉnh sửa",
+    "editStaffTitle": "Chỉnh sửa thông tin nhân viên",
+    "updateInfo": "Cập nhật thông tin",
+    "updating": "Đang cập nhật",
+    "updatePhone": "Cập nhật số điện thoại",
+    "createStaffTitle": "Thêm nhân viên",
+    "createStaff": "Thêm",
+    "creating": "Đang thêm",
+    "createSuccess": "Nhân viên đã được thêm thành công",
+    "roleStaff": "Nhân viên",
+    "roleAdmin": "Quản lý",
+    "details": "Thông tin",
+    "staffDetails": "Chi tiết nhân viên",
+    "updateStaff": "Cập nhật",
+    "hasAccount": "Đã có tài khoản",
+    "noAccount": "Chưa có tài khoản"
   }
 }

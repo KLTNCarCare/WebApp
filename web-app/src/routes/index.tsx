@@ -11,6 +11,7 @@ import InvoicePage from 'src/pages/Invoice';
 import PriceCatalogPage from 'src/pages/PriceCatalog';
 import PromotionPage from 'src/pages/PromotionPage';
 import SignInPage from 'src/pages/SignIn';
+import StaffPage from 'src/pages/StaffPage';
 
 const routes: RouteObject[] = [
   {
@@ -70,6 +71,14 @@ const routes: RouteObject[] = [
         element: (
           <ProtectedRoute>
             <CustomerPage />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: `${publicUrl}/staff`,
+        element: (
+          <ProtectedRoute>
+            <StaffPage />
           </ProtectedRoute>
         ),
       },

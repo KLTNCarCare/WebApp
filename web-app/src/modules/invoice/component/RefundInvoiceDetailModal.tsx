@@ -117,6 +117,36 @@ const RefundInvoiceDetailModal: React.FC<RefundInvoiceDetailModalProps> = ({
             <Box key={invoice._id} sx={{ mb: 2, textAlign: 'center' }}>
               <Typography variant="h4">{t('invoice.header')}</Typography>
               <List>
+                {invoice.invoiceRefundId && (
+                  <>
+                    <ListItem>
+                      <ListItemText primary={t('invoice.invoiceRefundId')} />
+                      <Typography
+                        variant="body2"
+                        textAlign="right"
+                        color="grey.600"
+                      >
+                        {invoice.invoiceRefundId}
+                      </Typography>
+                    </ListItem>
+                    <Divider variant="middle" />
+                  </>
+                )}
+                {invoice.reason && (
+                  <>
+                    <ListItem>
+                      <ListItemText primary={t('invoice.reason')} />
+                      <Typography
+                        variant="body2"
+                        textAlign="right"
+                        color="red.600"
+                      >
+                        {invoice.reason}
+                      </Typography>
+                    </ListItem>
+                    <Divider variant="middle" />
+                  </>
+                )}
                 {invoice.invoice.invoiceId && (
                   <>
                     <ListItem>
@@ -219,21 +249,6 @@ const RefundInvoiceDetailModal: React.FC<RefundInvoiceDetailModalProps> = ({
                         color="grey.600"
                       >
                         {new Date(invoice.createdAt).toLocaleDateString()}
-                      </Typography>
-                    </ListItem>
-                    <Divider variant="middle" />
-                  </>
-                )}
-                {invoice.reason && (
-                  <>
-                    <ListItem>
-                      <ListItemText primary={t('invoice.reason')} />
-                      <Typography
-                        variant="body2"
-                        textAlign="right"
-                        color="grey.600"
-                      >
-                        {invoice.reason}
                       </Typography>
                     </ListItem>
                     <Divider variant="middle" />
