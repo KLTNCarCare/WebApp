@@ -401,6 +401,11 @@
     "staffDetails": "Chi tiết nhân viên",
     "updateStaff": "Cập nhật",
     "hasAccount": "Đã có tài khoản",
-    "noAccount": "Chưa có tài khoản"
+    "noAccount": "Chưa có tài khoản",
+    "grantAccountTitle": "Cấp tài khoản",
+    "grantAccountDescription": "Thông tin tài khoản",
+    "password": "Mật khẩu",
+    "revokeAccountTitle": "Thu hồi tài khoản",
+    "revokeAccountConfirmation": "Bạn có chắc chắn muốn thu hồi tài khoản không?"
   }
 }

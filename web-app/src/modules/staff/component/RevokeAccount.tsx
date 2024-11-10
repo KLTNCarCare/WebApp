@@ -50,14 +50,14 @@ const RevokeAccount: React.FC<RevokeAccountProps> = ({
       </DialogContent>
       <DialogActions>
         <Button onClick={onClose} color="primary">
-          {t('staff.cancel')}
+          {t('dashboard.cancel')}
         </Button>
         <Button
           onClick={handleConfirmRevoke}
           color="secondary"
           disabled={isLoading}
         >
-          {t('staff.confirm')}
+          {t('dashboard.confirm')}
         </Button>
       </DialogActions>
     </Dialog>

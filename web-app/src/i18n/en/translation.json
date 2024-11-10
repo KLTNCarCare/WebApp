@@ -393,6 +393,11 @@
     "staffDetails": "Staff Details",
     "updateStaff": "Update",
     "hasAccount": "Has Account",
-    "noAccount": "No Account"
+    "noAccount": "No Account",
+    "grantAccountTitle": "Grant Account",
+    "grantAccountDescription": "Account Information",
+    "password": "Password",
+    "revokeAccountTitle": "Revoke Account",
+    "revokeAccountConfirmation": "Do you sure you want to revoke the account?"
   }
 }
