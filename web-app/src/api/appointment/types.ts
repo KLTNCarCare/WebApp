@@ -2,6 +2,10 @@ export interface Customer {
   phone: string;
   name: string;
 }
+export interface Staff {
+  staffId: string;
+  name: string;
+}
 
 export interface Vehicle {
   licensePlate: string | null;
@@ -24,6 +28,7 @@ export interface ItemCreate {
 
 export interface Appointment {
   _id: string;
+  staff: Staff;
   customer: Customer;
   vehicle: Vehicle;
   total_duration: number;
@@ -39,6 +44,7 @@ export interface Appointment {
 }
 
 export type CreateAppointmentFn = {
+  staff: Staff;
   customer: Customer;
   vehicle: Vehicle;
   startTime: number;

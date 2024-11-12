@@ -31,7 +31,7 @@ declare global {
 const StyledDialog = styled(Dialog)(({ theme }) => ({
   '& .MuiDialog-paper': {
     borderRadius: theme.shape.borderRadius,
-    padding: theme.spacing(2),
+    padding: theme.spacing(3),
     backgroundColor: theme.palette.background.paper,
     boxShadow: theme.shadows[5],
   },
@@ -40,16 +40,20 @@ const StyledDialog = styled(Dialog)(({ theme }) => ({
 const StyledDialogTitle = styled(DialogTitle)(({ theme }) => ({
   borderBottom: `1px solid ${theme.palette.divider}`,
   marginBottom: theme.spacing(2),
+  padding: theme.spacing(2),
 }));
 
 const StyledDialogContent = styled(DialogContent)(({ theme }) => ({
   paddingBottom: theme.spacing(2),
+  padding: theme.spacing(2),
 }));
 
 const StyledDialogActions = styled(DialogActions)(({ theme }) => ({
   borderTop: `1px solid ${theme.palette.divider}`,
   marginTop: theme.spacing(2),
   padding: theme.spacing(1),
+  display: 'flex',
+  justifyContent: 'space-between',
 }));
 
 const AccountCurrent: React.FC = () => {

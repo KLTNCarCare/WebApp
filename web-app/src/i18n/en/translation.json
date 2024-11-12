@@ -56,7 +56,9 @@
     "changeStatus": "Change Status",
     "submit": "Submit",
     "staff": "Staff",
-    "logout": "Logout"
+    "logout": "Logout",
+    "staffId": "Staff ID",
+    "staffName": "Staff Name"
   },
   "status": {
     "confirmed": "Confirmed",
@@ -306,7 +308,9 @@
     "refundReason": "Refund Reason",
     "transfer": "Transfer",
     "invoiceRefundId": "Invoice Refund ID",
-    "refundInvoiceDetails": "Refund Invoice Details"
+    "refundInvoiceDetails": "Refund Invoice Details",
+    "staffId": "Staff ID",
+    "staffName": "Staff Name"
   },
   "customer": {
     "userCustomerManagement": "User Customer Management",

@@ -1,4 +1,4 @@
-import { ConfirmAppointmentFn } from './../appointment/types';
+import { ConfirmAppointmentFn, Staff } from './../appointment/types';
 import { Customer, Vehicle } from '../appointment/types';
 
 interface Discount {
@@ -18,6 +18,7 @@ interface Item {
 export interface Invoice {
   _id: string;
   invoiceId: string;
+  staff?: Staff;
   appointmentId: string;
   customer: Customer;
   vehicle: Vehicle;

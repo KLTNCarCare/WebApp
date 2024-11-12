@@ -56,7 +56,9 @@
     "changeStatus": "Chuyển đổi trạng thái",
     "submit": "Xác nhận",
     "staff": "Nhân viên",
-    "logout": "Đăng xuất"
+    "logout": "Đăng xuất",
+    "staffId": "ID nhân viên",
+    "staffName": "Nhân viên tạo "
   },
   "status": {
     "confirmed": "Đã xác nhận",
@@ -313,7 +315,9 @@
     "zaloPay": "ZaloPay",
     "transfer": "Chuyển khoản",
     "invoiceRefundId": "Mã hóa đơn trả",
-    "refundInvoiceDetails": "Chi tiết hóa đơn trả"
+    "refundInvoiceDetails": "Chi tiết hóa đơn trả",
+    "staffId": "Mã nhân viên",
+    "staffName": "Nhân viên"
   },
   "customer": {
     "userCustomerManagement": "Quản lý khách hàng",

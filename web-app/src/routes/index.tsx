@@ -4,6 +4,7 @@ import { publicUrl } from 'src/lib/constants';
 import { AuthProvider } from 'src/modules/auth/AuthProvider';
 import ProtectedRoute from 'src/modules/auth/ProtectedRoute';
 import AccountPage from 'src/pages/AccountPage';
+import AdsPage from 'src/pages/AdsPage';
 import CategoryPage from 'src/pages/CategoryPage';
 import CustomerPage from 'src/pages/CustomerPage';
 import DashboardPage from 'src/pages/DashBoard';
@@ -83,6 +84,7 @@ const routes: RouteObject[] = [
         ),
       },
       { path: `${publicUrl}/signin`, element: <SignInPage /> },
+      { path: `${publicUrl}/home`, element: <AdsPage /> },
     ],
   },
 ];

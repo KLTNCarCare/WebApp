@@ -43,6 +43,7 @@ const PaymentModal: React.FC<PaymentModalProps> = ({
   const [paymentMethod, setPaymentMethod] = useState('cash');
   const [isDetailModalOpen, setIsDetailModalOpen] = useState(false);
   const [selectedInvoice, setSelectedInvoice] = useState<Invoice | null>(null);
+
   useEffect(() => {
     console.log('PaymentModal rendered');
   });

@@ -1,4 +1,4 @@
-import React, { ReactNode, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { ChevronLeft } from '@mui/icons-material';
 import {
   Link,
@@ -14,7 +14,6 @@ import { styled } from '@mui/material/styles';
 import { NavLink, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import DashboardIcon from '@mui/icons-material/Dashboard';
-import ContactEmergencyIcon from '@mui/icons-material/ContactEmergency';
 import DiscountIcon from '@mui/icons-material/Discount';
 import CategoryIcon from '@mui/icons-material/Category';
 import PriceChangeIcon from '@mui/icons-material/PriceChange';
@@ -23,6 +22,7 @@ import SupervisedUserCircleIcon from '@mui/icons-material/SupervisedUserCircle';
 import SelectLanguage from './SelectLanguage';
 import PersonPinIcon from '@mui/icons-material/PersonPin';
 import AccountCurrent from './AccountCurent';
+import { ReactComponent as AKAutoIcon } from '../../../assets/icons/AKAuto.svg';
 
 type SidebarDashboardProps = {
   isCollapse: boolean;
@@ -203,10 +203,15 @@ const SidebarDashboard: React.FC<SidebarDashboardProps> = ({
           href={`/dashboard`}
           underline="none"
           sx={{
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
             px: !isCollapse ? 2.5 : `12px !important`,
             py: 3,
           }}
-        ></Link>
+        >
+          <AKAutoIcon style={{ width: !isCollapse ? 200 : 50, height: 80 }} />
+        </Link>
 
         <List sx={{ flexGrow: 1 }}>
           {sidebarData.map((item, idx) => (

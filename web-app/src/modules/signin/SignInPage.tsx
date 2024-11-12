@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { LoadingButton } from '@mui/lab';
 import { Box, Container, Paper, TextField, Typography } from '@mui/material';
 import { Link, useNavigate } from 'react-router-dom';
@@ -6,7 +6,9 @@ import { useForm, SubmitHandler } from 'react-hook-form';
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useLogin } from 'src/api/auth/useLogin';
-import { setCookie } from 'src/lib/cookies';
+import { setCookie, getCookie } from 'src/lib/cookies';
+import { useAuth } from '../auth/AuthProvider';
+import snackbarUtils from 'src/lib/snackbarUtils';
 
 interface SignInFormValues {
   username: string;
@@ -27,17 +29,32 @@ export function SignInPage() {
   const [errorSignin, setErrorSignin] = useState('');
   const [loadingLogin, setLoadingLogin] = useState(false);
   const navigate = useNavigate();
-  const { mutateAsync: login } = useLogin();
+  const { isAuthenticated, setIsAuthenticated } = useAuth();
+  const { mutateAsync: login } = useLogin({
+    onSuccess: (success) => {
+      snackbarUtils.success(success);
+    },
+    onError(error) {
+      snackbarUtils.error(error);
+    },
+  });
 
   const { handleSubmit, register } = useForm<SignInFormValues>({
     resolver: yupResolver(schemaSignin),
   });
 
+  useEffect(() => {
+    const accessToken = getCookie('accessToken');
+    if (isAuthenticated || accessToken) {
+      navigate('/dashboard', { replace: true });
+    }
+  }, [isAuthenticated, navigate]);
+
   const signIn: SubmitHandler<SignInFormValues> = async (value) => {
     setLoadingLogin(true);
     setErrorSignin('');
     try {
-      const response = await login({
+      const response: any = await login({
         username: value.username,
         password: value.password,
       });
@@ -56,6 +73,7 @@ export function SignInPage() {
             localStorage.removeItem('userData');
           }, expirationTime);
 
+          setIsAuthenticated(true);
           navigate('/dashboard');
         } else {
           setErrorSignin('Access token or refresh token is missing');

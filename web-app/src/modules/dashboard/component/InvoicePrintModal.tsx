@@ -95,6 +95,13 @@ const InvoicePrintModal: React.FC<InvoicePrintModalProps> = ({
           <Box>
             {[
               { label: t('invoice.id'), value: invoiceData.invoiceId },
+              { label: t('invoice.staffId'), value: invoiceData.staff.staffId },
+
+              {
+                label: t('invoice.staffName'),
+                value: invoiceData.staff.name,
+              },
+
               {
                 label: t('invoice.customerName'),
                 value: invoiceData.customer.name,

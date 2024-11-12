@@ -179,7 +179,13 @@ function CreateAppointmentModal({
   });
 
   const handleCreateAppointment: SubmitHandler<any> = (data) => {
+    const staff = JSON.parse(localStorage.getItem('userData') || '{}');
+
     const appointmentData = {
+      staff: {
+        staffId: staff.staffId,
+        name: staff.name,
+      },
       customer: {
         phone: customerVehicleData?.customer?.phone || data.customer.phone,
         name: customerVehicleData?.customer?.name || data.customer.name,

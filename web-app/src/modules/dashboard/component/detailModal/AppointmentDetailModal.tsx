@@ -149,6 +149,22 @@ const AppointmentDetailModal: React.FC<AppointmentDetailModalProps> = ({
               <Typography
                 sx={{ color: 'text.primary', fontWeight: 'medium', mb: 1 }}
               >
+                {t('dashboard.staffId')}:{' '}
+                <Typography component="span" sx={{ fontWeight: 'bold' }}>
+                  {item?.staff?.staffId || t('dashboard.na')}
+                </Typography>
+              </Typography>
+              <Typography
+                sx={{ color: 'text.primary', fontWeight: 'medium', mb: 1 }}
+              >
+                {t('dashboard.staffName')}:{' '}
+                <Typography component="span" sx={{ fontWeight: 'bold' }}>
+                  {item?.staff?.name || t('dashboard.na')}
+                </Typography>
+              </Typography>
+              <Typography
+                sx={{ color: 'text.primary', fontWeight: 'medium', mb: 1 }}
+              >
                 {t('priceCatalog.customerName')}:{' '}
                 <Typography component="span" sx={{ fontWeight: 'bold' }}>
                   {item?.customer?.name || t('dashboard.na')}

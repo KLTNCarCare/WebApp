@@ -134,6 +134,40 @@ const InvoiceDetailModal: React.FC<InvoiceDetailModalProps> = ({
                     <Divider variant="middle" />
                   </>
                 )}
+                {invoice.staff && (
+                  <>
+                    {invoice.staff.staffId && (
+                      <>
+                        <ListItem>
+                          <ListItemText primary={t('invoice.staffId')} />
+                          <Typography
+                            variant="body2"
+                            textAlign="right"
+                            color="grey.600"
+                          >
+                            {invoice.staff.staffId}
+                          </Typography>
+                        </ListItem>
+                        <Divider variant="middle" />
+                      </>
+                    )}
+                    {invoice.staff.name && (
+                      <>
+                        <ListItem>
+                          <ListItemText primary={t('invoice.staffName')} />
+                          <Typography
+                            variant="body2"
+                            textAlign="right"
+                            color="grey.600"
+                          >
+                            {invoice.staff.name}
+                          </Typography>
+                        </ListItem>
+                        <Divider variant="middle" />
+                      </>
+                    )}
+                  </>
+                )}
                 {invoice.customer.custId && (
                   <>
                     <ListItem>

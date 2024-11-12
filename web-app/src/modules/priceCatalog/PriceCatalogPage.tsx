@@ -50,7 +50,7 @@ export function PriceCatalogPage() {
   return (
     <>
       <AdminLayout
-        title="Bản đồ ngập"
+        title=""
         isCollapse={isCollapse}
         setIsCollapse={setIsCollapse}
       >

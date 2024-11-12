@@ -63,7 +63,7 @@ export function AccountPage() {
   return (
     <>
       <AdminLayout
-        title="Bản đồ ngập"
+        title="AK Auto"
         isCollapse={isCollapse}
         setIsCollapse={setIsCollapse}
       >

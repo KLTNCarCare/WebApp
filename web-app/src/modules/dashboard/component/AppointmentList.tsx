@@ -42,6 +42,10 @@ interface Appointment {
   createdAt: string;
   updatedAt: string;
   __v: number;
+  staff: {
+    staffId: string;
+    name: string;
+  };
 }
 
 interface AppointmentListProps {

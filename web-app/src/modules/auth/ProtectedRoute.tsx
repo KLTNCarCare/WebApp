@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from './AuthProvider';
 import { getCookie } from 'src/lib/cookies';
 
@@ -10,15 +10,18 @@ type Props = {
 const ProtectedRoute = ({ children }: Props) => {
   const { isAuthenticated, setIsAuthenticated } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
   const prevAuthRef = useRef<boolean | null>(null);
 
   useEffect(() => {
     const accessToken = getCookie('accessToken');
 
     if (!accessToken) {
-      navigate('/signin', {
-        replace: true,
-      });
+      if (location.pathname !== '/signin') {
+        navigate('/signin', {
+          replace: true,
+        });
+      }
       return;
     }
 
@@ -31,20 +34,14 @@ const ProtectedRoute = ({ children }: Props) => {
       prevAuthRef.current !== isAuthenticated
     ) {
       if (isAuthenticated) {
-        navigate('/dashboard', {
-          replace: true,
-        });
-      } else {
-        navigate('/signin', {
-          replace: true,
-        });
+        // Add any additional logic if needed when authentication state changes
       }
     }
-    prevAuthRef.current = isAuthenticated;
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isAuthenticated, navigate, setIsAuthenticated]);
 
-  return isAuthenticated ? children : null;
+    prevAuthRef.current = isAuthenticated;
+  }, [isAuthenticated, setIsAuthenticated, navigate, location.pathname]);
+
+  return children;
 };
 
 export default ProtectedRoute;
