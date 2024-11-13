@@ -170,6 +170,11 @@ const AccountCurrent: React.FC = () => {
   return (
     <GoogleReCaptchaProvider
       reCaptchaKey={process.env.REACT_APP_RECAPTCHA_SITE_KEY || ''}
+      scriptProps={{
+        async: false,
+        defer: true,
+        appendTo: 'head',
+      }}
     >
       <IconButton onClick={handleClickOpen} color="inherit">
         <AccountCircleIcon />
@@ -279,10 +284,10 @@ const AccountCurrent: React.FC = () => {
         </StyledDialogContent>
         <StyledDialogActions>
           <Button onClick={handleCloseChangePassword} color="primary">
-            {t('staff.cancel')}
+            {t('dashboard.cancel')}
           </Button>
           <Button onClick={handleChangePassword} color="primary">
-            {t('staff.save')}
+            {t('dashboard.save')}
           </Button>
         </StyledDialogActions>
       </StyledDialog>

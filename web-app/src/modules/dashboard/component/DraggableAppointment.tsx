@@ -4,7 +4,7 @@ import { Check as CheckIcon, Cancel } from '@mui/icons-material';
 import { useDrag } from 'react-dnd';
 import { useTranslation } from 'react-i18next';
 import { format } from 'date-fns';
-import { purple, amber, grey, green, cyan } from '@mui/material/colors';
+import { purple, grey, green, cyan } from '@mui/material/colors';
 import { useConfirmAppointment } from 'src/api/appointment/useConfirmAppointment';
 import { useInProgressAppointment } from 'src/api/appointment/useInProgressAppoinment';
 import { useCompletedAppointment } from 'src/api/appointment/useCompletedAppointment';
@@ -12,8 +12,10 @@ import { useCreateInvoice } from 'src/api/invoice/useCreateInvoice';
 import { useCanceledAppointment } from 'src/api/appointment/useCancelAppoitment';
 import AppointmentDetailModal from './detailModal/AppointmentDetailModal';
 import PaymentModal from './PaymentModal';
+import InvoiceDetailModal from 'src/modules/invoice/component/InvoiceDetailModal';
 import { Appointment } from 'src/api/appointment/types';
 import snackbarUtils from 'src/lib/snackbarUtils';
+import { Invoice } from 'src/api/invoice/types';
 
 const ItemTypes = {
   APPOINTMENT: 'appointment',
@@ -30,6 +32,14 @@ const DraggableAppointment: React.FC<DraggableAppointmentProps> = ({
 }) => {
   const [isDetailModalOpen, setIsDetailModalOpen] = useState(false);
   const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
+  const [isInvoiceModalOpen, setIsInvoiceModalOpen] = useState(false);
+  const [selectedInvoice, setSelectedInvoice] = useState<Invoice | null>(null);
+  const [paginationModel, setPaginationModel] = useState({
+    pageSize: 5,
+    page: 0,
+  });
+  const [isLoadingInvoice, setIsLoadingInvoice] = useState(false);
+
   const { mutate: confirmAppointment, isLoading } = useConfirmAppointment();
   const { mutate: inProgressAppointment, isLoading: isInProgress } =
     useInProgressAppointment();
@@ -37,10 +47,13 @@ const DraggableAppointment: React.FC<DraggableAppointmentProps> = ({
     useCompletedAppointment();
   const { mutate: createInvoice, isLoading: isCreatingInvoice } =
     useCreateInvoice({
-      onSuccess: (success) => snackbarUtils.success(success),
+      onSuccess: (invoice) => {
+        snackbarUtils.success('Invoice created successfully');
+        setSelectedInvoice(invoice);
+      },
       onError: (error) => {
         console.error('Invoice creation failed', error);
-        snackbarUtils.error(error);
+        snackbarUtils.error('Invoice creation failed');
       },
     });
   const { mutate: cancelAppointment, isLoading: isCancelling } =
@@ -66,6 +79,7 @@ const DraggableAppointment: React.FC<DraggableAppointmentProps> = ({
       await new Promise((resolve) => setTimeout(resolve, 1000));
       createInvoice({ appointmentId: item._id });
       setIsPaymentModalOpen(false);
+      setIsInvoiceModalOpen(true);
     } catch (error) {
       console.error('Payment failed', error);
     }
@@ -77,6 +91,13 @@ const DraggableAppointment: React.FC<DraggableAppointmentProps> = ({
   const handleCloseDetailModal = () => setIsDetailModalOpen(false);
   const handleOpenPaymentModal = () => setIsPaymentModalOpen(true);
   const handleClosePaymentModal = () => setIsPaymentModalOpen(false);
+  const handlePaymentSuccess = (invoice: any) => {
+    setSelectedInvoice(invoice);
+    setIsInvoiceModalOpen(true);
+    setIsPaymentModalOpen(false);
+  };
+  const handleCloseInvoiceModal = () => setIsInvoiceModalOpen(false);
+
   const [, ref] = useDrag({
     type: ItemTypes.APPOINTMENT,
     item: { id: item._id },
@@ -306,7 +327,9 @@ const DraggableAppointment: React.FC<DraggableAppointmentProps> = ({
         onClose={handleCloseDetailModal}
         item={item}
         refetch={refetch}
+        onPaymentSuccess={handlePaymentSuccess}
       />
+
       <PaymentModal
         open={isPaymentModalOpen}
         onClose={handleClosePaymentModal}
@@ -316,6 +339,18 @@ const DraggableAppointment: React.FC<DraggableAppointmentProps> = ({
         customerName={item.customer.name}
         customerPhone={item.customer.phone}
         refetch={refetch}
+        handlePaymentSuccess={handlePaymentSuccess}
+      />
+
+      <InvoiceDetailModal
+        open={isInvoiceModalOpen}
+        onClose={handleCloseInvoiceModal}
+        onBack={handleCloseInvoiceModal}
+        invoiceData={selectedInvoice}
+        refetch={refetch}
+        isLoadingInvoice={isLoadingInvoice}
+        paginationModel={paginationModel}
+        setPaginationModel={setPaginationModel}
       />
     </>
   );
