@@ -3,7 +3,7 @@ import httpClient from 'src/lib/httpClient';
 import { DefaultQueryError } from '../type';
 import { getCookie } from 'src/lib/cookies';
 import apiRoutes from 'src/lib/apiRoutes';
-import { ApiResponse, Customer } from './types';
+import { ApiResponse } from './types';
 
 export const getAllCustomerFn = async (
   page: number | null,

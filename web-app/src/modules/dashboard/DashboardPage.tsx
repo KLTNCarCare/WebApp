@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Typography, Box, Grid } from '@mui/material';
+import { Box } from '@mui/material';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import AdminLayout from 'src/components/layouts/AdminLayout';
@@ -8,14 +8,12 @@ import SlotArea from './component/SlotArea';
 import AppointmentList from './component/AppointmentList';
 import CompletedAppointments from './component/CompletedAppointments';
 import CreateAppointmentModal from './component/createAppoinment/CreateAppoimentModal';
-import InvoiceDetailModal from '../invoice/component/InvoiceDetailModal';
 import AppointmentsModal from './component/AppointmentsModal';
 import { useGetAppointmentInDay } from 'src/api/appointment/useGetAppointmentInDay';
 import { useTranslation } from 'react-i18next';
 import useSocket from 'src/lib/socket';
-import { grey, cyan, lightGreen, green } from '@mui/material/colors';
+import { grey, cyan, lightGreen } from '@mui/material/colors';
 import dayjs from 'dayjs';
-import { format } from 'date-fns';
 
 interface Slot {
   id: string;

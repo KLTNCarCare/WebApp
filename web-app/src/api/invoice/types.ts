@@ -1,4 +1,4 @@
-import { ConfirmAppointmentFn, Staff } from './../appointment/types';
+import { Staff } from './../appointment/types';
 import { Customer, Vehicle } from '../appointment/types';
 
 interface Discount {

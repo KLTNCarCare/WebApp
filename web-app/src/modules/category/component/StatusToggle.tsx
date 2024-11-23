@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import {
   Button,
   Dialog,
@@ -35,7 +35,6 @@ const ToggleButton = styled(Button)<{ isActive: boolean }>`
 `;
 const StatusToggle = ({ _id, currentStatus, refetch }: StatusToggleProps) => {
   const { t } = useTranslation();
-  const theme = useTheme();
   const [isOpenToggleDialog, setIsOpenToggleDialog] = useState(false);
   const [isSuccessDialogOpen, setIsSuccessDialogOpen] = useState(false);
 

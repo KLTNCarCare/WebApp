@@ -1,7 +1,6 @@
 import {
   Button,
   ButtonBase,
-  Chip,
   Dialog,
   DialogActions,
   DialogContent,

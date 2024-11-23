@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Chip, Dialog, LinearProgress, Paper, Button } from '@mui/material';
+import { Dialog, LinearProgress, Paper, Button } from '@mui/material';
 import {
   DataGrid,
   GridColDef,

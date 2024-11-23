@@ -4,7 +4,6 @@ import {
   Button,
   ButtonBase,
   Dialog,
-  DialogContent,
   DialogTitle,
   Paper,
   Stack,

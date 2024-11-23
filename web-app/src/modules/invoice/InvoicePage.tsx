@@ -19,10 +19,7 @@ import AdminLayout from 'src/components/layouts/AdminLayout';
 import { useGetListInvoice } from 'src/api/invoice/useGetAllInvoice';
 import { useGetRefundInvoice } from 'src/api/refundInvoice/useGetRefundInvoice';
 import { Invoice } from 'src/api/invoice/types';
-import {
-  RefundInvoiceResponse,
-  InvoiceData as RefundInvoiceData,
-} from 'src/api/refundInvoice/types';
+import { InvoiceData as RefundInvoiceData } from 'src/api/refundInvoice/types';
 import InvoiceDataTable from './component/InvoiceDataTable';
 import RefundInvoiceDataTable from './component/RefundInvoiceDataTable';
 import FilterFormInvoice from './component/filter/FilterFormInvoice';

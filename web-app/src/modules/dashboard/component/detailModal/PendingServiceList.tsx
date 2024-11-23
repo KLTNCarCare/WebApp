@@ -1,10 +1,8 @@
 import React, { useState } from 'react';
 import { Box, Typography, Paper, Button } from '@mui/material';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
-import HourglassEmptyIcon from '@mui/icons-material/HourglassEmpty';
 import BuildIcon from '@mui/icons-material/Build';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
-import { formatDateTime } from 'src/lib/ultils/formatDateTime';
 import { Item } from 'src/api/appointment/types';
 import { useInProgressAppointment } from 'src/api/appointment/useChangePiorityService';
 

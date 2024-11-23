@@ -9,7 +9,6 @@ import {
   Typography,
   Divider,
   Box,
-  Chip,
 } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import { PromotionManagement } from 'src/api/promotion/useGetPromotion';

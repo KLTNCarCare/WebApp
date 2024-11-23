@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, Typography, LinearProgress, Collapse } from '@mui/material';
+import { Box, Typography, LinearProgress } from '@mui/material';
 import CustomPagination from 'src/components/CustomPagination';
 import EmptyScreen from 'src/components/layouts/EmtyScreen';
 interface StaffItemDetails {

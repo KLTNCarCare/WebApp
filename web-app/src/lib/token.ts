@@ -1,5 +1,4 @@
 import { getCookie, removeCookie, setCookie } from './cookies';
-import dayjs from 'dayjs';
 
 export const ACCESS_TOKEN_KEY = 'token';
 export const REFRESH_TOKEN_KEY = 'refresh_token';

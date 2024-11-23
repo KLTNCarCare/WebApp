@@ -1,10 +1,8 @@
 import {
   Box,
   ButtonBase,
-  Chip,
   Dialog,
   DialogTitle,
-  LinearProgress,
   Stack,
   Toolbar,
   Typography,
@@ -17,13 +15,11 @@ import {
   DataGrid,
   GridCellParams,
   GridColDef,
-  GridRenderCellParams,
   GridValueFormatterParams,
   GridValueGetterParams,
   viVN,
 } from '@mui/x-data-grid';
 import { useDemoData } from '@mui/x-data-grid-generator';
-import DeleteAccount from './DeleteAccount';
 import {
   AccountManagement,
   AccountResponse,
@@ -116,17 +112,10 @@ const AccountDataTable = ({
   refetch,
   isLoadingAccount,
   paginationModel,
-  setPaginationModel,
 }: ListAccountProps) => {
   const { t } = useTranslation();
   const [showModalDetail, setShowModalDetail] = useState<boolean>(false);
   const [accountData, setAccountData] = useState<AccountManagement>();
-  const handlePaginationModelChange = (model: {
-    page: number;
-    pageSize: number;
-  }) => {
-    setPaginationModel(model);
-  };
 
   const { data } = useDemoData({
     dataSet: 'Commodity',

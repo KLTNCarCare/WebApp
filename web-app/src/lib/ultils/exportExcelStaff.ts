@@ -4,7 +4,6 @@ export const exportStaffToExcel = async (
   data: any,
   filters: { fromDate: string; toDate: string }
 ) => {
-  console.log('dataStaff', data);
   const workbook = new ExcelJS.Workbook();
   const sheet = workbook.addWorksheet('DSBH_TheoNgay', {
     views: [{ showGridLines: false }],

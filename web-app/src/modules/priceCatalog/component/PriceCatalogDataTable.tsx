@@ -1,17 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import {
-  Box,
-  Dialog,
-  DialogTitle,
-  LinearProgress,
-  Stack,
-  Toolbar,
-  Typography,
-  ButtonBase,
-  DialogContent,
-  Paper,
-  Chip,
-} from '@mui/material';
+import { Dialog, LinearProgress, Paper, Chip } from '@mui/material';
 import {
   DataGrid,
   GridColDef,
@@ -21,7 +9,6 @@ import {
   viVN,
 } from '@mui/x-data-grid';
 import { useTranslation } from 'react-i18next';
-import { Close as CloseIcon } from '@mui/icons-material';
 import { PriceCatalogManagement } from 'src/api/priceCatalog/useGetPriceCatalog';
 import { TEN_ITEMS_PAGE } from 'src/lib/constants';
 import CustomPagination from 'src/components/CustomPagination';
@@ -180,7 +167,6 @@ const PriceCatalogDataTable: React.FC<PriceCatalogDataTableProps> = ({
   const [selectedPriceCatalog, setSelectedPriceCatalog] =
     useState<PriceCatalogManagement | null>(null);
   const [currentPage, setCurrentPage] = useState(0);
-  const [previousPage, setPreviousPage] = useState(0);
   const [isEditPriceCatalogOpen, setIsEditPriceCatalogOpen] = useState(false);
   const [editPriceCatalogData, setEditPriceCatalogData] = useState<any>(null);
 

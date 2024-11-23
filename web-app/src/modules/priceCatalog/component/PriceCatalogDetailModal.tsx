@@ -78,10 +78,6 @@ const PriceCatalogDetailModal: React.FC<PriceCatalogDetailModalProps> = ({
     onClose();
   };
 
-  const isInactiveAndFutureStartDate =
-    priceCatalogData.status === 'inactive' &&
-    new Date(priceCatalogData.startDate) > new Date();
-
   const itemColumns = createItemColumns(t);
 
   return (

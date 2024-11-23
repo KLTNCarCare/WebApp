@@ -8,7 +8,6 @@ import {
   SelectChangeEvent,
   Stack,
   TextField,
-  Typography,
 } from '@mui/material';
 import React from 'react';
 import { ReactComponent as SearchIcon } from '../../../../assets/icons/Search.svg';

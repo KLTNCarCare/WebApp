@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import DeleteIcon from '@mui/icons-material/Delete';
 import {
   Dialog,
@@ -6,7 +6,6 @@ import {
   DialogContent,
   DialogContentText,
   DialogTitle,
-  Button,
 } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 import { useTranslation } from 'react-i18next';

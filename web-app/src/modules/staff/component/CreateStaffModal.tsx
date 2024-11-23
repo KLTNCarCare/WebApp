@@ -43,7 +43,6 @@ const CreateStaffModal: React.FC<CreateStaffProps> = ({
     useState<boolean>(false);
   const {
     register,
-    control,
     formState: { errors, isValid },
     handleSubmit,
     reset,

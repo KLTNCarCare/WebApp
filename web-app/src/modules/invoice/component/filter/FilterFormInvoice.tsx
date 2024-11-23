@@ -39,13 +39,9 @@ const FilterFormInvoice = ({
     setSelectedField(event.target.value as string);
   };
 
-  React.useEffect(() => {
-    console.log('isReturnInvoice:', isReturnInvoice);
-  }, [isReturnInvoice]);
+  React.useEffect(() => {}, [isReturnInvoice]);
 
-  React.useEffect(() => {
-    console.log('selectedField:', selectedField);
-  }, [selectedField]);
+  React.useEffect(() => {}, [selectedField]);
 
   const invoiceFields = [
     <MenuItem key="invoiceId" value="invoiceId">

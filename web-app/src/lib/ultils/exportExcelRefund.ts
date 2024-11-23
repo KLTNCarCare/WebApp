@@ -4,8 +4,6 @@ export const exportRefundToExcel = async (
   data: any,
   filters: { fromDate: string; toDate: string }
 ) => {
-  console.log('Refund data', data);
-
   const workbook = new ExcelJS.Workbook();
   const sheet = workbook.addWorksheet('DSBH_TheoNgay', {
     views: [{ showGridLines: false }],

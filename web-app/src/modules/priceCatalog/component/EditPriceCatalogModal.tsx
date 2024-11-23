@@ -11,8 +11,6 @@ import {
   IconButton,
   Autocomplete,
   Avatar,
-  DialogActions,
-  DialogContentText,
 } from '@mui/material';
 import CheckIcon from '@mui/icons-material/Check';
 import DeleteIcon from '@mui/icons-material/Delete';
