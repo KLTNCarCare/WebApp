@@ -13,6 +13,7 @@ import PriceCatalogPage from 'src/pages/PriceCatalog';
 import PromotionPage from 'src/pages/PromotionPage';
 import SignInPage from 'src/pages/SignIn';
 import StaffPage from 'src/pages/StaffPage';
+import StatisticPage from 'src/pages/StatisticPage';
 
 const routes: RouteObject[] = [
   {
@@ -80,6 +81,14 @@ const routes: RouteObject[] = [
         element: (
           <ProtectedRoute>
             <StaffPage />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: `${publicUrl}/statistic`,
+        element: (
+          <ProtectedRoute>
+            <StatisticPage />
           </ProtectedRoute>
         ),
       },

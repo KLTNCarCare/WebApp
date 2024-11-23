@@ -109,6 +109,16 @@ const apiRoutes = {
     changePassword: 'v1/api/account/change-password',
     sendOTP: 'v1/api/otp/send-otp',
   },
+  statistic: {
+    getStatisticCustomer: 'v1/api/statistic/customer',
+    getStatisticStaff: 'v1/api/statistic/staff',
+    getStatisticPromotion: 'v1/api/statistic/promotion-result',
+    getStatisticRefund: 'v1/api/statistic/service-refund',
+    exportCustomer: 'v1/api/statistic/customer/export',
+    exportStaff: 'v1/api/statistic/staff/export',
+    exportPromotion: 'v1/api/statistic/promotion-result/export',
+    exportRefund: 'v1/api/statistic/service-refund/export',
+  },
 };
 
 export default apiRoutes;

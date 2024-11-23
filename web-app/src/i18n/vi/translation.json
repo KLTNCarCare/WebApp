@@ -58,7 +58,12 @@
     "staff": "Nhân viên",
     "logout": "Đăng xuất",
     "staffId": "ID nhân viên",
-    "staffName": "Nhân viên tạo "
+    "staffName": "Nhân viên tạo ",
+    "fromDate": "Từ ngày",
+    "toDate": "Đến ngày",
+    "statistic": "Thống kê",
+    "filter": "Lọc",
+    "export": "Xuất file"
   },
   "status": {
     "confirmed": "Đã xác nhận",
@@ -421,5 +426,8 @@
     "otpSentSuccessfully": "Mã OTP đã được gửi thành công",
     "otpSendFailed": "Gửi mã OTP thất bại",
     "currentStaff": "Nhân viên hiện tại"
+  },
+  "statistics": {
+    "title": "Thống kê"
   }
 }

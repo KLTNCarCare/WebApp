@@ -19,6 +19,7 @@ import CategoryIcon from '@mui/icons-material/Category';
 import PriceChangeIcon from '@mui/icons-material/PriceChange';
 import ReceiptLongIcon from '@mui/icons-material/ReceiptLong';
 import SupervisedUserCircleIcon from '@mui/icons-material/SupervisedUserCircle';
+import BarChartIcon from '@mui/icons-material/BarChart';
 import SelectLanguage from './SelectLanguage';
 import PersonPinIcon from '@mui/icons-material/PersonPin';
 import AccountCurrent from './AccountCurent';
@@ -131,6 +132,11 @@ const SidebarDashboard: React.FC<SidebarDashboardProps> = ({
       value: '/invoice',
       label: 'invoice',
       icon: <ReceiptLongIcon />,
+    },
+    {
+      value: '/statistic',
+      label: 'statistic',
+      icon: <BarChartIcon />,
     },
   ]);
 

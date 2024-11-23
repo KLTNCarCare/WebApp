@@ -58,7 +58,12 @@
     "staff": "Staff",
     "logout": "Logout",
     "staffId": "Staff ID",
-    "staffName": "Staff Name"
+    "staffName": "Staff Name",
+    "fromDate": "From Date",
+    "toDate": "To Date",
+    "statistic": "Statistic",
+    "filter": "Filter",
+    "export": "Export"
   },
   "status": {
     "confirmed": "Confirmed",
@@ -413,5 +418,8 @@
     "otpSentSuccessfully": "OTP has been sent successfully",
     "otpSendFailed": "Failed to send OTP",
     "currentStaff": "Current Staff"
+  },
+  "statistics": {
+    "title": "Statistics"
   }
 }
