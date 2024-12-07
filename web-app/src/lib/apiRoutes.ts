@@ -89,7 +89,7 @@ const apiRoutes = {
     payZaloPay: (id: string) => `v1/api/payment/create-payment-url/${id}`,
   },
   socket: {
-    staff: 'http://localhost:8080/sockjs/staff',
+    staff: 'sockjs/staff',
   },
   customer: {
     list: 'v1/api/customer/get-all',

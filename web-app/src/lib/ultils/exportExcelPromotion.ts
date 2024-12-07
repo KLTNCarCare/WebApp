@@ -24,8 +24,6 @@ export const exportPromotionToExcel = async (
   };
 
   const currencyFormat = '#,##0;[Red]"-"#,##0';
-
-  // Function to format date in dd/mm/yyyy
   const formatDate = (date: string) => {
     const d = new Date(date);
     const day = d.getDate().toString().padStart(2, '0');
@@ -34,11 +32,19 @@ export const exportPromotionToExcel = async (
     return `${day}/${month}/${year}`;
   };
 
-  // Sheet setup
   sheet.addRow(['Tên cửa hàng: AKAuto']);
   sheet.mergeCells('A1:C1');
   sheet.addRow(['Địa chỉ cửa hàng: 4 Nguyễn Lương Bằng, Đống Đa, Hà Nội']);
-  sheet.addRow([`Ngày in: ${new Date().toLocaleString('vi-VN')}`]);
+  sheet.addRow([
+    `Ngày in: ${new Date().toLocaleString('vi-VN', {
+      hour: '2-digit',
+      minute: '2-digit',
+      second: '2-digit',
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric',
+    })}`,
+  ]);
   sheet.mergeCells('A2:D2');
   sheet.mergeCells('A3:C3');
   sheet.eachRow((row) => {
@@ -46,18 +52,16 @@ export const exportPromotionToExcel = async (
       if (!cell.font || cell.font.bold !== true) {
         cell.font = defaultFont;
         cell.alignment = { horizontal: 'left', vertical: 'middle' };
-        cell.alignment.wrapText = true; // Enable text wrapping for all cells
       }
     });
   });
 
-  const titleRow = sheet.addRow(['DOANH SỐ THEO CHƯƠNG TRÌNH']);
+  const titleRow = sheet.addRow(['DOANH SỐ THEO KHÁCH HÀNG']);
   titleRow.eachCell((cell) => {
     cell.font = boldFont;
     cell.alignment = { horizontal: 'center', vertical: 'middle' };
-    cell.alignment.wrapText = true; // Enable text wrapping for title row
   });
-  sheet.mergeCells('A4:J4');
+  sheet.mergeCells('A4:G4');
 
   const date = sheet.addRow([
     `Từ ngày: ${formatDate(filters.fromDate)} Đến ngày ${formatDate(
@@ -67,23 +71,19 @@ export const exportPromotionToExcel = async (
   date.eachCell((cell) => {
     cell.font = defaultFont;
     cell.alignment = { horizontal: 'center', vertical: 'middle' };
-    cell.alignment.wrapText = true; // Enable text wrapping for date row
   });
-  sheet.mergeCells('A5:J5');
+  sheet.mergeCells('A5:G5');
   sheet.addRow([]);
 
-  // Header Row
   const headerRow = sheet.addRow([
     'STT',
     'Mã CTKM',
     'Tên CTKM',
-    'Ngày Bắt Đầu',
-    'Ngày Kết Thúc',
-    'Tổng Số Lượng Áp Dụng',
-    'Tổng Giá Trị Áp Dụng',
-    'Dịch Vụ',
-    'Số Lượng Áp Dụng Khuyến Mãi',
-    'Giá Trị Áp Dụng Khuyến Mãi',
+    'Ngày bắt đầu',
+    'Ngày kết thúc',
+    'Dịch vụ',
+    'Số lượng áp dụng',
+    'Giá trị áp dụng',
   ]);
   headerRow.height = 35;
   headerRow.eachCell((cell) => {
@@ -100,42 +100,85 @@ export const exportPromotionToExcel = async (
       bottom: { style: 'thin', color: { argb: '000000' } },
       right: { style: 'thin', color: { argb: '000000' } },
     };
-    cell.alignment.wrapText = true; // Enable text wrapping for header row
   });
 
-  let serialNumber = 1; // STT for each promotion (CTKM)
+  let previousCustRow: { [key: string]: any[] } = {};
+  let totalApply = 0;
+  let totalAmount = 0;
 
-  data?.data.forEach((promotion: any) => {
-    // Khởi tạo serial number cho mỗi promotionId, đánh STT chỉ cho mỗi CTKM
-    promotion.items.forEach((item: any, index: number) => {
-      const promotionRow = sheet.addRow([
-        index === 0 ? serialNumber++ : '', // Only assign STT to the first row for each promotion
-        promotion.promotionId || '',
-        promotion.promotionName || '',
-        promotion.startDate || '',
-        promotion.endDate || '',
-        promotion.total_apply || 0,
-        promotion.total_amount || 0,
-        item.serviceName || '',
-        item.total_apply || 0,
-        item.total_amount || 0,
-      ]);
+  let serialNumber = 1;
 
-      promotionRow.eachCell((cell) => {
-        cell.font = defaultFont;
-        cell.alignment = { horizontal: 'center', vertical: 'middle' };
-        cell.alignment.wrapText = true; // Enable text wrapping for each data cell
+  data?.data.forEach((item: any) => {
+    item.items.forEach((promtion: any) => {
+      let promotionTotalApply = 0;
+      let promotionTotalAmount = 0;
 
-        if (
-          typeof cell.value === 'number' &&
-          (cell.address?.charAt(0) === 'F' ||
-            cell.address?.charAt(0) === 'G' ||
-            cell.address?.charAt(0) === 'I' ||
-            cell.address?.charAt(0) === 'J')
-        ) {
-          cell.numFmt = currencyFormat;
-          cell.alignment = { horizontal: 'right', vertical: 'middle' };
+      promtion.items.forEach((invoice: any) => {
+        const content = sheet.addRow([
+          serialNumber,
+          promtion?.promotionId || '',
+          promtion?.promotionName || '',
+          promtion?.startDate || '',
+          promtion?.endDate || '',
+          invoice.type === 'discount-bill'
+            ? 'Giảm giá hóa đơn'
+            : 'Giảm giá dịch vụ',
+          invoice.total_apply || 0,
+          invoice.total_amount || 0,
+        ]);
+
+        if (!previousCustRow[promtion.promotionId]) {
+          previousCustRow[promtion.promotionId] = [];
         }
+        previousCustRow[promtion.promotionId].push(content.number);
+
+        content.eachCell((cell, colNumber) => {
+          cell.font = defaultFont;
+          cell.alignment = { horizontal: 'left', vertical: 'middle' };
+
+          if (typeof cell.value === 'number') {
+            if (colNumber === 8 || colNumber === 7) {
+              cell.numFmt = currencyFormat;
+              cell.alignment = { horizontal: 'right', vertical: 'middle' };
+            }
+          }
+
+          cell.border = {
+            top: { style: 'thin', color: { argb: '000000' } },
+            left: { style: 'thin', color: { argb: '000000' } },
+            bottom: { style: 'thin', color: { argb: '000000' } },
+            right: { style: 'thin', color: { argb: '000000' } },
+          };
+        });
+
+        promotionTotalApply += invoice.total_apply || 0;
+        promotionTotalAmount += invoice.total_amount || 0;
+      });
+
+      const promotionTotalRow = sheet.addRow([
+        '',
+        '',
+        '',
+        '',
+        '',
+        `Tổng cộng`,
+        promotionTotalApply,
+        promotionTotalAmount,
+      ]);
+      sheet.mergeCells(
+        `A${promotionTotalRow.number}:E${promotionTotalRow.number}`
+      );
+      promotionTotalRow.eachCell((cell, colNumber) => {
+        cell.font = boldFont;
+        cell.alignment = { horizontal: 'left', vertical: 'middle' };
+
+        if (typeof cell.value === 'number') {
+          if (colNumber === 8 || colNumber === 7) {
+            cell.numFmt = currencyFormat;
+            cell.alignment = { horizontal: 'right', vertical: 'middle' };
+          }
+        }
+
         cell.border = {
           top: { style: 'thin', color: { argb: '000000' } },
           left: { style: 'thin', color: { argb: '000000' } },
@@ -143,76 +186,71 @@ export const exportPromotionToExcel = async (
           right: { style: 'thin', color: { argb: '000000' } },
         };
       });
+
+      totalApply += promotionTotalApply;
+      totalAmount += promotionTotalAmount;
+
+      serialNumber++;
     });
   });
 
-  // Merge cells if data is the same
-  const mergeCells = (startRow: number, endRow: number, col: string) => {
-    sheet.mergeCells(`${col}${startRow}:${col}${endRow}`);
-  };
+  const totalRow = sheet.addRow([
+    'Tổng cộng',
+    '',
+    '',
+    '',
+    '',
+    '',
+    totalApply,
+    totalAmount,
+  ]);
+  sheet.mergeCells(`A${totalRow.number}:F${totalRow.number}`);
+  totalRow.eachCell((cell, colNumber) => {
+    cell.font = boldFont;
+    cell.alignment = { horizontal: 'left', vertical: 'middle' };
 
-  let startRow = 9; // Starting row for data
-  let endRow = startRow;
-  let previousValue = sheet.getCell(`B${startRow}`).value;
-
-  for (let i = startRow + 1; i <= sheet.rowCount; i++) {
-    const currentValue = sheet.getCell(`B${i}`).value;
-    if (currentValue === previousValue) {
-      endRow = i;
-    } else {
-      if (startRow !== endRow) {
-        mergeCells(startRow, endRow, 'A');
-        mergeCells(startRow, endRow, 'B');
-        mergeCells(startRow, endRow, 'C');
-        mergeCells(startRow, endRow, 'D');
-        mergeCells(startRow, endRow, 'E');
-        mergeCells(startRow, endRow, 'F');
-        mergeCells(startRow, endRow, 'G');
+    if (typeof cell.value === 'number') {
+      if (colNumber === 8 || colNumber === 7) {
+        cell.numFmt = currencyFormat;
+        cell.alignment = { horizontal: 'right', vertical: 'middle' };
       }
-      startRow = i;
-      endRow = i;
-      previousValue = currentValue;
     }
-  }
 
-  // Merge the last set of cells if needed
-  if (startRow !== endRow) {
-    mergeCells(startRow, endRow, 'A');
-    mergeCells(startRow, endRow, 'B');
-    mergeCells(startRow, endRow, 'C');
-    mergeCells(startRow, endRow, 'D');
-    mergeCells(startRow, endRow, 'E');
-    mergeCells(startRow, endRow, 'F');
-    mergeCells(startRow, endRow, 'G');
+    cell.border = {
+      top: { style: 'thin', color: { argb: '000000' } },
+      left: { style: 'thin', color: { argb: '000000' } },
+      bottom: { style: 'thin', color: { argb: '000000' } },
+      right: { style: 'thin', color: { argb: '000000' } },
+    };
+  });
+
+  for (const key in previousCustRow) {
+    const row = previousCustRow[key];
+    const start = row[0];
+    const end = row[row.length - 1];
+    sheet.mergeCells(`A${start}:A${end}`);
+    sheet.mergeCells(`B${start}:B${end}`);
+    sheet.mergeCells(`C${start}:C${end}`);
   }
 
   sheet.columns = [
-    { width: 10 },
+    { width: 5 },
     { width: 18 },
     { width: 28 },
     { width: 15 },
     { width: 15 },
-    { width: 20 },
-    { width: 20 },
-    { width: 25 }, // Service column
-    { width: 20 }, // Apply quantity column
-    { width: 20 }, // Apply value column
+    { width: 25 },
+    { width: 10 },
+    { width: 25 },
   ];
-
-  // Create file name based on filter date
   const formattedFromDate = formatDate(filters.fromDate);
   const formattedToDate = formatDate(filters.toDate);
-  const fileName = `TKCTKM_${formattedFromDate}-${formattedToDate}.xlsx`;
+  const fileName = `TKNV_${formattedFromDate}-${formattedToDate}.xlsx`;
 
-  // Write buffer to download the file
-  try {
-    const buffer = await workbook.xlsx.writeBuffer();
-    const blob = new Blob([buffer], { type: 'application/octet-stream' });
-    const link = document.createElement('a');
-    link.href = URL.createObjectURL(blob);
-    link.download = fileName;
-    link.click();
-  } catch (error) {
-    console.error('Error generating excel file:', error);
-  }
+  const buffer = await workbook.xlsx.writeBuffer();
+  const blob = new Blob([buffer], { type: 'application/octet-stream' });
+  const link = document.createElement('a');
+  link.href = URL.createObjectURL(blob);
+  link.download = fileName;
+  link.click();
 };

@@ -1,9 +1,9 @@
 import React from 'react';
-import { Box, Typography, LinearProgress, Paper } from '@mui/material';
+import { Box, Typography, LinearProgress } from '@mui/material';
 import CustomPagination from 'src/components/CustomPagination';
 import EmptyScreen from 'src/components/layouts/EmtyScreen';
 
-interface ServiceItem {
+interface CustomerItemDetails {
   serviceId: string;
   serviceName: string;
   sale_before: number;
@@ -11,10 +11,20 @@ interface ServiceItem {
   sale_after: number;
 }
 
-interface CustomerRow {
+interface CustomerItem {
   custId: string;
   custName: string;
-  items: ServiceItem[];
+  sale_before: number;
+  discount: number;
+  sale_after: number;
+  items: CustomerItemDetails[];
+}
+
+interface CustomerRow {
+  sale_before: number;
+  discount: number;
+  sale_after: number;
+  items: CustomerItem[];
 }
 
 interface CustomerDataTableProps {
@@ -34,121 +44,185 @@ const CustomerDataTable: React.FC<CustomerDataTableProps> = ({
   totalPage,
   isLoading,
 }) => {
-  const groupedCustomers = rows.reduce((acc, customer) => {
-    if (!acc[customer.custName]) {
-      acc[customer.custName] = {
-        custName: customer.custName,
-        items: [],
-      };
-    }
-    acc[customer.custName].items = acc[customer.custName].items.concat(
-      customer.items
-    );
-    return acc;
-  }, {} as Record<string, { custName: string; items: ServiceItem[] }>);
-
-  const groupedRows = Object.values(groupedCustomers);
-
   return (
-    <Paper>
+    <Box sx={{ marginBottom: 4 }}>
       <Typography variant="h5" sx={{ paddingBottom: 2 }}>
         Thống kê khách hàng
       </Typography>
       {isLoading ? (
         <LinearProgress />
-      ) : groupedRows.length === 0 ? (
+      ) : rows && rows.length === 0 ? (
         <EmptyScreen titleEmpty="No data available" />
       ) : (
         <Box>
-          {groupedRows.map((row, rowIndex) => (
-            <Box
-              key={rowIndex}
-              sx={{
-                marginBottom: 3,
-                border: '1px solid #ddd',
-                borderRadius: 2,
-                padding: 2,
-                backgroundColor: '#e6f7ff',
-              }}
-            >
-              <Typography variant="h6" sx={{ paddingBottom: 2 }}>
-                Tên Khách Hàng: {row.custName}
-              </Typography>
+          <Box
+            sx={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(11, 1fr)',
+              gap: 2,
+              alignItems: 'center',
+              justifyItems: 'center',
+              marginBottom: 2,
+              marginLeft: 1,
+            }}
+          >
+            <Typography>STT</Typography>
+            <Typography>MÃ KH</Typography>
+            <Typography>TÊN KH</Typography>
+            <Typography>Mã dịch vụ</Typography>
+            <Typography>Tên dịch vụ</Typography>
+            <Typography sx={{ gridColumn: 'span 2' }}>
+              DOANH SỐ TRƯỚC CK
+            </Typography>
+            <Typography sx={{ gridColumn: 'span 2' }}>CHIẾT KHẤU</Typography>
+            <Typography sx={{ gridColumn: 'span 2' }}>
+              DOANH SỐ SAU CK
+            </Typography>
+          </Box>
 
+          <Box sx={{ backgroundColor: '#e6f7ff' }}>
+            {rows?.map((row, rowIndex) => (
               <Box
+                key={rowIndex}
                 sx={{
+                  marginBottom: 3,
+                  border: '1px solid #ddd',
+                  borderRadius: 2,
+                  padding: 2,
                   display: 'grid',
-                  gridTemplateColumns: 'repeat(6, 1fr)',
-                  gap: 2,
-                  alignItems: 'center',
-                  marginBottom: 2,
                 }}
               >
-                <Typography sx={{ gridColumn: 'span 1', fontWeight: 'bold' }}>
-                  STT
-                </Typography>
-                <Typography sx={{ gridColumn: 'span 2', fontWeight: 'bold' }}>
-                  Tên Dịch Vụ
-                </Typography>
-                <Typography
-                  sx={{
-                    gridColumn: 'span 1',
-                    fontWeight: 'bold',
-                    textAlign: 'end',
-                  }}
-                >
-                  Giá Trước Giảm
-                </Typography>
-                <Typography
-                  sx={{
-                    gridColumn: 'span 1',
-                    fontWeight: 'bold',
-                    textAlign: 'end',
-                  }}
-                >
-                  Giảm Giá
-                </Typography>
-                <Typography
-                  sx={{
-                    gridColumn: 'span 1',
-                    fontWeight: 'bold',
-                    textAlign: 'end',
-                  }}
-                >
-                  Giá Sau Giảm
-                </Typography>
-              </Box>
-
-              {row.items.map((serviceItem, serviceIndex) => (
                 <Box
-                  key={serviceIndex}
                   sx={{
                     display: 'grid',
-                    gridTemplateColumns: 'repeat(6, 1fr)',
+                    gridTemplateColumns: 'repeat(11, 1fr)',
                     gap: 2,
                     alignItems: 'center',
-                    borderTop: '1px solid #ddd',
-                    paddingTop: 1,
-                    marginBottom: 1,
+                    marginBottom: 2,
                   }}
                 >
-                  <Typography>{serviceIndex + 1}</Typography>
-                  <Typography sx={{ gridColumn: 'span 2' }}>
-                    {serviceItem.serviceName}
+                  <Typography
+                    sx={{
+                      gridColumn: 'span 5',
+                      textAlign: 'end',
+                      fontWeight: 'bold',
+                    }}
+                  >
+                    Tổng cộng
                   </Typography>
-                  <Typography sx={{ gridColumn: 'span 1', textAlign: 'end' }}>
-                    {serviceItem.sale_before.toLocaleString()}
+                  <Typography
+                    sx={{
+                      gridColumn: 'span 2',
+                      textAlign: 'end',
+                      fontWeight: 'bold',
+                    }}
+                  >
+                    {(row.sale_before ?? 0).toLocaleString()}
                   </Typography>
-                  <Typography sx={{ gridColumn: 'span 1', textAlign: 'end' }}>
-                    {serviceItem.discount.toLocaleString()}
+                  <Typography
+                    sx={{
+                      gridColumn: 'span 2',
+                      textAlign: 'end',
+                      fontWeight: 'bold',
+                    }}
+                  >
+                    {(row.discount ?? 0).toLocaleString()}
                   </Typography>
-                  <Typography sx={{ gridColumn: 'span 1', textAlign: 'end' }}>
-                    {serviceItem.sale_after.toLocaleString()}
+                  <Typography
+                    sx={{
+                      gridColumn: 'span 2',
+                      textAlign: 'end',
+                      fontWeight: 'bold',
+                    }}
+                  >
+                    {(row.sale_after ?? 0).toLocaleString()}
                   </Typography>
                 </Box>
-              ))}
-            </Box>
-          ))}
+
+                {row.items?.map((customerItem, staffIndex) => (
+                  <Box
+                    key={staffIndex}
+                    sx={{
+                      marginBottom: 2,
+                      border: '1px solid #ccc',
+                      borderRadius: 1,
+                      padding: 2,
+                    }}
+                  >
+                    <Box>
+                      {customerItem.items?.map((detail, detailIndex) => (
+                        <Box
+                          key={detailIndex}
+                          sx={{
+                            display: 'grid',
+                            gridTemplateColumns: 'repeat(11, 1fr)',
+                            gap: 2,
+                            alignItems: 'center',
+                            marginBottom: 1,
+                          }}
+                        >
+                          <Typography>{detailIndex + 1}</Typography>
+                          <Typography>
+                            {customerItem.custId || 'Chưa có mã khách'}
+                          </Typography>
+                          {/* Mã khách */}
+                          <Typography sx={{ gridColumn: 'span 1' }}>
+                            {customerItem.custName || 'Chưa có tên khách'}
+                          </Typography>
+                          {/* Tên khách */}
+                          <Typography>{detail.serviceId}</Typography>
+                          <Typography>{detail.serviceName}</Typography>
+
+                          <Typography
+                            sx={{ gridColumn: 'span 2', textAlign: 'end' }}
+                          >
+                            {detail.sale_before.toLocaleString()}
+                          </Typography>
+                          <Typography
+                            sx={{ gridColumn: 'span 2', textAlign: 'end' }}
+                          >
+                            {(detail.discount ?? 0).toLocaleString()}
+                          </Typography>
+                          <Typography
+                            sx={{ gridColumn: 'span 2', textAlign: 'end' }}
+                          >
+                            {detail.sale_after.toLocaleString()}
+                          </Typography>
+                        </Box>
+                      ))}
+                    </Box>
+
+                    <Box
+                      sx={{
+                        cursor: 'pointer',
+                        display: 'grid',
+                        gridTemplateColumns: 'repeat(11, 1fr)',
+                        gap: 2,
+                        alignItems: 'center',
+                        justifyItems: 'end',
+                      }}
+                    >
+                      <Typography
+                        sx={{ gridColumn: 'span 5', fontWeight: 'bold' }}
+                      >
+                        Tổng cộng
+                      </Typography>
+                      <Typography sx={{ gridColumn: 'span 2' }}>
+                        {customerItem.sale_before.toLocaleString()}
+                      </Typography>
+                      <Typography sx={{ gridColumn: 'span 2' }}>
+                        {(customerItem.discount ?? 0).toLocaleString()}
+                      </Typography>
+                      <Typography sx={{ gridColumn: 'span 2' }}>
+                        {customerItem.sale_after.toLocaleString()}
+                      </Typography>
+                    </Box>
+                  </Box>
+                ))}
+              </Box>
+            ))}
+          </Box>
+
           <CustomPagination
             paginationModel={paginationModel}
             onPageChange={(page) =>
@@ -158,7 +232,7 @@ const CustomerDataTable: React.FC<CustomerDataTableProps> = ({
           />
         </Box>
       )}
-    </Paper>
+    </Box>
   );
 };
 

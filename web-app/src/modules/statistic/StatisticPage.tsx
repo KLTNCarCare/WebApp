@@ -163,14 +163,26 @@ export const StatisticPage = () => {
 
   const customerRows =
     customerData?.data?.map((customer: any) => ({
-      custId: customer.custId,
-      custName: customer.custName,
+      sale_before: customer.sale_before,
+      discount: customer.discount,
+      sale_after: customer.sale_after,
       items: (customer.items || []).map((item: any) => ({
-        serviceId: item.serviceId,
-        serviceName: item.serviceName,
-        sale_before: item.sale_before?.toLocaleString() || 'N/A',
-        discount: item.discount?.toLocaleString() || 'N/A',
-        sale_after: item.sale_after?.toLocaleString() || 'N/A',
+        custId: item.custId,
+        custName: item.custName,
+        sale_before: item.sale_before,
+        discount: item.discount,
+        sale_after: item.sale_after,
+        items: (item.items || []).map((service: any) => ({
+          serviceId: service.serviceId,
+          serviceName: service.serviceName,
+          sale_before: service.sale_before
+            ? service.sale_before.toLocaleString()
+            : 'N/A',
+          discount: service.discount ? service.discount.toLocaleString() : '0',
+          sale_after: service.sale_after
+            ? service.sale_after.toLocaleString()
+            : 'N/A',
+        })),
       })),
     })) || [];
 
@@ -212,18 +224,23 @@ export const StatisticPage = () => {
 
   const promotionRows =
     promotionData?.data?.map((promotion: any) => ({
-      promotionId: promotion.promotionId,
-      promotionName: promotion.promotionName,
-      startDate: promotion.startDate,
-      endDate: promotion.endDate,
       total_apply: promotion.total_apply,
       total_amount: promotion.total_amount,
       items: promotion.items.map((item: any) => ({
-        type: item.type,
-        serviceId: item.serviceId,
-        serviceName: item.serviceName,
+        promotionId: item.promotionId,
+        promotionName: item.promotionName,
+        startDate: item.startDate,
+        endDate: item.endDate,
         total_apply: item.total_apply,
         total_amount: item.total_amount,
+        total_total_amount: item.total_total_amount,
+        items: item.items.map((subItem: any) => ({
+          type: subItem.type,
+          serviceId: subItem.serviceId,
+          serviceName: subItem.serviceName,
+          total_apply: subItem.total_apply,
+          total_amount: subItem.total_amount,
+        })),
       })),
     })) || [];
 

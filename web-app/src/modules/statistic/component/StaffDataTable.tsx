@@ -2,6 +2,7 @@ import React from 'react';
 import { Box, Typography, LinearProgress } from '@mui/material';
 import CustomPagination from 'src/components/CustomPagination';
 import EmptyScreen from 'src/components/layouts/EmtyScreen';
+
 interface StaffItemDetails {
   date: string;
   total_sale_before: number;
@@ -61,7 +62,7 @@ const StaffDataTable: React.FC<StaffDataTableProps> = ({
               alignItems: 'center',
               justifyItems: 'center',
               marginBottom: 2,
-              marginLeft: 5,
+              marginLeft: 1,
             }}
           >
             <Typography>STT</Typography>

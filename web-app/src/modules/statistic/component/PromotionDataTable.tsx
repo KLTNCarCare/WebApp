@@ -18,11 +18,18 @@ interface Promotion {
   endDate: string;
   total_apply: number;
   total_amount: number;
+  total_total_amount: number;
   items: PromotionItem[];
 }
 
+interface PromotionGroup {
+  total_apply: number;
+  total_amount: number;
+  items: Promotion[];
+}
+
 interface PromotionDataTableProps {
-  rows: Promotion[];
+  rows: PromotionGroup[];
   paginationModel: { page: number; pageSize: number };
   setPaginationModel: React.Dispatch<
     React.SetStateAction<{ pageSize: number; page: number }>
@@ -49,84 +56,100 @@ const PromotionDataTable: React.FC<PromotionDataTableProps> = ({
         <EmptyScreen titleEmpty="Không có dữ liệu" />
       ) : (
         <Box>
-          {rows.map((promotion, index) => (
-            <Box
-              key={index}
-              sx={{
-                marginBottom: 3,
-                border: '1px solid #ddd',
-                borderRadius: 2,
-                padding: 3,
-                boxShadow: 2,
-                backgroundColor: '#e6f7ff',
-              }}
-            >
-              <Box
-                sx={{
-                  display: 'grid',
-                  gridTemplateColumns: 'repeat(11, 1fr)',
-                  gap: 2,
-                  alignItems: 'center',
-                  marginBottom: 3,
-                  borderRadius: 1,
-                  padding: 1,
-                }}
-              >
-                <Typography sx={{ gridColumn: 'span 10', fontWeight: 'bold' }}>
-                  Chương trình khuyến mãi: {promotion.promotionName}
-                </Typography>
-                <Typography sx={{ gridColumn: 'span 2' }}>
-                  Mã KM: {promotion.promotionId}
-                </Typography>
-                <Typography sx={{ gridColumn: 'span 2' }}>
-                  Ngày bắt đầu: {promotion.startDate}
-                </Typography>
-                <Typography sx={{ gridColumn: 'span 3' }}>
-                  Ngày kết thúc: {promotion.endDate}
-                </Typography>
-                <Typography sx={{ gridColumn: 'span 2', textAlign: 'end' }}>
-                  Tổng số lần áp dụng: {promotion.total_apply.toLocaleString()}
-                </Typography>
-                <Typography sx={{ gridColumn: 'span 2', textAlign: 'end' }}>
-                  Tổng tiền: {promotion.total_amount.toLocaleString()} VND
-                </Typography>
-              </Box>
-              {promotion.items.length > 0 ? (
-                promotion.items.map((item, itemIndex) => (
+          {rows.map((group, groupIndex) => (
+            <Box key={groupIndex} sx={{ marginBottom: 3 }}>
+              <Typography sx={{ fontWeight: 'bold', marginBottom: 2 }}>
+                Tổng số lần áp dụng: {group.total_apply.toLocaleString()} - Tổng
+                tiền: {group.total_amount.toLocaleString()} VND
+              </Typography>
+              {group.items.map((promotion, promoIndex) => (
+                <Box
+                  key={promoIndex}
+                  sx={{
+                    marginBottom: 3,
+                    border: '1px solid #ddd',
+                    borderRadius: 2,
+                    padding: 3,
+                    boxShadow: 2,
+                    backgroundColor: '#e6f7ff',
+                  }}
+                >
                   <Box
                     sx={{
                       display: 'grid',
                       gridTemplateColumns: 'repeat(11, 1fr)',
                       gap: 2,
                       alignItems: 'center',
-                      marginBottom: 2,
+                      marginBottom: 3,
+                      borderRadius: 1,
+                      padding: 1,
                     }}
                   >
-                    <Typography sx={{ fontWeight: 'bold' }}>
-                      {itemIndex + 1}
+                    <Typography
+                      sx={{ gridColumn: 'span 10', fontWeight: 'bold' }}
+                    >
+                      Chương trình khuyến mãi: {promotion.promotionName}
+                    </Typography>
+                    <Typography sx={{ gridColumn: 'span 2' }}>
+                      Mã KM: {promotion.promotionId}
+                    </Typography>
+                    <Typography sx={{ gridColumn: 'span 2' }}>
+                      Ngày bắt đầu: {promotion.startDate}
                     </Typography>
                     <Typography sx={{ gridColumn: 'span 3' }}>
-                      Dịch vụ: {item.serviceName || 'Không có tên dịch vụ'}
-                    </Typography>
-                    <Typography sx={{ gridColumn: 'span 3' }}>
-                      Loại dịch vụ:{' '}
-                      {item.type === 'discount-bill'
-                        ? 'Giảm giá hóa đơn'
-                        : 'Giảm giá dịch vụ'}
+                      Ngày kết thúc: {promotion.endDate}
                     </Typography>
                     <Typography sx={{ gridColumn: 'span 2', textAlign: 'end' }}>
-                      {item.total_apply.toLocaleString()}
+                      Tổng số lần áp dụng:{' '}
+                      {promotion.total_apply.toLocaleString()}
                     </Typography>
                     <Typography sx={{ gridColumn: 'span 2', textAlign: 'end' }}>
-                      {item.total_amount.toLocaleString()} VND
+                      Tổng tiền: {promotion.total_amount.toLocaleString()} VND
                     </Typography>
                   </Box>
-                ))
-              ) : (
-                <Typography sx={{ textAlign: 'center', color: 'gray' }}>
-                  Không có dịch vụ nào
-                </Typography>
-              )}
+                  {promotion.items.length > 0 ? (
+                    promotion.items.map((item, itemIndex) => (
+                      <Box
+                        key={itemIndex}
+                        sx={{
+                          display: 'grid',
+                          gridTemplateColumns: 'repeat(11, 1fr)',
+                          gap: 2,
+                          alignItems: 'center',
+                          marginBottom: 2,
+                        }}
+                      >
+                        <Typography sx={{ fontWeight: 'bold' }}>
+                          {itemIndex + 1}
+                        </Typography>
+                        <Typography sx={{ gridColumn: 'span 3' }}>
+                          Dịch vụ: {item.serviceName || 'Không có tên dịch vụ'}
+                        </Typography>
+                        <Typography sx={{ gridColumn: 'span 3' }}>
+                          Loại dịch vụ:{' '}
+                          {item.type === 'discount-bill'
+                            ? 'Giảm giá hóa đơn'
+                            : 'Giảm giá dịch vụ'}
+                        </Typography>
+                        <Typography
+                          sx={{ gridColumn: 'span 2', textAlign: 'end' }}
+                        >
+                          {item.total_apply.toLocaleString()}
+                        </Typography>
+                        <Typography
+                          sx={{ gridColumn: 'span 2', textAlign: 'end' }}
+                        >
+                          {item.total_amount.toLocaleString()} VND
+                        </Typography>
+                      </Box>
+                    ))
+                  ) : (
+                    <Typography sx={{ textAlign: 'center', color: 'gray' }}>
+                      Không có dịch vụ nào
+                    </Typography>
+                  )}
+                </Box>
+              ))}
             </Box>
           ))}
 

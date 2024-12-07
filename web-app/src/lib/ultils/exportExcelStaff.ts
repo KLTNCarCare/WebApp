@@ -238,12 +238,10 @@ export const exportStaffToExcel = async (
     { width: 25 },
     { width: 25 },
   ];
-  // Tạo tên file từ filter date
   const formattedFromDate = formatDate(filters.fromDate);
   const formattedToDate = formatDate(filters.toDate);
   const fileName = `TKNV_${formattedFromDate}-${formattedToDate}.xlsx`;
 
-  // Save the file
   const buffer = await workbook.xlsx.writeBuffer();
   const blob = new Blob([buffer], { type: 'application/octet-stream' });
   const link = document.createElement('a');

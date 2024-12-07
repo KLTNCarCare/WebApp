@@ -33,7 +33,6 @@ export const exportRefundToExcel = async (
     return `${day}/${month}/${year}`;
   };
 
-  // General store information
   sheet.addRow(['Tên cửa hàng: AKAuto']);
   sheet.mergeCells('A1:C1');
   sheet.addRow(['Địa chỉ cửa hàng: 4 Nguyễn Lương Bằng, Đống Đa, Hà Nội']);
@@ -59,7 +58,6 @@ export const exportRefundToExcel = async (
     });
   });
 
-  // Title Row
   const titleRow = sheet.addRow(['HOÁ ĐƠN HOÀN TRẢ']);
   titleRow.eachCell((cell) => {
     cell.font = boldFont;
@@ -67,7 +65,6 @@ export const exportRefundToExcel = async (
   });
   sheet.mergeCells('A4:G4');
 
-  // Filter Date Range
   const date = sheet.addRow([
     `Từ ngày: ${formatDate(filters.fromDate)} Đến ngày ${formatDate(
       filters.toDate
@@ -80,7 +77,6 @@ export const exportRefundToExcel = async (
   sheet.mergeCells('A5:G5');
   sheet.addRow([]);
 
-  // Header Row
   const headerRow = sheet.addRow([
     'STT',
     'Mã Hóa Đơn Bán',
@@ -108,14 +104,13 @@ export const exportRefundToExcel = async (
   });
 
   let totalRefundAmount = 0;
-  let rowNumber = 1; // Initialize rowNumber outside the loops
+  let rowNumber = 1;
 
-  // Loop through the refund data
   data?.data.forEach((item: any) => {
     item.items.forEach((refundItem: any) => {
       refundItem.items.forEach((service: any) => {
         const row = sheet.addRow([
-          rowNumber, // Use rowNumber for the STT column
+          rowNumber,
           refundItem.saleInvoiceId || '',
           refundItem.saleInvoiceCreatedAt || '',
           refundItem.refundInvoiceId || '',
@@ -124,10 +119,8 @@ export const exportRefundToExcel = async (
           service.amount || 0,
         ]);
 
-        // Increment the row number after adding each row
         rowNumber++;
 
-        // Format the columns
         row.eachCell((cell, colNumber) => {
           cell.font = defaultFont;
           cell.alignment = { horizontal: 'left', vertical: 'middle' };
@@ -150,7 +143,6 @@ export const exportRefundToExcel = async (
     });
   });
 
-  // Total Row
   const totalRow = sheet.addRow([
     'Tổng giá trị',
     '',
@@ -188,7 +180,6 @@ export const exportRefundToExcel = async (
     { width: 20 },
   ];
 
-  // Generate the filename based on the filter date
   const formattedFromDate = formatDate(filters.fromDate);
   const formattedToDate = formatDate(filters.toDate);
   const fileName = `Refund_${formattedFromDate}-${formattedToDate}.xlsx`;

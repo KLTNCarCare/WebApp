@@ -1,4 +1,3 @@
-// src/utils/exportExcel.ts
 import ExcelJS from 'exceljs';
 
 export const exportCustomerToExcel = async (
@@ -33,20 +32,18 @@ export const exportCustomerToExcel = async (
     return `${day}/${month}/${year}`;
   };
 
-  // Sheet setup
   sheet.addRow(['Tên cửa hàng: AKAuto']);
   sheet.mergeCells('A1:C1');
   sheet.addRow(['Địa chỉ cửa hàng: 4 Nguyễn Lương Bằng, Đống Đa, Hà Nội']);
   sheet.addRow([
-    'Ngày in: ' +
-      new Date().toLocaleString('vi-VN', {
-        hour: '2-digit',
-        minute: '2-digit',
-        second: '2-digit',
-        day: '2-digit',
-        month: '2-digit',
-        year: 'numeric',
-      }),
+    `Ngày in: ${new Date().toLocaleString('vi-VN', {
+      hour: '2-digit',
+      minute: '2-digit',
+      second: '2-digit',
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric',
+    })}`,
   ]);
   sheet.mergeCells('A2:D2');
   sheet.mergeCells('A3:C3');
@@ -81,8 +78,8 @@ export const exportCustomerToExcel = async (
   const headerRow = sheet.addRow([
     'STT',
     'Mã KH',
-    'Tên KH',
-    'Loại DV',
+    'Tên Khách Hàng',
+    'Dịch vụ',
     'Doanh Số Trước CK',
     'Chiết Khấu',
     'Doanh Số Sau CK',
@@ -104,26 +101,71 @@ export const exportCustomerToExcel = async (
     };
   });
 
-  let previousSTT: any = null;
   let previousCustRow: { [key: string]: any[] } = {};
-  data?.data.forEach((item: any, index: number) => {
-    item.items.forEach((invoice: any) => {
-      const content = sheet.addRow([
-        previousSTT === index ? '' : index + 1,
-        item?.custId || '',
-        item?.custName || '',
-        invoice.serviceName || '',
-        invoice.sale_before || 0,
-        invoice.discount || 0,
-        invoice.sale_after || 0,
-      ]);
-      if (!previousCustRow[item.custId]) {
-        previousCustRow[item.custId] = [];
-      }
-      previousCustRow[item.custId].push(content.number);
+  let totalSaleBefore = 0;
+  let totalDiscount = 0;
+  let totalSaleAfter = 0;
 
-      content.eachCell((cell, colNumber) => {
-        cell.font = defaultFont;
+  let serialNumber = 1;
+
+  data?.data.forEach((item: any) => {
+    item.items.forEach((cust: any) => {
+      let custTotalSaleBefore = 0;
+      let custTotalDiscount = 0;
+      let custTotalSaleAfter = 0;
+
+      cust.items.forEach((invoice: any) => {
+        const content = sheet.addRow([
+          serialNumber,
+          cust?.custId || '',
+          cust?.custName || '',
+          invoice?.serviceName || '',
+          invoice.sale_before || 0,
+          invoice.discount || 0,
+          invoice.sale_after || 0,
+        ]);
+
+        if (!previousCustRow[cust.custId]) {
+          previousCustRow[cust.custId] = [];
+        }
+        previousCustRow[cust.custId].push(content.number);
+
+        content.eachCell((cell, colNumber) => {
+          cell.font = defaultFont;
+          cell.alignment = { horizontal: 'left', vertical: 'middle' };
+
+          if (typeof cell.value === 'number') {
+            if (colNumber === 5 || colNumber === 6 || colNumber === 7) {
+              cell.numFmt = currencyFormat;
+              cell.alignment = { horizontal: 'right', vertical: 'middle' };
+            }
+          }
+
+          cell.border = {
+            top: { style: 'thin', color: { argb: '000000' } },
+            left: { style: 'thin', color: { argb: '000000' } },
+            bottom: { style: 'thin', color: { argb: '000000' } },
+            right: { style: 'thin', color: { argb: '000000' } },
+          };
+        });
+
+        custTotalSaleBefore += invoice.sale_before || 0;
+        custTotalDiscount += invoice.discount || 0;
+        custTotalSaleAfter += invoice.sale_after || 0;
+      });
+
+      const custTotalRow = sheet.addRow([
+        '',
+        '',
+        '',
+        `Tổng cộng`,
+        custTotalSaleBefore,
+        custTotalDiscount,
+        custTotalSaleAfter,
+      ]);
+      sheet.mergeCells(`A${custTotalRow.number}:C${custTotalRow.number}`);
+      custTotalRow.eachCell((cell, colNumber) => {
+        cell.font = boldFont;
         cell.alignment = { horizontal: 'left', vertical: 'middle' };
 
         if (typeof cell.value === 'number') {
@@ -132,6 +174,7 @@ export const exportCustomerToExcel = async (
             cell.alignment = { horizontal: 'right', vertical: 'middle' };
           }
         }
+
         cell.border = {
           top: { style: 'thin', color: { argb: '000000' } },
           left: { style: 'thin', color: { argb: '000000' } },
@@ -139,8 +182,42 @@ export const exportCustomerToExcel = async (
           right: { style: 'thin', color: { argb: '000000' } },
         };
       });
-      previousSTT = item.custId;
+
+      totalSaleBefore += custTotalSaleBefore;
+      totalDiscount += custTotalDiscount;
+      totalSaleAfter += custTotalSaleAfter;
+
+      serialNumber++;
     });
+  });
+
+  const totalRow = sheet.addRow([
+    'Tổng cộng',
+    '',
+    '',
+    '',
+    totalSaleBefore,
+    totalDiscount,
+    totalSaleAfter,
+  ]);
+  sheet.mergeCells(`A${totalRow.number}:D${totalRow.number}`);
+  totalRow.eachCell((cell, colNumber) => {
+    cell.font = boldFont;
+    cell.alignment = { horizontal: 'left', vertical: 'middle' };
+
+    if (typeof cell.value === 'number') {
+      if (colNumber === 5 || colNumber === 6 || colNumber === 7) {
+        cell.numFmt = currencyFormat;
+        cell.alignment = { horizontal: 'right', vertical: 'middle' };
+      }
+    }
+
+    cell.border = {
+      top: { style: 'thin', color: { argb: '000000' } },
+      left: { style: 'thin', color: { argb: '000000' } },
+      bottom: { style: 'thin', color: { argb: '000000' } },
+      right: { style: 'thin', color: { argb: '000000' } },
+    };
   });
 
   for (const key in previousCustRow) {
@@ -155,24 +232,20 @@ export const exportCustomerToExcel = async (
   sheet.columns = [
     { width: 10 },
     { width: 18 },
-    { width: 28 },
-    { width: 46 },
+    { width: 20 },
+    { width: 40 },
     { width: 25 },
     { width: 25 },
     { width: 25 },
   ];
-  // Tạo tên file từ filter date
   const formattedFromDate = formatDate(filters.fromDate);
   const formattedToDate = formatDate(filters.toDate);
-  const fileName = `TKKH_${formattedFromDate}-${formattedToDate}.xlsx`;
-  try {
-    const buffer = await workbook.xlsx.writeBuffer();
-    const blob = new Blob([buffer], { type: 'application/octet-stream' });
-    const link = document.createElement('a');
-    link.href = URL.createObjectURL(blob);
-    link.download = fileName;
-    link.click();
-  } catch (error) {
-    console.error('Error exporting to Excel:', error);
-  }
+  const fileName = `TKNV_${formattedFromDate}-${formattedToDate}.xlsx`;
+
+  const buffer = await workbook.xlsx.writeBuffer();
+  const blob = new Blob([buffer], { type: 'application/octet-stream' });
+  const link = document.createElement('a');
+  link.href = URL.createObjectURL(blob);
+  link.download = fileName;
+  link.click();
 };
