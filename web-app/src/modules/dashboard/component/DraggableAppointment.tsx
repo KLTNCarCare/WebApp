@@ -101,7 +101,7 @@ const DraggableAppointment: React.FC<DraggableAppointmentProps> = ({
   const [, ref] = useDrag({
     type: ItemTypes.APPOINTMENT,
     item: { id: item._id },
-    canDrag: item.status === 'confirmed',
+    canDrag: item.status === 'confirmed' || item.status === 'pending',
   });
 
   const formatDateTime = (dateTimeString: string) => {
@@ -255,9 +255,9 @@ const DraggableAppointment: React.FC<DraggableAppointmentProps> = ({
             gap: '0.5rem',
           }}
         >
-          {item.status === 'pending' && (
+          {(item.status === 'pending' || item.status === 'confirmed') && (
             <>
-              <Button
+              {/* <Button
                 variant="contained"
                 color="success"
                 startIcon={<CheckIcon />}
@@ -274,7 +274,7 @@ const DraggableAppointment: React.FC<DraggableAppointmentProps> = ({
                 }}
               >
                 {isLoading ? t('dashboard.confirming') : t('dashboard.confirm')}
-              </Button>
+              </Button> */}
               <Button
                 variant="contained"
                 color="error"

@@ -48,7 +48,10 @@ dayjs.extend(utc);
 dayjs.extend(timezone);
 
 const schemaCreateAppointment = yup.object({
-  // startTime: yup.date().required('Vui lòng nhập thời gian bắt đầu'),
+  startTime: yup
+    .date()
+    .required('Vui lòng nhập thời gian bắt đầu')
+    .min(new Date(), 'Thời gian bắt đầu phải lớn hơn thời gian hiện tại'),
 });
 
 type CreateAppointmentProps = {
@@ -91,7 +94,7 @@ function CreateAppointmentFutureModal({
   } = useForm<{
     customer: { phone: string; name: string };
     vehicle: { licensePlate: string; model: string };
-    // startTime: Date | undefined;
+    startTime: Date | undefined;
     total_duration: number | undefined;
     notes: string;
     items: Item[];
@@ -99,7 +102,7 @@ function CreateAppointmentFutureModal({
     defaultValues: {
       customer: { phone: '', name: '' },
       vehicle: { licensePlate: '', model: '' },
-      // startTime: undefined,
+      startTime: undefined,
       total_duration: 0,
       notes: '',
       items: [],
@@ -221,8 +224,10 @@ function CreateAppointmentFutureModal({
           customerVehicleData?.vehicle?.licensePlate ||
           data.vehicle.licensePlate,
       },
-      startTime: new Date().getTime(),
       total_duration: data.total_duration,
+      startTime: data.startTime
+        ? new Date(data.startTime).getTime()
+        : new Date().getTime(),
       notes: data.notes,
       items: data.items.map((item: Item) => ({
         typeId: item.typeId,
@@ -257,8 +262,10 @@ function CreateAppointmentFutureModal({
           customerVehicleData?.vehicle?.licensePlate ||
           data.vehicle.licensePlate,
       },
-      startTime: new Date().getTime(),
       total_duration: data.total_duration ?? 0,
+      startTime: data.startTime
+        ? new Date(data.startTime).getTime()
+        : new Date().getTime(),
       notes: data.notes,
       items: data.items.map((item: Item) => ({
         typeId: item.typeId,
@@ -276,8 +283,8 @@ function CreateAppointmentFutureModal({
   };
 
   const totalPrice = fields.reduce((acc, field) => acc + (field.price ?? 0), 0);
-  const estimatedCompletionTime = new Date()
-    ? dayjs(new Date())
+  const estimatedCompletionTime = watch('startTime')
+    ? dayjs(watch('startTime'))
         .add(totalDuration ?? 0, 'hour')
         .format('YYYY-MM-DD HH:mm')
     : '';
@@ -482,6 +489,37 @@ function CreateAppointmentFutureModal({
 
                 {/* Additional Details Section */}
                 <Box>
+                  <Controller
+                    name="startTime"
+                    control={control}
+                    defaultValue={undefined}
+                    render={({ field }) => (
+                      <TextField
+                        {...field}
+                        label={t('priceCatalog.startDate')}
+                        type="datetime-local"
+                        InputLabelProps={{ shrink: true }}
+                        error={!!errors.startTime}
+                        helperText={errors.startTime?.message}
+                        fullWidth
+                        variant="filled"
+                        value={
+                          field.value
+                            ? dayjs(field.value).format('YYYY-MM-DDTHH:mm')
+                            : ''
+                        }
+                        onChange={(e) => {
+                          const date = new Date(e.target.value);
+                          if (date instanceof Date && !isNaN(date.getTime())) {
+                            field.onChange(date.getTime());
+                            setValue('startTime', date, {
+                              shouldValidate: true,
+                            });
+                          }
+                        }}
+                      />
+                    )}
+                  />
                   <Grid container spacing={2}>
                     <Grid item xs={12}>
                       <TextField

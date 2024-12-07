@@ -138,53 +138,33 @@ const CustomerVehicleInfo: React.FC<CustomerVehicleInfoProps> = ({
         {isExistingCustomer ? (
           <>
             <Grid item xs={12} sm={6}>
-              <TextField
-                variant="filled"
-                label={t('customer.searchByPhone')}
-                type="text"
-                value={inputValue}
-                onChange={(e) => setInputValue(e.target.value)}
-                inputProps={{ inputMode: 'text' }}
-                fullWidth
-                sx={{ marginBottom: 0 }}
+              <Autocomplete
+                options={customerData || []}
+                getOptionLabel={(option) => `${option.name} - ${option.phone}`}
+                onInputChange={(event, newInputValue) => {
+                  setInputValue(newInputValue);
+                }}
+                onChange={(event, value) => {
+                  handleCustomerSelect(value?._id || '');
+                }}
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    variant="filled"
+                    label={t('customer.searchByPhone')}
+                    fullWidth
+                    sx={{ marginBottom: 0 }}
+                  />
+                )}
+                renderOption={(props, option) => (
+                  <Box component="li" {...props}>
+                    <Typography variant="body1">{option.name}</Typography>
+                    <Typography color="primary" sx={{ ml: 1 }}>
+                      - {option.phone}
+                    </Typography>
+                  </Box>
+                )}
               />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <FormControl variant="filled" fullWidth sx={{ marginBottom: 0 }}>
-                <InputLabel shrink>{t('customer.selectCustomer')}</InputLabel>
-                <Controller
-                  name="customer.selected"
-                  control={control}
-                  render={({ field }) => (
-                    <Autocomplete
-                      options={customerData || []}
-                      getOptionLabel={(option) =>
-                        `${option.name} - ${option.phone}`
-                      }
-                      onChange={(event, value) => {
-                        field.onChange(value?._id || '');
-                        handleCustomerSelect(value?._id || '');
-                      }}
-                      renderInput={(params) => (
-                        <TextField {...params} variant="filled" />
-                      )}
-                      renderOption={(props, option) => (
-                        <Box component="li" {...props}>
-                          <Typography variant="body1">{option.name}</Typography>
-                          <Typography color="primary" sx={{ ml: 1 }}>
-                            - {option.phone}
-                          </Typography>
-                        </Box>
-                      )}
-                      value={
-                        customerData.find(
-                          (customer) => customer._id === field.value
-                        ) || null
-                      }
-                    />
-                  )}
-                />
-              </FormControl>
             </Grid>
             {selectedCustomer && (
               <>
