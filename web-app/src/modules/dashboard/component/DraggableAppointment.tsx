@@ -78,8 +78,10 @@ const DraggableAppointment: React.FC<DraggableAppointmentProps> = ({
   const handleClosePaymentModal = () => setIsPaymentModalOpen(false);
   const handlePaymentSuccess = (invoice: any) => {
     setSelectedInvoice(invoice);
-    // setIsInvoiceModalOpen(true);
-    // setIsPaymentModalOpen(false);
+    localStorage.setItem('selectedInvoice', JSON.stringify(invoice));
+    window.open('/invoice', '_blank');
+    setIsInvoiceModalOpen(true);
+    setIsPaymentModalOpen(false);
   };
   const handleCloseInvoiceModal = () => setIsInvoiceModalOpen(true);
   const [, ref] = useDrag({

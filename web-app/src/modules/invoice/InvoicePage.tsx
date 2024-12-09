@@ -24,6 +24,7 @@ import InvoiceDataTable from './component/InvoiceDataTable';
 import RefundInvoiceDataTable from './component/RefundInvoiceDataTable';
 import FilterFormInvoice from './component/filter/FilterFormInvoice';
 import useSocket from 'src/lib/socket';
+import InvoiceDetailModal from './component/InvoiceDetailModal';
 
 export function InvoicePage() {
   const { t } = useTranslation();
@@ -85,6 +86,22 @@ export function InvoicePage() {
       refetch();
     }
   }, [messages, refetchRefund, refetch]);
+
+  const [invoiceData, setInvoiceData] = useState<Invoice | null>(null);
+  const [isInvoiceModalOpen, setIsInvoiceModalOpen] = useState(false);
+
+  useEffect(() => {
+    const storedInvoice = localStorage.getItem('selectedInvoice');
+    if (storedInvoice) {
+      setInvoiceData(JSON.parse(storedInvoice));
+      setIsInvoiceModalOpen(true);
+      localStorage.removeItem('selectedInvoice');
+    }
+  }, []);
+
+  const handleCloseInvoiceModal = () => {
+    setIsInvoiceModalOpen(false);
+  };
 
   return (
     <AdminLayout
@@ -212,6 +229,16 @@ export function InvoicePage() {
           </Toolbar>
         </DialogTitle>
       </Dialog>
+      <InvoiceDetailModal
+        open={isInvoiceModalOpen}
+        onClose={handleCloseInvoiceModal}
+        invoiceData={invoiceData}
+        refetch={refetch}
+        isLoadingInvoice={isLoading}
+        paginationModel={paginationModel}
+        setPaginationModel={setPaginationModel}
+        onBack={() => {}}
+      />
     </AdminLayout>
   );
 }
