@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Paper, Box, Typography, Button } from '@mui/material';
 import { Check as CheckIcon, Cancel } from '@mui/icons-material';
 import { useDrag } from 'react-dnd';
@@ -32,7 +32,7 @@ const DraggableAppointment: React.FC<DraggableAppointmentProps> = ({
 }) => {
   const [isDetailModalOpen, setIsDetailModalOpen] = useState(false);
   const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
-  const [isInvoiceModalOpen, setIsInvoiceModalOpen] = useState(false);
+  const [isInvoiceModalOpen, setIsInvoiceModalOpen] = useState(true);
   const [selectedInvoice, setSelectedInvoice] = useState<Invoice | null>(null);
   const [paginationModel, setPaginationModel] = useState({
     pageSize: 5,
@@ -59,27 +59,12 @@ const DraggableAppointment: React.FC<DraggableAppointmentProps> = ({
   const { mutate: cancelAppointment, isLoading: isCancelling } =
     useCanceledAppointment();
   const { t } = useTranslation();
-
-  const handleConfirm = () => {
-    confirmAppointment(
-      { _id: item._id },
-      {
-        onSuccess: () =>
-          inProgressAppointment({ _id: item._id }, { onSuccess: refetch }),
-      }
-    );
-  };
-
-  const handleInProgress = () =>
-    inProgressAppointment({ _id: item._id }, { onSuccess: refetch });
-  const handleComplete = () =>
-    completedAppointment({ _id: item._id }, { onSuccess: refetch });
   const handlePaymentAndInvoice = async (paymentMethod: string) => {
     try {
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      await new Promise((resolve) => setTimeout(resolve, 10000));
       createInvoice({ appointmentId: item._id });
-      setIsPaymentModalOpen(false);
-      setIsInvoiceModalOpen(true);
+      // setIsPaymentModalOpen(false);
+      // setIsInvoiceModalOpen(true);
     } catch (error) {
       console.error('Payment failed', error);
     }
@@ -93,11 +78,10 @@ const DraggableAppointment: React.FC<DraggableAppointmentProps> = ({
   const handleClosePaymentModal = () => setIsPaymentModalOpen(false);
   const handlePaymentSuccess = (invoice: any) => {
     setSelectedInvoice(invoice);
-    setIsInvoiceModalOpen(true);
-    setIsPaymentModalOpen(false);
+    // setIsInvoiceModalOpen(true);
+    // setIsPaymentModalOpen(false);
   };
-  const handleCloseInvoiceModal = () => setIsInvoiceModalOpen(false);
-
+  const handleCloseInvoiceModal = () => setIsInvoiceModalOpen(true);
   const [, ref] = useDrag({
     type: ItemTypes.APPOINTMENT,
     item: { id: item._id },

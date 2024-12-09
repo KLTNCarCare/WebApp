@@ -22,6 +22,7 @@ export const removeCookie = (
   options: Cookies.CookieAttributes = {}
 ) => {
   return Cookies.remove(name, {
+    domain: window.location.hostname,
     path: '/',
     ...options,
   });
