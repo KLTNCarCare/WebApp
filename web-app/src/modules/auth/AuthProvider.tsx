@@ -30,6 +30,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const navigate = useNavigate();
 
   useEffect(() => {
+    navigate('/dashboard', { replace: true });
     const tokenCookie = getCookie('accessToken');
     if (tokenCookie) {
       setAccessToken(tokenCookie);
