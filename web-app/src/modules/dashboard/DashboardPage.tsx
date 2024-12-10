@@ -3,7 +3,6 @@ import { Box } from '@mui/material';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import AdminLayout from 'src/components/layouts/AdminLayout';
-import LoadingState from './component/LoadingState';
 import SlotArea from './component/SlotArea';
 import AppointmentList from './component/AppointmentList';
 import CompletedAppointments from './component/CompletedAppointments';
@@ -41,12 +40,12 @@ const DashboardPage: React.FC = () => {
     slots: initialSlots,
   });
 
-  const { data: appointments, refetch: refetchAppointments } =
-    useGetAppointmentInDay({ date: selectedDate.valueOf().toString() });
-
   const { data, error, isLoading, refetch } = useGetAppointmentInDay({
     date: Math.floor(new Date().setHours(0, 0, 0, 0)).toString(),
   });
+
+  const { data: appointments, refetch: refetchAppointments } =
+    useGetAppointmentInDay({ date: selectedDate.valueOf().toString() });
 
   const { messages } = useSocket('user-id');
 
@@ -205,60 +204,57 @@ const DashboardPage: React.FC = () => {
       isCollapse={isCollapse}
       setIsCollapse={setIsCollapse}
     >
-      <LoadingState isLoading={isLoading} error={error} />
-      {!isLoading && !error && (
-        <DndProvider backend={HTML5Backend}>
-          <Box
-            display="flex"
-            flexDirection="column"
-            height="100vh"
-            sx={{ padding: 2 }}
-          >
-            <Box display="flex" flex="1" minHeight="0">
-              <Box
-                flex={isCollapse ? '0 0 1000px' : '1'}
-                minWidth={isCollapse ? '1000px' : '0'}
-              >
-                <SlotArea
-                  slots={state.slots}
-                  moveAppointment={moveAppointment}
-                  refetch={refetch}
-                />
-              </Box>
-              <Box width="400px" flexShrink="0">
-                <AppointmentList
-                  appointments={state.appointments}
-                  selectedDate={selectedDate}
-                  handleDateChange={handleDateChange}
-                  handleAddAppointment={handleAddAppointment}
-                  refetch={refetch}
-                />
-              </Box>
+      <DndProvider backend={HTML5Backend}>
+        <Box
+          display="flex"
+          flexDirection="column"
+          height="100vh"
+          sx={{ padding: 2 }}
+        >
+          <Box display="flex" flex="1" minHeight="0">
+            <Box
+              flex={isCollapse ? '0 0 1000px' : '1'}
+              minWidth={isCollapse ? '1000px' : '0'}
+            >
+              <SlotArea
+                slots={state.slots}
+                moveAppointment={moveAppointment}
+                refetch={refetch}
+              />
             </Box>
-            <Box flexShrink="0" marginTop={1}>
-              <CompletedAppointments
+            <Box width="400px" flexShrink="0">
+              <AppointmentList
                 appointments={state.appointments}
+                selectedDate={selectedDate}
+                handleDateChange={handleDateChange}
+                handleAddAppointment={handleAddAppointment}
                 refetch={refetch}
               />
             </Box>
           </Box>
+          <Box flexShrink="0" marginTop={1}>
+            <CompletedAppointments
+              appointments={state.appointments}
+              refetch={refetch}
+            />
+          </Box>
+        </Box>
 
-          <CreateAppointmentModal
-            open={isAddAppointment}
-            onClose={handleCloseModal}
-            refetch={refetch}
-            setIsAddAppointment={setIsAddAppointment}
-          />
+        <CreateAppointmentModal
+          open={isAddAppointment}
+          onClose={handleCloseModal}
+          refetch={refetch}
+          setIsAddAppointment={setIsAddAppointment}
+        />
 
-          <AppointmentsModal
-            open={isModalOpen}
-            onClose={handleAppointmentsModalClose}
-            selectedDate={selectedDate}
-            appointments={appointments || []}
-            refetch={refetchAppointments}
-          />
-        </DndProvider>
-      )}
+        <AppointmentsModal
+          open={isModalOpen}
+          onClose={handleAppointmentsModalClose}
+          selectedDate={selectedDate}
+          appointments={appointments || []}
+          refetch={refetchAppointments}
+        />
+      </DndProvider>
     </AdminLayout>
   );
 };

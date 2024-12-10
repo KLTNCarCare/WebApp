@@ -30,13 +30,15 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    navigate('/dashboard', { replace: true });
+    if (window.location.pathname === '/') {
+      navigate('/dashboard', { replace: true });
+    }
     const tokenCookie = getCookie('accessToken');
     if (tokenCookie) {
       setAccessToken(tokenCookie);
       setIsAuthenticated(true);
     }
-  }, []);
+  }, [navigate]);
 
   const { mutate: signIn, isLoading } = useLogin({});
 

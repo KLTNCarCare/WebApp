@@ -157,7 +157,8 @@ const ServiceProgress: React.FC<ServiceProgressProps> = ({
                     alignItems: 'center',
                   }}
                 >
-                  {service.status === 'pending' &&
+                  {item.status === 'in-progress' &&
+                    service.status === 'pending' &&
                     (index === 0 ||
                       item.items[index - 1].status === 'completed') && (
                       <Button
@@ -171,18 +172,19 @@ const ServiceProgress: React.FC<ServiceProgressProps> = ({
                         {t('appointment.start')}
                       </Button>
                     )}
-                  {service.status === 'in-progress' && (
-                    <Button
-                      variant="contained"
-                      color="secondary"
-                      onClick={() =>
-                        handleStatusChange(service.serviceId, 'completed')
-                      }
-                      sx={{ '&:hover': { bgcolor: 'secondary.dark' } }}
-                    >
-                      {t('appointment.start')}
-                    </Button>
-                  )}
+                  {item.status === 'in-progress' &&
+                    service.status === 'in-progress' && (
+                      <Button
+                        variant="contained"
+                        color="secondary"
+                        onClick={() =>
+                          handleStatusChange(service.serviceId, 'completed')
+                        }
+                        sx={{ '&:hover': { bgcolor: 'secondary.dark' } }}
+                      >
+                        {t('appointment.start')}
+                      </Button>
+                    )}
                 </Box>
               </Paper>
             </TimelineContent>

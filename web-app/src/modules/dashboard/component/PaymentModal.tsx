@@ -66,6 +66,7 @@ const PaymentModal: React.FC<PaymentModalProps> = ({
     onSuccess: (url) => {
       window.open(url, '_blank');
       onClose();
+      window.location.href = '/invoice';
     },
     onError: () => {
       toast.error(t('invoice.paymentFailed'));

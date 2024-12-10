@@ -20,10 +20,14 @@ import useDebounce from 'src/lib/hooks/useDebounce';
 
 type CustomerVehicleInfoProps = {
   onCustomerVehicleChange: (data: any) => void;
+  onClose: () => void;
+  open: boolean;
 };
 
 const CustomerVehicleInfo: React.FC<CustomerVehicleInfoProps> = ({
   onCustomerVehicleChange,
+  onClose,
+  open,
 }) => {
   const {
     register,
@@ -31,6 +35,7 @@ const CustomerVehicleInfo: React.FC<CustomerVehicleInfoProps> = ({
     setValue,
     getValues,
     control,
+    reset,
   } = useFormContext();
   const { t } = useTranslation();
   const [isExistingCustomer, setIsExistingCustomer] = useState(false);
@@ -79,6 +84,18 @@ const CustomerVehicleInfo: React.FC<CustomerVehicleInfoProps> = ({
       refetch();
     }
   }, [debouncedSearchPhone, setValue, refetch]);
+
+  useEffect(() => {
+    if (!open) {
+      reset();
+      setIsExistingCustomer(false);
+      setCustomerData([]);
+      setVehicles([]);
+      setSelectedCustomer(null);
+      setSelectedVehicle(null);
+      setInputValue('');
+    }
+  }, [open, reset]);
 
   const handleCustomerSelect = (customerId: string) => {
     const customer = customerData.find((cust) => cust._id === customerId);

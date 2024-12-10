@@ -145,6 +145,14 @@ function CreateAppointmentFutureModal({
     setValue('total_duration', totalDuration);
   }, [fields, selectedServices, setValue]);
 
+  useEffect(() => {
+    if (!open) {
+      reset();
+      setSelectedServices([]);
+      setCustomerVehicleData(null);
+    }
+  }, [open, reset]);
+
   const handleServiceChange = (index: number, service: any) => {
     if (service) {
       update(index, {
@@ -183,7 +191,7 @@ function CreateAppointmentFutureModal({
     },
     onError(error) {
       snackbarUtils.error(error);
-      if (error.response && error.response.status === 500) {
+      if (error.response && error.response.status === 400) {
         setIsConfirmModalOpen(true);
       } else {
         console.error('Error creating appointment:', error);
@@ -307,6 +315,8 @@ function CreateAppointmentFutureModal({
                 {/* Customer Info Section */}
                 <FormProvider {...methods}>
                   <CustomerVehicleInfo
+                    onClose={onClose}
+                    open={open}
                     onCustomerVehicleChange={(data) => {
                       setCustomerVehicleData(data);
                     }}
