@@ -143,11 +143,19 @@ const SidebarDashboard: React.FC<SidebarDashboardProps> = ({
   useEffect(() => {
     const { name, role } = getUserData();
     setSidebarData((prevData) =>
-      prevData.map((item) =>
-        item.labelForAccount
-          ? { ...item, labelForAccount: `${name} (${role})` }
-          : item
-      )
+      prevData
+        .map((item) =>
+          item.labelForAccount
+            ? { ...item, labelForAccount: `${name} (${role})` }
+            : item
+        )
+        .filter(
+          (item) =>
+            role !== 'staff' ||
+            !['staff', 'category', 'priceCatalog', 'promotion'].includes(
+              item.label || ''
+            )
+        )
     );
   }, []);
 
