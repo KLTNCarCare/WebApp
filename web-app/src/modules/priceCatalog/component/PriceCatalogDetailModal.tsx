@@ -148,7 +148,7 @@ const PriceCatalogDetailModal: React.FC<PriceCatalogDetailModalProps> = ({
                     <Divider variant="middle" />
                   </>
                 )}
-                {priceCatalogData.startDate && (
+                {/* {priceCatalogData.startDate && (
                   <>
                     <ListItem>
                       <ListItemText primary={t('priceCatalog.startDate')} />
@@ -164,7 +164,7 @@ const PriceCatalogDetailModal: React.FC<PriceCatalogDetailModalProps> = ({
                     </ListItem>
                     <Divider variant="middle" />
                   </>
-                )}
+                )} */}
                 {priceCatalogData.startDate && (
                   <>
                     <ListItem>
