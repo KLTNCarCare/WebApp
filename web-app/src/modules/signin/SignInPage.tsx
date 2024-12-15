@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { LoadingButton } from '@mui/lab';
 import { Box, Container, Paper, TextField, Typography } from '@mui/material';
-import { Link, useNavigate } from 'react-router-dom';
-import { useForm, SubmitHandler } from 'react-hook-form';
+import { useNavigate } from 'react-router-dom';
+import { useForm, SubmitHandler, Controller } from 'react-hook-form';
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useLogin } from 'src/api/auth/useLogin';
@@ -39,7 +39,7 @@ export function SignInPage() {
     },
   });
 
-  const { handleSubmit, register } = useForm<SignInFormValues>({
+  const { handleSubmit, control } = useForm<SignInFormValues>({
     resolver: yupResolver(schemaSignin),
   });
 
@@ -89,7 +89,14 @@ export function SignInPage() {
   };
 
   return (
-    <Box className="relative flex min-h-screen items-center justify-center px-4 py-12 sm:px-6 lg:px-8">
+    <Box
+      className="relative flex min-h-screen items-center justify-center px-4 py-12 sm:px-6 lg:px-8"
+      sx={{
+        backgroundImage: `url(${require('../../assets/images/loginImage.jpg')})`,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+      }}
+    >
       <Container maxWidth="sm" sx={{ zIndex: 10 }}>
         <Paper
           elevation={0}
@@ -103,85 +110,88 @@ export function SignInPage() {
             borderStyle: 'solid',
             borderColor: 'grey.200',
             display: 'flex',
-            flexDirection: 'row',
+            flexDirection: 'column',
             justifyContent: 'center',
             alignItems: 'center',
             margin: '0 auto',
-            marginTop: '20vh',
+            marginTop: '17vh',
             transition: 'transform 0.3s ease-in-out',
             '&:hover': {
               transform: 'scale(1.05)',
             },
+            backgroundColor: 'rgba(255, 255, 255, 0.9)',
           }}
         >
-          <Box sx={{ flex: 1 }}>
+          <Box sx={{ textAlign: 'center', mb: 1 }}>
             <img
-              src={require('../../assets/images/loginImage.jpg')}
-              alt="Illustration"
-              style={{ width: '100%', height: 'auto', paddingRight: 20 }}
+              src={require('../../assets/icons/AKAuto.svg').default}
+              alt="AKAuto Logo"
+              style={{ width: '150px', height: 'auto' }}
             />
           </Box>
-          <Box sx={{ flex: 1, width: '100%' }}>
-            <Typography variant="h1" color="primary.dark" align="center" my={2}>
-              {process.env.REACT_APP_NAME}
-            </Typography>
-            <Typography variant="h2" color="primary.dark" align="center" my={2}>
-              Welcome back!
-            </Typography>
-            <Box
-              pt={3}
-              component="form"
-              sx={{ width: '100%' }}
-              onSubmit={handleSubmit(signIn)}
-            >
-              <TextField
-                autoComplete="username"
-                autoFocus
-                label="Nhập số điện thoại"
-                variant="filled"
-                fullWidth
-                {...register('username')}
-              />
-              <TextField
-                autoComplete="current-password"
-                type="password"
-                label="Nhập mật khẩu"
-                variant="filled"
-                fullWidth
-                {...register('password')}
-              />
-
-              <LoadingButton
-                loading={loadingLogin}
-                fullWidth
-                variant="contained"
-                color="primary"
-                type="submit"
-              >
-                Đăng nhập
-              </LoadingButton>
-              {errorSignin && (
-                <Typography
-                  paragraph
-                  mt={2}
-                  variant="body2"
-                  align="left"
-                  height={40}
-                  color="red"
-                >
-                  {errorSignin}
-                </Typography>
+          <Typography variant="h2" color="primary.dark" align="center" my={1}>
+            Welcome back!
+          </Typography>
+          <Box
+            pt={3}
+            component="form"
+            sx={{ width: '100%' }}
+            onSubmit={handleSubmit(signIn)}
+          >
+            <Controller
+              name="username"
+              control={control}
+              render={({ field, fieldState: { error } }) => (
+                <TextField
+                  {...field}
+                  autoComplete="username"
+                  autoFocus
+                  label="Nhập số điện thoại"
+                  variant="filled"
+                  fullWidth
+                  error={!!error}
+                  helperText={error ? error.message : ''}
+                />
               )}
-            </Box>
-            <Box pt={3} sx={{ width: '100%' }}>
+            />
+            <Controller
+              name="password"
+              control={control}
+              render={({ field, fieldState: { error } }) => (
+                <TextField
+                  {...field}
+                  autoComplete="current-password"
+                  type="password"
+                  label="Nhập mật khẩu"
+                  variant="filled"
+                  fullWidth
+                  error={!!error}
+                  helperText={error ? error.message : ''}
+                />
+              )}
+            />
+
+            <LoadingButton
+              loading={loadingLogin}
+              fullWidth
+              variant="contained"
+              color="primary"
+              type="submit"
+            >
+              Đăng nhập
+            </LoadingButton>
+            {errorSignin && (
               <Typography
+                paragraph
+                mt={2}
                 variant="body2"
-                align="center"
-                style={{ cursor: 'pointer' }}
+                align="left"
+                height={40}
+                color="red"
               >
-                <Link to="/">Quay lại cửa hàng</Link>
+                {errorSignin}
               </Typography>
-            </Box>
+            )}
           </Box>
         </Paper>
       </Container>
